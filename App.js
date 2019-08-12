@@ -1,49 +1,31 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import Test from './src/views/Test';
+import AuthOrAppSwitch from './src/switchNavigators/AuthOrAppSwitch';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-type Props = {};
-export default class App extends Component<Props> {
+export default class App extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
+      <AuthOrAppSwitch />
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+// Pre-build fix for Android
+// implementation "androidx.appcompat:appcompat:1.0.+"
+//in build.gradle for dependency
+
+// import androidx.annotation.NonNull;
+// import androidx.annotation.Nullable;
+// import androidx.annotation.StyleRes;
+// import androidx.core.app.ActivityCompat;
+// import androidx.core.content.FileProvider;
+// import androidx.appcompat.app.AlertDialog;
+// import androidx.core.app.NotificationCompat;
+// place in place of vanilla android support android
+
+//To make a release build
+
+//Android crash fix followed thus far: https://medium.com/@impaachu/react-native-android-release-build-crash-on-device-14f2c9eacf18:
+
+// react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+// ./gradlew clean && ./gradlew assembleRelease
