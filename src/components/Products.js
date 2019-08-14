@@ -49,6 +49,7 @@ const cardWidth = width/2 - 10;
 const cardHeaderHeight = 200;
 const cardContentHeight = 50
 const cardFull = cardHeaderHeight + cardContentHeight;
+const cardFullPlus = cardFull + 25;
 
 const popUpMenuHeight = 35;
 const popUpMenuWidth = 65;
@@ -924,7 +925,7 @@ class Products extends Component {
     return (
       
       <TouchableOpacity
-      style={{height: section.isActive == true ? cardFull : cardHeaderHeight}}
+      style={{height: section.isActive == true ? section.text.name.length > 7 ? cardFullPlus : cardFull : cardHeaderHeight}}
       underlayColor={'transparent'}
       onPress={() => {
         // section.isActive ? this.navToProductDetails(section, this.state.collectionKeys, this.state.productKeys) : null;

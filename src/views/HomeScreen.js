@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { withNavigation, TabNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
+import { withNavigation, createBottomTabNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
 
 import { profileToEditProfileStack } from '../stackNavigators/profileToEditProfileStack';
 import { marketToProductDetailsOrChatOrCommentsStack } from '../stackNavigators/marketToProductDetailsOrChatOrCommentsStack';
@@ -15,7 +15,7 @@ import { BadgeIcon, MarketplaceIcon } from '../localFunctions/visualFunctions';
 
 // const uid = firebase.auth().currentUser.uid;
 
-const HomeScreen = TabNavigator(
+const HomeScreen = createBottomTabNavigator(
             {
 
               
@@ -31,9 +31,9 @@ const HomeScreen = TabNavigator(
               
             },
             {
-              navigationOptions: ({ navigation }) => ({
+              defaultNavigationOptions: ({ navigation }) => ({
                 
-                tabBarIcon: ({ focused, tintColor }) => {
+                tabBarIcon: ({ focused, horizontal, tintColor }) => {
                   const { routeName } = navigation.state;
                   // const unreadCount = navigation.getParam('unreadCount', false);
                   // let unreadCount = false;
@@ -75,15 +75,17 @@ const HomeScreen = TabNavigator(
           
                   // You can return any component that you like here! We usually use an
                   // icon component from react-native-vector-icons
+                  // return <Icon name={iconName} size={iconSize} color={tintColor}/>
                   return <BadgeIcon name={iconName} size={iconSize} color={tintColor} unreadCount={false} />;
                   // return 
                 },
               }),
-              tabBarComponent: TabBarBottom,
-              tabBarPosition: 'bottom',
+              // tabBarComponent: TabBarBottom,
+              // tabBarPosition: 'bottom',
               tabBarOptions: {
                 activeTintColor: highlightGreen,
                 inactiveTintColor: 'black',
+                showIcon: true,
                 showLabel: false
 
               },

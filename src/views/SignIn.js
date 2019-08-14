@@ -979,13 +979,13 @@ const styles = StyleSheet.create({
 //   },
 
   input: {
-    height: 45, borderRadius: 22.5, backgroundColor: '#fff', 
-    padding: 10, 
+    height: 50, borderRadius: 5, backgroundColor: '#fff', 
+    padding: 3, 
     // justifyContent: 'center', alignItems: 'flex-start',
     ...new shadow(2,2, color = mantisGreen, -1, 1)
 },
 
-  inputText: { fontFamily: 'Avenir Next', fontSize: 20, fontWeight: "500", color: highlightGreen},
+  inputText: { fontFamily: 'Avenir Next', fontSize: 15, fontWeight: "500", color: highlightGreen},
 
   allAuthButtonsContainer: {
     flex: 0.30,

@@ -273,7 +273,7 @@ class BadgeIcon extends React.Component {
     render() {
         return (
           
-            <View style={{ width: 35, height: 35, margin: 5, justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{ width: 35, height: 35, margin: 5, justifyContent: 'center', alignItems: 'center', backgroundColor: 'blue'}}>
                 <Icon name={this.props.name} size={this.props.size} color={this.props.color}/>
                 {/* Now just for chats icon */}
                 { this.state.unreadCount > 0 ?
