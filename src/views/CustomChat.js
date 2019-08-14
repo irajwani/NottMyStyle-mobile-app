@@ -346,7 +346,7 @@ class CustomChat extends Component {
             renderAvatarOnTop={true}
             loadEarlier={false}
           />    
-          <KeyboardAvoidingView behavior={Platform.OS == 'android' ? 'padding' : null} keyboardVerticalOffset={110}/>
+          {/* <KeyboardAvoidingView behavior={Platform.OS == 'android' ? 'padding' : null} keyboardVerticalOffset={110}/> */}
           
         </View>
         </DismissKeyboardView>

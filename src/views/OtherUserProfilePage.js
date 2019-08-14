@@ -153,7 +153,7 @@ class OtherUserProfilePage extends Component {
   }
 
   loadReviews = (otherUserUid) => {
-    this.setState({isGetting: true});
+    // this.setState({isGetting: true});
     firebase.database().ref(`/Users/${otherUserUid}/`).on('value', (snap) => { 
       var d = snap.val();
       var comments = false;
@@ -161,7 +161,7 @@ class OtherUserProfilePage extends Component {
         comments = d.comments;
       }
       //Removed hard code this.state.comments to unhelpful object with one property
-      this.setState({comments, isGetting: false});
+      this.setState({comments});
     })
 
   }
@@ -235,7 +235,8 @@ class OtherUserProfilePage extends Component {
       )
     }
 
-    return (
+    else {
+      return (
       <SafeAreaView style={styles.mainContainer}>
       <View style={styles.linearGradient}>
 
@@ -342,7 +343,7 @@ class OtherUserProfilePage extends Component {
           </View>  
           {!comments ? null : Object.keys(comments).map(
                   (comment) => (
-                  <View key={comment} style={styles.commentContainer}>
+                  <View key={comment} style={[styles.commentContainer, Platform.OS == 'android' ? {borderWidth: 0.5, borderColor: 'black'} : null]}>
 
                       <View style={styles.commentPicAndTextRow}>
 
@@ -476,7 +477,7 @@ class OtherUserProfilePage extends Component {
       
 
 
-    )
+    )}
 
 
   }

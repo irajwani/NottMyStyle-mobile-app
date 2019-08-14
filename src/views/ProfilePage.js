@@ -54,12 +54,12 @@ class ProfilePage extends Component {
 
   constructor(props) {
     super(props);
-    this.gradientColors = {
-      0: ['#7de853','#0baa26', '#064711'],
-      1: ['#7de853','#0baa26', '#064711'],
-      2: ['#7de853','#0baa26', '#064711'],
-      3: ['#7de853','#0baa26', '#064711'],
-    }
+    // this.gradientColors = {
+    //   0: ['#7de853','#0baa26', '#064711'],
+    //   1: ['#7de853','#0baa26', '#064711'],
+    //   2: ['#7de853','#0baa26', '#064711'],
+    //   3: ['#7de853','#0baa26', '#064711'],
+    // }
     this.state = {
       name: '',
       email: '',
@@ -71,9 +71,9 @@ class ProfilePage extends Component {
       products: [],
       isGetting: true,
       noComments: false,
-      gradient: this.gradientColors[0],
+      // gradient: this.gradientColors[0],
       isMenuActive: false,
-      // backgroundColor: this.props.navigation.getParam('backgroundColor', yellowGreen),
+      backgroundColor: yellowGreen,
 
     }
 
@@ -163,9 +163,10 @@ class ProfilePage extends Component {
     console.log(your_uid);
     const keys = [];
     //read the value of refreshed cloud db so a user may seamlessly transition from registration to profile page
-    firebase.database().ref().on("value", async (snapshot) => {
-      var d = snapshot.val();
-      let currentUser = d.Users[your_uid];
+    firebase.database().ref('/Users/' + your_uid + '/').on("value", async (snapshot) => {
+      let currentUser = snapshot.val();
+      // var d = snapshot.val();
+      // let currentUser = d.Users[your_uid];
       // console.log(d.val(), d.Users, your_uid);
 
       //In the scenario where this is the person's first time logging in, update token in the cloud
@@ -214,18 +215,22 @@ class ProfilePage extends Component {
       //   soldProducts = 0;
       //   numberProducts = 0;
       // }
-      
+
+      var backgroundColor = yellowGreen;
+      if(currentUser.color) {
+        backgroundColor = currentUser.color;
+      }
       
       var {country, insta, name, size, uri} = currentUser.profile
 
       var comments;
       if(currentUser.comments) {
         comments = currentUser.comments;
-        this.setState({ name, country, uri, insta, numberProducts, soldProducts, comments, isGetting: false })
+        this.setState({ name, country, uri, insta, numberProducts, soldProducts, backgroundColor, comments, isGetting: false })
         // this.setState({comments})
       }
       else {
-        this.setState({ name, country, uri, insta, numberProducts, soldProducts, noComments: true, isGetting: false })
+        this.setState({ name, country, uri, insta, numberProducts, soldProducts, backgroundColor, noComments: true, isGetting: false })
       }
       
       // console.log(comments);
@@ -432,9 +437,9 @@ class ProfilePage extends Component {
 
   }
 
-  setGradient = (index) => {
-    this.setState({gradient: this.gradientColors[index]})
-  }
+  // setGradient = (index) => {
+  //   this.setState({gradient: this.gradientColors[index]})
+  // }
 
   navToEditProfile = () => {
     this.props.navigation.navigate('CreateProfile', {editProfileBoolean: true})
@@ -446,12 +451,12 @@ class ProfilePage extends Component {
 
   render() {
     var {isGetting, comments, gradient} = this.state;
-    var backgroundColor = this.props.navigation.getParam('backgroundColor', yellowGreen);
+    // var backgroundColor = ;
     // console.log(comments, 'the user has no comments, perfectly harmless');
     // const gradientColors = ["#a2f76c", "#1c3a09"]
     //kinda like this one
     // const gradientColors = ["#c8f966", "#307206", "#1c3a09"]; 
-    const gradientColors = ["#c8f966", "#307206", highlightGreen]; 
+    // const gradientColors = ["#c8f966", "#307206", highlightGreen]; 
 
     
     // const gradientColors = [limeGreen,lightGreen, treeGreen];
@@ -472,7 +477,7 @@ class ProfilePage extends Component {
 
         <View style={styles.linearGradient}>
           
-          <View style={[styles.oval, {backgroundColor: backgroundColor}]}/>
+          <View style={[styles.oval, {backgroundColor: this.props.navigation.getParam('backgroundColor', this.state.backgroundColor)}]}/>
           
           
         
@@ -630,7 +635,7 @@ class ProfilePage extends Component {
           <Text style={styles.reviewsHeader}>REVIEWS</Text>
           {this.state.noComments ? null : Object.keys(comments).map(
                   (comment) => (
-                  <View key={comment} style={styles.commentContainer}>
+                  <View key={comment} style={[styles.commentContainer, Platform.OS == 'android' ? {borderWidth: 0.5, borderColor: 'black'} : null]}>
 
                       <View style={styles.commentPicAndTextRow}>
 

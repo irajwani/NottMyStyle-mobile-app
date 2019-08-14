@@ -1,39 +1,62 @@
 import React, { Component } from 'react'
 import {View, WebView, StyleSheet} from 'react-native'
-
-
-const payPalEndpoint = "https://calm-coast-12842.herokuapp.com", 
-// const payPalEndpoint = "http://localhost:5000",
-finalPrice = 1;
-
+import { ColorWheel } from 'react-native-color-wheel';
 
 export default class Test extends Component {
   constructor(props) {
-    super(props)
-    this.state = {
-      name: 'asjnldbl',
-      description: 'klsfnflfl',
-      sku: 'ae8qe330'
-    }
-  }
+    super(props);
 
-  handleResponse = (data) => {
-    console.log(data)
-    console.log(data.title)
   }
 
   render() {
     return (
-      <View style={styles.container}>
-        <WebView 
-            source={{uri: payPalEndpoint + `/?price=${finalPrice}&name=${this.state.name}&description=${this.state.description}&sku=${this.state.sku}`}} 
-            onNavigationStateChange={data => this.handleResponse(data)}
-            injectedJavaScript={`document.f1.submit()`}
-          />
+      <View style={{flex: 1,}}>
+        <ColorWheel
+          initialColor="#87d720"
+          onColorChange={color => console.log({color})}
+          onColorChangeComplete={color => this.setState({color})}
+          // style={{width: 100, height: 100}}
+          // thumbSize={}
+          thumbStyle={{ height: 10, width: 10, borderRadius: 10}}
+        />
       </View>
     )
   }
 }
+
+
+// const payPalEndpoint = "https://calm-coast-12842.herokuapp.com", 
+// // const payPalEndpoint = "http://localhost:5000",
+// finalPrice = 1;
+
+
+// export default class Test extends Component {
+//   constructor(props) {
+//     super(props)
+//     this.state = {
+//       name: 'asjnldbl',
+//       description: 'klsfnflfl',
+//       sku: 'ae8qe330'
+//     }
+//   }
+
+//   handleResponse = (data) => {
+//     console.log(data)
+//     console.log(data.title)
+//   }
+
+//   render() {
+//     return (
+//       <View style={styles.container}>
+//         <WebView 
+//             source={{uri: payPalEndpoint + `/?price=${finalPrice}&name=${this.state.name}&description=${this.state.description}&sku=${this.state.sku}`}} 
+//             onNavigationStateChange={data => this.handleResponse(data)}
+//             injectedJavaScript={`document.f1.submit()`}
+//           />
+//       </View>
+//     )
+//   }
+// }
 
 // import { Platform, Text, StyleSheet, View, Image, CameraRoll} from 'react-native'
 // import ImageResizer from 'react-native-image-resizer';

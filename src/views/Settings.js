@@ -4,7 +4,9 @@ import { withNavigation } from 'react-navigation';
 
 import firebase from '../cloud/firebase.js';
 
-import Dialog, { DialogTitle, DialogContent, DialogButton, SlideAnimation } from 'react-native-popup-dialog';
+// import Dialog, { DialogTitle, DialogContent, DialogButton, SlideAnimation } from 'react-native-popup-dialog';
+
+import { ColorWheel } from 'react-native-color-wheel';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import { material, iOSUIKit, iOSColors } from 'react-native-typography'
@@ -21,6 +23,7 @@ import { avenirNextText } from '../constructors/avenirNextText.js';
 import { WhiteSpace } from '../localFunctions/visualFunctions.js';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { textStyles } from '../styles/textStyles.js';
+import { hsv2Hex, hsvToHex } from 'colorsys';
 
 const {width} = Dimensions.get('window');
 
@@ -48,14 +51,16 @@ class Settings extends Component {
       collapsed: true,
       modalVisible: false,
       colorDialogVisible: false,
+      color: '#87d720'
     };
+    this.uid = firebase.auth().currentUser.uid;
   }
 
   logOut = () => {
-    firebase.auth().signOut().then( async () => {
-      var statusUpdate = {};
-      statusUpdate['Users/' + this.uid + '/status/'] = "offline";
-      await firebase.database().ref().update(statusUpdate);
+    firebase.auth().signOut().then(() => {
+      // var statusUpdate = {};
+      // statusUpdate['Users/' + this.uid + '/status/'] = "offline";
+      // await firebase.database().ref().update(statusUpdate);
       this.props.navigation.navigate('SignIn');
     })
   }
@@ -72,6 +77,17 @@ class Settings extends Component {
   setSection = section => {
     this.setState({ activeSection: section });
   };
+
+  confirmColor = () => {
+    this.setState({colorDialogVisible: false}, () => {
+      let colorUpdate = {};
+      colorUpdate['/Users/' + this.uid + '/color/'] = this.state.color;
+      let promiseToUpdateColor = firebase.database().ref().update(colorUpdate);
+      promiseToUpdateColor
+      .then( () => this.props.navigation.navigate('ProfilePage', {backgroundColor: this.state.color}) )
+      .catch( err => console.log(err))
+    })
+  }
 
   renderHeader = (section, _, isActive) => {
     return (
@@ -183,30 +199,41 @@ class Settings extends Component {
             <Text style={styles.headerText} onPress={this.logOut}>Log out</Text>
           </View>
 
-          <Dialog
+          <Modal
+            animationType="slide"
+            transparent={false}
             visible={this.state.colorDialogVisible}
-            dialogAnimation={new SlideAnimation({
-            slideFrom: 'top',
-            })}
-            dialogTitle={<DialogTitle title="Select a background color for your profile page:" titleTextStyle={styles.dialogTitle} />}
-            actions={[ 
-            <DialogButton
-            text="OK"
-            onPress={() => {this.setState({ colorDialogVisible: false }, () => {
-              this.props.navigation.navigate('ProfilePage', {backgroundColor: 'red'})
-            });}}
-            />,
-            ]}
-            onTouchOutside={() => {
-            this.setState({ colorDialogVisible: false });
+            onRequestClose={() => {
+              this.setState({colorDialogVisible: false})
+              // Alert.alert('Modal has been closed.');
             }}
           >
-            <DialogContent>
-                <View style={styles.dialogContentContainer}>
-                
-                </View>
-            </DialogContent>
-          </Dialog>
+            <View style={styles.dialogContentContainer}>
+              <View style={styles.dialogHeaderContainer}>
+                <Text style={{...textStyles.generic, color: 'black', fontSize: 22, fontWeight: "500"}}>{this.state.color}</Text>
+                <View style={{width: 60, height: 40, backgroundColor: this.state.color, borderRadius: 10, borderWidth: 1, borderColor: 'black'}}/>
+              </View>
+              
+              <View style={styles.dialogBodyContainer}>
+                <ColorWheel
+                  initialColor="#87d720"
+                  onColorChange={color => console.log(color)}
+                  onColorChangeComplete={color => this.setState({color: hsvToHex(color.h, color.s, color.v)})}
+                  style={{width: 300, height: 300}}
+                  // thumbSize={}
+                  thumbStyle={{ height: 7, width: 7, borderRadius: 7}}
+                />
+              </View>
+
+              <TouchableOpacity 
+              style={styles.dialogButton}
+              onPress={this.confirmColor}>
+                <Text style={styles.dialogTitle}>Confirm</Text>
+              </TouchableOpacity>
+
+            </View>
+          </Modal>
+            
 
         </View>
 
@@ -321,12 +348,37 @@ const styles = StyleSheet.create({
     },
 
     dialogContentContainer: {
-      padding: 5,
-      margin: 10,
+      flex: 1,
+      // padding: 5,
+      // margin: 5,
+      // alignItems: 'center',
+      // justifyContent: 'center'
+      // margin: 10,
+    },
+
+    dialogHeaderContainer: {
+      flex: 0.15,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: 10,
+      alignItems: 'center'
+    },
+
+    dialogBodyContainer: {
+      flex: 0.75,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+
+    dialogButton: {
+      flex: 0.1,
+      backgroundColor: 'black', 
+      alignItems: 'center', justifyContent: 'center'
     },
 
     dialogTitle: {
       ...textStyles.generic,
-      color: 'black'
+      fontSize: 20,
+      color: '#fff'
     }
 })

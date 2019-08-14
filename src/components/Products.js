@@ -50,6 +50,7 @@ const cardHeaderHeight = 200;
 const cardContentHeight = 50
 const cardFull = cardHeaderHeight + cardContentHeight;
 const cardFullPlus = cardFull + 20;
+// const cardFullPlusPlus = cardFullPlus + 10;
 
 const popUpMenuHeight = 35;
 const popUpMenuWidth = 65;
@@ -925,7 +926,7 @@ class Products extends Component {
     return (
       
       <TouchableOpacity
-      style={{height: section.isActive == true ? section.text.name.length > 13 ? cardFullPlus : cardFull : cardHeaderHeight}}
+      style={{height: section.isActive == true ? cardFull : cardHeaderHeight}}
       underlayColor={'transparent'}
       onPress={() => {
         // section.isActive ? this.navToProductDetails(section, this.state.collectionKeys, this.state.productKeys) : null;
@@ -1070,8 +1071,8 @@ class Products extends Component {
                   
                 
                 <Animatable.View style={styles.brandAndSizeCol} transition='backgroundColor'>
-                  <Animatable.Text style={styles.contentCardText} direction={column == 'left' ? 'normal' : 'alternate'} easing={textAnimationEasing} duration={textAnimationDuration} animation={section.isActive ? 'bounceInRight' : undefined}>{section.text.brand}</Animatable.Text>
-                  <Animatable.Text style={[styles.contentCardText]} direction={column == 'left' ? 'normal' : 'alternate'}  easing={textAnimationEasing} duration={textAnimationDuration} animation={section.isActive ? 'bounceInLeft' : undefined}>{section.text.gender == "Accessories" ? "Accessory" : `Size: ${section.text.size.length > 8 ? section.text.size.substring(0,7) + ".." : section.text.size}`}</Animatable.Text>
+                  <Animatable.Text style={styles.contentCardText} direction={column == 'left' ? 'normal' : 'alternate'} easing={textAnimationEasing} duration={textAnimationDuration} animation={section.isActive ? 'bounceInRight' : undefined}>{section.text.name.length > 11 ? section.text.brand.substring(0,9) + '..' : section.text.brand}</Animatable.Text>
+                  <Animatable.Text style={styles.contentCardText} direction={column == 'left' ? 'normal' : 'alternate'}  easing={textAnimationEasing} duration={textAnimationDuration} animation={section.isActive ? 'bounceInLeft' : undefined}>{section.text.gender == "Accessories" ? "Accessory" : `Size: ${section.text.size.length > 8 ? section.text.size.substring(0,7) + ".." : section.text.size}`}</Animatable.Text>
                 </Animatable.View>
 
                 <Animatable.View style={styles.magnifyingGlassCol} transition='backgroundColor'>
@@ -1956,11 +1957,11 @@ const styles = StyleSheet.create({
     //200
     //marginLeft: 2,
     //marginRight: 2,
-    marginTop: 2,
-    paddingTop: 3,
-    // paddingRight: 7,
-    paddingLeft: 7,
-    paddingBottom: 5
+    // marginTop: 2,
+    // paddingTop: 3,
+    paddingRight: 5,
+    paddingLeft: 5,
+    // paddingBottom: 5
   },
   content: {
     padding: 20,
@@ -1969,7 +1970,8 @@ const styles = StyleSheet.create({
 
   contentCardText: {
     ...textStyles.generic,
-    color: 'black'
+    color: 'black',
+    fontSize: 15,
   },
 
   //header Card
