@@ -72,7 +72,8 @@ class ProfilePage extends Component {
       isGetting: true,
       noComments: false,
       gradient: this.gradientColors[0],
-      isMenuActive: false
+      isMenuActive: false,
+      // backgroundColor: this.props.navigation.getParam('backgroundColor', yellowGreen),
 
     }
 
@@ -445,6 +446,7 @@ class ProfilePage extends Component {
 
   render() {
     var {isGetting, comments, gradient} = this.state;
+    var backgroundColor = this.props.navigation.getParam('backgroundColor', yellowGreen);
     // console.log(comments, 'the user has no comments, perfectly harmless');
     // const gradientColors = ["#a2f76c", "#1c3a09"]
     //kinda like this one
@@ -470,7 +472,7 @@ class ProfilePage extends Component {
 
         <View style={styles.linearGradient}>
           
-          <View style={styles.oval}/>
+          <View style={[styles.oval, {backgroundColor: backgroundColor}]}/>
           
           
         
@@ -794,7 +796,7 @@ const styles = StyleSheet.create({
       {scaleX: 2}
     ],
     // top: 10,
-    backgroundColor: yellowGreen
+    // backgroundColor: yellowGreen
   },
 
   iconColumn: {

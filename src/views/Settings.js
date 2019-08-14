@@ -4,6 +4,8 @@ import { withNavigation } from 'react-navigation';
 
 import firebase from '../cloud/firebase.js';
 
+import Dialog, { DialogTitle, DialogContent, DialogButton, SlideAnimation } from 'react-native-popup-dialog';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import { material, iOSUIKit, iOSColors } from 'react-native-typography'
 
@@ -18,6 +20,7 @@ import BackButton from '../components/BackButton';
 import { avenirNextText } from '../constructors/avenirNextText.js';
 import { WhiteSpace } from '../localFunctions/visualFunctions.js';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { textStyles } from '../styles/textStyles.js';
 
 const {width} = Dimensions.get('window');
 
@@ -27,7 +30,7 @@ const profoundPink = '#c64f5f';
 const settings = [ 
   {
     header: 'Personalization',
-    settings: ['Edit Personal Details']
+    settings: ['Edit Personal Details', 'Edit Profile Background Color']
   }, 
   {
     header: 'Support',
@@ -44,6 +47,7 @@ class Settings extends Component {
       activeSection: false,
       collapsed: true,
       modalVisible: false,
+      colorDialogVisible: false,
     };
   }
 
@@ -99,14 +103,17 @@ class Settings extends Component {
     return (
       <Animatable.View
         duration={400}
-        style={[section.settings.length == 1 ? styles.shortContentCard : styles.contentCard, isActive ? styles.active : styles.inactive]}
+        style={[section.settings.length == 2 ? styles.shortContentCard : styles.contentCard, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor"
       >
         {section.settings.map( (setting, index) => (
           <Animatable.Text 
             key={index}
-            onPress={ section.settings.length == 1 ? 
-            () => {this.props.navigation.navigate('CreateProfile', {editProfileBoolean: true})}
+            onPress={ section.settings.length == 2 ?
+            !index ? 
+              () => {this.props.navigation.navigate('CreateProfile', {editProfileBoolean: true})}
+              :
+              () => {this.setState({colorDialogVisible: true})}
             :
             () => { this.setState({ activeDocument: setting, modalVisible: true }) } 
             } 
@@ -176,6 +183,31 @@ class Settings extends Component {
             <Text style={styles.headerText} onPress={this.logOut}>Log out</Text>
           </View>
 
+          <Dialog
+            visible={this.state.colorDialogVisible}
+            dialogAnimation={new SlideAnimation({
+            slideFrom: 'top',
+            })}
+            dialogTitle={<DialogTitle title="Select a background color for your profile page:" titleTextStyle={styles.dialogTitle} />}
+            actions={[ 
+            <DialogButton
+            text="OK"
+            onPress={() => {this.setState({ colorDialogVisible: false }, () => {
+              this.props.navigation.navigate('ProfilePage', {backgroundColor: 'red'})
+            });}}
+            />,
+            ]}
+            onTouchOutside={() => {
+            this.setState({ colorDialogVisible: false });
+            }}
+          >
+            <DialogContent>
+                <View style={styles.dialogContentContainer}>
+                
+                </View>
+            </DialogContent>
+          </Dialog>
+
         </View>
 
         <Modal
@@ -183,7 +215,8 @@ class Settings extends Component {
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
+            this.setState({modalVisible: false})
+            // Alert.alert('Modal has been closed.');
           }}
         >
           <ScrollView style={{flex: 1, padding: 5}} contentContainerStyle={styles.licenseContainer}>
@@ -260,7 +293,8 @@ const styles = StyleSheet.create({
     },
 
     shortContentCard: {
-      height: 50,
+      height: 95,
+      justifyContent: 'space-evenly',
       paddingVertical: 5,
       paddingLeft: 10,
     },
@@ -285,4 +319,14 @@ const styles = StyleSheet.create({
     inactive: {
       backgroundColor: '#fff'
     },
+
+    dialogContentContainer: {
+      padding: 5,
+      margin: 10,
+    },
+
+    dialogTitle: {
+      ...textStyles.generic,
+      color: 'black'
+    }
 })
