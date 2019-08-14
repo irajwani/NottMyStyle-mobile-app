@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Platform, Dimensions, View, Text, TextInput, Image, StyleSheet, ScrollView, ListView, TouchableHighlight, Modal, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView } from 'react-native';
+import { Platform, Dimensions, Alert, View, Text, TextInput, Image, StyleSheet, ScrollView, ListView, TouchableHighlight, Modal, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView } from 'react-native';
 import { Button } from 'react-native-elements';
 import {withNavigation} from 'react-navigation'; // Version can be specified in package.json
 // import { Text,  } from 'native-base';
@@ -49,7 +49,7 @@ const cardWidth = width/2 - 10;
 const cardHeaderHeight = 200;
 const cardContentHeight = 50
 const cardFull = cardHeaderHeight + cardContentHeight;
-const cardFullPlus = cardFull + 25;
+const cardFullPlus = cardFull + 20;
 
 const popUpMenuHeight = 35;
 const popUpMenuWidth = 65;
@@ -925,7 +925,7 @@ class Products extends Component {
     return (
       
       <TouchableOpacity
-      style={{height: section.isActive == true ? section.text.name.length > 7 ? cardFullPlus : cardFull : cardHeaderHeight}}
+      style={{height: section.isActive == true ? section.text.name.length > 13 ? cardFullPlus : cardFull : cardHeaderHeight}}
       underlayColor={'transparent'}
       onPress={() => {
         // section.isActive ? this.navToProductDetails(section, this.state.collectionKeys, this.state.productKeys) : null;
@@ -1123,7 +1123,8 @@ class Products extends Component {
       transparent={true}
       visible={this.state.showFilterModal}
       onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
+        this.setState({showFilterModal: false})
+        // Alert.alert('Modal has been closed.');
       }}
       >
       <View style={[{flex: 1},{backgroundColor: lightBlack }, styles.filterModal, {marginTop: Platform.OS == 'ios' ? 22 : 0}]}>
