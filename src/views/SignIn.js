@@ -684,7 +684,7 @@ class SignIn extends Component {
                     
                     <View style={styles.twoTextInputsContainer}>
                         
-                        {/* <View style={styles.inputContainer}>
+                        <View style={styles.inputContainer}>
 
                             <View style={styles.input}>
                                 <TextInput
@@ -727,9 +727,9 @@ class SignIn extends Component {
                                 
                                 />         
                             </View>
-                        </View> */}
+                        </View>
 
-                        <View style={{paddingVertical: 2}}>
+                        {/* <View style={{paddingVertical: 2}}>
                             <Hoshi
                                 label={'Email Address'}
                                 
@@ -765,7 +765,7 @@ class SignIn extends Component {
                                 ref={ref => this.passInput = ref}
                                 // onSubmitEditing={this.onSignInPress}
                             />
-                        </View>
+                        </View> */}
 
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginVertical: 15, marginHorizontal: 5}}>
                             <View style={{ justifyContent: 'center', alignItems: 'flex-start', marginHorizontal: 5}}>

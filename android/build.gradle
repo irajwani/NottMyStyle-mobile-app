@@ -19,7 +19,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        //maybe it should be 3.4.1
+        //should be 3.4.0 or 3.4.1
         classpath("com.android.tools.build:gradle:3.4.1")
 
         //used to be 4.0.1

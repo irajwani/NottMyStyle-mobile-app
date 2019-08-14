@@ -11,13 +11,13 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
-import com.facebook.react.BuildConfig;
+//import com.facebook.react.BuildConfig;
 
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 //import com.oblador.vectoricons.VectorIconsPackage; dont need to manually link because we use gradle to accomplish this
 import com.BV.LinearGradient.LinearGradientPackage;
-//import org.reactnative.camera.RNCameraPackage;
+import org.reactnative.camera.RNCameraPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 
 import com.pusher.pushnotifications.PushNotifications;
@@ -61,7 +61,7 @@ public class MainApplication extends Application implements ReactApplication {
           new RNGoogleSigninPackage(),
           new FBSDKPackage(mCallbackManager),
           new LinearGradientPackage(),
-//          new RNCameraPackage(),
+          new RNCameraPackage(),
           new RNFetchBlobPackage(),
           new SvgPackage(),
           new ReactNativePushNotificationPackage(),
@@ -85,7 +85,9 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-
+    FacebookSdk.setApplicationId("775950776083601");
+    FacebookSdk.sdkInitialize(this);
+    AppEventsLogger.activateApp(this);
     PushNotifications.start(getApplicationContext(), "9c23a8e4-a4f1-4e41-ab34-e627e7d23d2c");
     PushNotifications.addDeviceInterest("hello");
 
