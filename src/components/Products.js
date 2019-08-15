@@ -57,6 +57,10 @@ const popUpMenuWidth = 65;
 
 // const loadingStrings = ['Acquiring Catalogue of Products...', 'Fetching Marketplace...', 'Loading...', 'Almost there...']
 
+const onlyUnique = (value, index, self) => { 
+  return self.indexOf(value) === index;
+}
+
 const splitArrayIntoArraysOfSuccessiveElements = (array) => {
   var first, second;
   
@@ -469,11 +473,23 @@ class Products extends Component {
     const {...state} = this.state;
     const {selectedBrands, selectedCategory, selectedType, selectedConditions, selectedSize} = state;
 
-    products = selectedBrands.length > 0 ? products.filter( (product) => selectedBrands.includes(product.text.brand)) : products;
-    products = products.filter( (product) => selectedCategory == product.text.gender);
-    products = selectedType ? products.filter( (product) => selectedType == product.text.type ) : products;
-    products = selectedConditions.length > 0 ? products.filter( (product) => selectedConditions.includes(product.text.condition)) : products;
-    products = selectedSize ? products.filter( (product) => selectedSize == product.text.size ) : products;
+    var brandsProducts, categoryProducts, typeProducts, conditionsProducts, sizeProducts;
+    
+    brandsProducts = selectedBrands.length > 0 ? products.filter( (product) => selectedBrands.includes(product.text.brand)) : [];
+    categoryProducts = selectedCategory ? products.filter( (product) => selectedCategory == product.text.gender) : [];
+    typeProducts = selectedType ? products.filter( (product) => selectedType == product.text.type ) : [];
+    conditionsProducts = selectedConditions.length > 0 ? products.filter( (product) => selectedConditions.includes(product.text.condition)) : [];
+    sizeProducts = selectedSize ? products.filter( (product) => selectedSize == product.text.size ) : [];
+
+    brandsProducts = brandsProducts.concat(categoryProducts, typeProducts, conditionsProducts, sizeProducts);
+
+    products = brandsProducts.filter(onlyUnique);
+
+    // products = selectedBrands.length > 0 ? products.filter( (product) => selectedBrands.includes(product.text.brand)) : products;
+    // products = products.filter( (product) => selectedCategory == product.text.gender);
+    // products = selectedType ? products.filter( (product) => selectedType == product.text.type ) : products;
+    // products = selectedConditions.length > 0 ? products.filter( (product) => selectedConditions.includes(product.text.condition)) : products;
+    // products = selectedSize ? products.filter( (product) => selectedSize == product.text.size ) : products;
 
     return products
   }
