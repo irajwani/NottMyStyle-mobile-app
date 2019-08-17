@@ -6,7 +6,7 @@ export default class App extends Component {
   render() {
     console.disableYellowBox = true;
     return (
-      <AuthOrAppSwitch />
+      <Test/>
     );
   }
 }
@@ -22,6 +22,11 @@ export default class App extends Component {
 // import androidx.core.content.FileProvider;
 // import androidx.appcompat.app.AlertDialog;
 // import androidx.core.app.NotificationCompat;
+// import androidx.annotation.Keep;
+// import androidx.core.app.NotificationManagerCompat;
+// import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+// import androidx.core.app.RemoteInput
+// import androidx.annotation.RequiresPermission;
 // place in place of vanilla android support android
 
 //To make a release build

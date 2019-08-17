@@ -1,28 +1,91 @@
 import React, { Component } from 'react'
-import {View, WebView, StyleSheet} from 'react-native'
-import { ColorWheel } from 'react-native-color-wheel';
+import {View, Text, WebView, StyleSheet} from 'react-native'
+import firebase, {Notification, RemoteMessage} from 'react-native-firebase';
 
 export default class Test extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    status: 'false',
+    token: '',
+    notification: '',
+  }
 
+  componentDidMount = async () => {
+    setTimeout(async () => {
+      
+        try {
+          const res = await firebase.messaging().requestPermission();
+          const fcmToken = await firebase.messaging().getToken();
+          if (fcmToken) {
+            this.setState({token: fcmToken})
+            console.log('FCM Token: ', fcmToken);
+            const enabled = await firebase.messaging().hasPermission();
+            if (enabled) {
+              console.log('FCM messaging has permission:' + enabled)
+            } else {
+              try {
+                await firebase.messaging().requestPermission();
+                console.log('FCM permission granted')
+              } catch (error) {
+                console.log('FCM Permission Error', error);
+              }
+            }
+            firebase.notifications().onNotificationDisplayed((notification: Notification) => {
+              // Process your notification as required
+              // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+              this.setState({notification: notification})
+              console.log('Notification: ', notification)
+            });
+            this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
+              this.setState({notification: notification})
+              console.log('Notification: ', notification)
+            });
+          } 
+          
+          else {
+            console.log('FCM Token not available');
+          }
+        } catch (e) {
+          console.log('Error initializing FCM', e);
+        }
+      
+
+    }, 2000);
+    
   }
 
   render() {
     return (
-      <View style={{flex: 1,}}>
-        <ColorWheel
-          initialColor="#87d720"
-          onColorChange={color => console.log({color})}
-          onColorChangeComplete={color => this.setState({color})}
-          // style={{width: 100, height: 100}}
-          // thumbSize={}
-          thumbStyle={{ height: 10, width: 10, borderRadius: 10}}
-        />
+      <View style={styles.container}>
+        <Text style={{fontSize: 30, color: '#fff'}}>{this.state.status} and {this.state.token}</Text>
+        <Text style={{fontSize: 30, color: '#fff'}}>{this.state.notification}</Text>
       </View>
     )
   }
 }
+
+// import { ColorWheel } from 'react-native-color-wheel';
+
+// export default class Test extends Component {
+//   constructor(props) {
+//     super(props);
+
+//   }
+
+//   render() {
+//     return (
+//       <View style={{flex: 1,}}>
+//         <ColorWheel
+//           initialColor="#87d720"
+//           onColorChange={color => console.log({color})}
+//           onColorChangeComplete={color => this.setState({color})}
+//           // style={{width: 100, height: 100}}
+//           // thumbSize={}
+//           thumbStyle={{ height: 10, width: 10, borderRadius: 10}}
+//         />
+//       </View>
+//     )
+//   }
+// }
 
 
 // const payPalEndpoint = "https://calm-coast-12842.herokuapp.com", 
@@ -89,7 +152,9 @@ export default class Test extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'green'
   }
 })
 

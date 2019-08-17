@@ -187,6 +187,13 @@ dependencies {
     implementation project(':react-native-push-notification')
     implementation project(':react-native-spinkit')
 
+    //rn-firebase
+    implementation project(':react-native-firebase')
+    implementation "com.google.android.gms:play-services-base:17.1.0"
+    //rn-firebase-messaging
+    implementation "com.google.firebase:firebase-messaging:18.0.0"
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
+
     //pusher beams
     implementation 'com.google.firebase:firebase-core:17.0.1'
     implementation 'com.google.firebase:firebase-messaging:19.0.1'

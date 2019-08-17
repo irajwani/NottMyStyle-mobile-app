@@ -57,9 +57,9 @@ const popUpMenuWidth = 65;
 
 // const loadingStrings = ['Acquiring Catalogue of Products...', 'Fetching Marketplace...', 'Loading...', 'Almost there...']
 
-const onlyUnique = (value, index, self) => { 
-  return self.indexOf(value) === index;
-}
+// const onlyUnique = (value, index, self) => { 
+//   return self.indexOf(value) === index;
+// }
 
 const splitArrayIntoArraysOfSuccessiveElements = (array) => {
   var first, second;

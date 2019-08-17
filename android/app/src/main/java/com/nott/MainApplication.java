@@ -37,6 +37,11 @@ import com.pusher.pushnotifications.PushNotifications;
 
 import com.react.rnspinkit.RNSpinkitPackage;
 
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+//import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+
 
 
 public class MainApplication extends Application implements ReactApplication {
@@ -67,7 +72,11 @@ public class MainApplication extends Application implements ReactApplication {
           new ReactNativePushNotificationPackage(),
           new RNSpinkitPackage(),
           new ImageResizerPackage(),
-          new ImagePickerPackage()
+          new ImagePickerPackage(),
+          new RNFirebasePackage(),
+          new RNFirebaseMessagingPackage(),
+          new RNFirebaseNotificationsPackage()
+//          new RNFirebaseNotificationsPackage()
       );
     }
 
