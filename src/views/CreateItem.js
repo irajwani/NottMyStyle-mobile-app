@@ -99,6 +99,7 @@ class CreateItem extends Component {
     // } 
 
     this.state = {
+        currency: '',
         uri: undefined,
         name: item ? item.text.name : '',
         brand: item ? item.text.brand : '', //empty or value selected from list of brands
@@ -130,6 +131,26 @@ class CreateItem extends Component {
         /////RESIZE IMAGE STUFF
         resizedImage: false,
     }
+ }
+
+ componentWillMount = async () => {
+    var uid = await firebase.auth().currentUser.uid;
+    firebase.database().ref(`/Users/${uid}/profile/country/`).once('value',(snap)=>{
+        var location = snap.val();
+        var currency;
+        switch(location) {
+            case "UK":
+                currency = '£';
+                break;
+            case "Pakistan":
+                currency = 'PKR';
+                break;
+            default:
+                currency = '$';
+                break;
+        }
+        this.setState({currency});
+    })    
  }
 
 // componentDidMount() {
@@ -185,7 +206,7 @@ class CreateItem extends Component {
 
 //1. Price and Original Price
 navToFillPrice = (typeOfPrice) => {
- this.props.navigation.navigate('PriceSelection', {typeOfPrice: typeOfPrice})
+ this.props.navigation.navigate('PriceSelection', {typeOfPrice: typeOfPrice, currency: this.state.currency})
 }
 
 //2. Type and Condition
@@ -855,7 +876,7 @@ uploadToStore = (pictureuris, uid, postKey) => {
 
                 {original_price > 0 ?
                 <View style={[styles.displayedPriceContainer, {flex: 0.3}]}>
-                    <Text style={styles.displayedPrice}>£{original_price}</Text>
+                    <Text style={styles.displayedPrice}>{this.state.currency+original_price}</Text>
                 </View>
                 :
                 null
@@ -880,25 +901,25 @@ uploadToStore = (pictureuris, uid, postKey) => {
             <TouchableHighlight underlayColor={'#fff'} style={styles.navToFillDetailRow} onPress={() => this.navToFillPrice("sellingPrice")}>
             <View style={[styles.navToFillDetailRow, {borderBottomWidth: 0}]}>
             
-            <View style={[styles.detailHeaderContainer, {flex: price > 0 ? 0.5 : 0.8}]}>
-            <Text style={styles.detailHeader}>Selling price</Text>
-            </View>
+                <View style={[styles.detailHeaderContainer, {flex: price > 0 ? 0.5 : 0.8}]}>
+                    <Text style={styles.detailHeader}>Selling price</Text>
+                </View>
 
-            {price > 0 ?
-            <View style={[styles.displayedPriceContainer, {flex: 0.3}]}>
-            <Text style={[styles.displayedPrice, {color: treeGreen}]}>£{price}</Text>
-            </View>
-            :
-            null
-            }
+                {price > 0 ?
+                    <View style={[styles.displayedPriceContainer, {flex: 0.3}]}>
+                        <Text style={[styles.displayedPrice, {color: treeGreen}]}>{this.state.currency + price}</Text>
+                    </View>
+                :
+                    null
+                }
 
-            <View style={[styles.navToFillDetailIcon, {flex: price > 0 ? 0.2 : 0.2 }]}>
-            <Icon 
-            name="chevron-right"
-            size={40}
-            color='black'
-            />
-            </View>
+                <View style={[styles.navToFillDetailIcon, {flex: price > 0 ? 0.2 : 0.2 }]}>
+                    <Icon 
+                    name="chevron-right"
+                    size={40}
+                    color='black'
+                    />
+                </View>
 
             </View>
             </TouchableHighlight>
@@ -906,7 +927,7 @@ uploadToStore = (pictureuris, uid, postKey) => {
             
             
             <View style={styles.priceAdjustmentReminderContainer}>
-            <Text style={styles.priceAdjustmentReminder}>{priceAdjustmentReminder}</Text>
+                <Text style={styles.priceAdjustmentReminder}>{priceAdjustmentReminder}</Text>
             </View>
 
             
@@ -1075,7 +1096,7 @@ uploadToStore = (pictureuris, uid, postKey) => {
 
                 {post_price > 0 ?
                     <View style={[styles.displayedPriceContainer, {flex: 0.3}]}>
-                        <Text style={styles.displayedPrice}>£{post_price}</Text>
+                        <Text style={styles.displayedPrice}>{this.state.currency + post_price}</Text>
                     </View>
                 :
                     null

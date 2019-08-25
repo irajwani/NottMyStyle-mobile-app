@@ -170,7 +170,7 @@ class ProfilePage extends Component {
       // console.log(d.val(), d.Users, your_uid);
 
       //In the scenario where this is the person's first time logging in, update token in the cloud
-      var token = await AsyncStorage.getItem('token');
+      var token = await AsyncStorage.getItem('fcmToken');
       if(currentUser.pushToken == undefined && token) {
         this.updatePushToken(your_uid, token);
       }

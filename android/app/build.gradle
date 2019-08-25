@@ -113,7 +113,7 @@ android {
         applicationId "com.nott"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 15
+        versionCode 16
         versionName "1.0"
 
         //for r-n-image-crop-picker:
@@ -191,7 +191,8 @@ dependencies {
     implementation project(':react-native-firebase')
     implementation "com.google.android.gms:play-services-base:17.1.0"
     //rn-firebase-messaging
-    implementation "com.google.firebase:firebase-messaging:18.0.0"
+//    implementation "com.google.firebase:firebase-messaging:18.0.0"
+//    implementation "com.google.firebase:firebase-notifications:"
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
 
     //pusher beams

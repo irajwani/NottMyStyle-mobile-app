@@ -54,6 +54,24 @@
 		6AA317682305D3CA00CA331B /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA317672305D3C900CA331B /* libz.tbd */; };
 		6AA3176A2305D3E400CA331B /* QBImagePicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA317692305D3E400CA331B /* QBImagePicker.framework */; };
 		6AA3176C2305D3E400CA331B /* RSKImageCropper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA3176B2305D3E400CA331B /* RSKImageCropper.framework */; };
+		6AEEADA22309B3A200B9B0ED /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEAD622309B3A200B9B0ED /* Octicons.ttf */; };
+		6AEEADA32309B3A200B9B0ED /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEAD632309B3A200B9B0ED /* Feather.ttf */; };
+		6AEEADA42309B3A200B9B0ED /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEAD642309B3A200B9B0ED /* Entypo.ttf */; };
+		6AEEADA52309B3A200B9B0ED /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEAD652309B3A200B9B0ED /* MaterialCommunityIcons.ttf */; };
+		6AEEADA62309B3A200B9B0ED /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEAD662309B3A200B9B0ED /* Foundation.ttf */; };
+		6AEEADA72309B3A200B9B0ED /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEAD672309B3A200B9B0ED /* Ionicons.ttf */; };
+		6AEEADA82309B3A200B9B0ED /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEAD682309B3A200B9B0ED /* FontAwesome.ttf */; };
+		6AEEADA92309B3A200B9B0ED /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEAD692309B3A200B9B0ED /* Zocial.ttf */; };
+		6AEEADAA2309B3A200B9B0ED /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEAD6A2309B3A200B9B0ED /* EvilIcons.ttf */; };
+		6AEEADAB2309B3A200B9B0ED /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEAD6B2309B3A200B9B0ED /* SimpleLineIcons.ttf */; };
+		6AEEADAC2309B3A200B9B0ED /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEAD6C2309B3A200B9B0ED /* MaterialIcons.ttf */; };
+		6AEEADB42309BA0900B9B0ED /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AEEADB32309BA0900B9B0ED /* AddressBook.framework */; };
+		6AEEADB62309BC9C00B9B0ED /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AEEADB52309BC9C00B9B0ED /* FBSDKCoreKit.framework */; };
+		6AEEADB82309BCC000B9B0ED /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AEEADB72309BCC000B9B0ED /* FBSDKLoginKit.framework */; };
+		6AEEADBA2309BCD100B9B0ED /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AEEADB92309BCD100B9B0ED /* FBSDKShareKit.framework */; };
+		6AEEADBC230B3D6C00B9B0ED /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6AEEADBB230B3D6C00B9B0ED /* GoogleSignIn.bundle */; };
+		6AEEADBF230B3D9400B9B0ED /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AEEADBD230B3D9300B9B0ED /* GoogleSignInDependencies.framework */; };
+		6AEEADC0230B3D9400B9B0ED /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AEEADBE230B3D9400B9B0ED /* GoogleSignIn.framework */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
@@ -490,6 +508,24 @@
 		6AA317672305D3C900CA331B /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		6AA317692305D3E400CA331B /* QBImagePicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AA3176B2305D3E400CA331B /* RSKImageCropper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RSKImageCropper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AEEAD622309B3A200B9B0ED /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
+		6AEEAD632309B3A200B9B0ED /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
+		6AEEAD642309B3A200B9B0ED /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
+		6AEEAD652309B3A200B9B0ED /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
+		6AEEAD662309B3A200B9B0ED /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Foundation.ttf; sourceTree = "<group>"; };
+		6AEEAD672309B3A200B9B0ED /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ionicons.ttf; sourceTree = "<group>"; };
+		6AEEAD682309B3A200B9B0ED /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		6AEEAD692309B3A200B9B0ED /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
+		6AEEAD6A2309B3A200B9B0ED /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
+		6AEEAD6B2309B3A200B9B0ED /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
+		6AEEAD6C2309B3A200B9B0ED /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		6AEEADB32309BA0900B9B0ED /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		6AEEADB52309BC9C00B9B0ED /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = Frameworks/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		6AEEADB72309BCC000B9B0ED /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = Frameworks/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		6AEEADB92309BCD100B9B0ED /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = Frameworks/FBSDKShareKit.framework; sourceTree = "<group>"; };
+		6AEEADBB230B3D6C00B9B0ED /* GoogleSignIn.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GoogleSignIn.bundle; sourceTree = "<group>"; };
+		6AEEADBD230B3D9300B9B0ED /* GoogleSignInDependencies.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignInDependencies.framework; sourceTree = "<group>"; };
+		6AEEADBE230B3D9400B9B0ED /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignIn.framework; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
@@ -510,10 +546,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AEEADB82309BCC000B9B0ED /* FBSDKLoginKit.framework in Frameworks */,
+				6AEEADB42309BA0900B9B0ED /* AddressBook.framework in Frameworks */,
 				6AA3176A2305D3E400CA331B /* QBImagePicker.framework in Frameworks */,
 				6AA3176C2305D3E400CA331B /* RSKImageCropper.framework in Frameworks */,
 				6AA317682305D3CA00CA331B /* libz.tbd in Frameworks */,
 				6AA317662305D39D00CA331B /* SafariServices.framework in Frameworks */,
+				6AEEADBF230B3D9400B9B0ED /* GoogleSignInDependencies.framework in Frameworks */,
 				6AA317642305D38F00CA331B /* SystemConfiguration.framework in Frameworks */,
 				6AA317622305D38700CA331B /* LocalAuthentication.framework in Frameworks */,
 				6AA317552305D37300CA331B /* libBVLinearGradient.a in Frameworks */,
@@ -523,8 +562,10 @@
 				6AA317592305D37300CA331B /* libRCTImageResizer.a in Frameworks */,
 				6AA3175A2305D37300CA331B /* libRCTPushNotification.a in Frameworks */,
 				6AA3175B2305D37300CA331B /* libRNCamera.a in Frameworks */,
+				6AEEADC0230B3D9400B9B0ED /* GoogleSignIn.framework in Frameworks */,
 				6AA3175C2305D37300CA331B /* libRNFetchBlob.a in Frameworks */,
 				6AA3175D2305D37300CA331B /* libRNGoogleSignin.a in Frameworks */,
+				6AEEADBA2309BCD100B9B0ED /* FBSDKShareKit.framework in Frameworks */,
 				6AA3175E2305D37300CA331B /* libRNSpinkit.a in Frameworks */,
 				6AA3175F2305D37300CA331B /* libRNSVG.a in Frameworks */,
 				6AA317602305D37300CA331B /* libRNVectorIcons.a in Frameworks */,
@@ -534,6 +575,7 @@
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
+				6AEEADB62309BC9C00B9B0ED /* FBSDKCoreKit.framework in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
@@ -690,6 +732,12 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6AEEADBE230B3D9400B9B0ED /* GoogleSignIn.framework */,
+				6AEEADBD230B3D9300B9B0ED /* GoogleSignInDependencies.framework */,
+				6AEEADB92309BCD100B9B0ED /* FBSDKShareKit.framework */,
+				6AEEADB72309BCC000B9B0ED /* FBSDKLoginKit.framework */,
+				6AEEADB52309BC9C00B9B0ED /* FBSDKCoreKit.framework */,
+				6AEEADB32309BA0900B9B0ED /* AddressBook.framework */,
 				6AA317692305D3E400CA331B /* QBImagePicker.framework */,
 				6AA3176B2305D3E400CA331B /* RSKImageCropper.framework */,
 				6AA317672305D3C900CA331B /* libz.tbd */,
@@ -812,6 +860,25 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6AEEAD612309B3A200B9B0ED /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				6AEEAD622309B3A200B9B0ED /* Octicons.ttf */,
+				6AEEAD632309B3A200B9B0ED /* Feather.ttf */,
+				6AEEAD642309B3A200B9B0ED /* Entypo.ttf */,
+				6AEEAD652309B3A200B9B0ED /* MaterialCommunityIcons.ttf */,
+				6AEEAD662309B3A200B9B0ED /* Foundation.ttf */,
+				6AEEAD672309B3A200B9B0ED /* Ionicons.ttf */,
+				6AEEAD682309B3A200B9B0ED /* FontAwesome.ttf */,
+				6AEEAD692309B3A200B9B0ED /* Zocial.ttf */,
+				6AEEAD6A2309B3A200B9B0ED /* EvilIcons.ttf */,
+				6AEEAD6B2309B3A200B9B0ED /* SimpleLineIcons.ttf */,
+				6AEEAD6C2309B3A200B9B0ED /* MaterialIcons.ttf */,
+			);
+			name = Fonts;
+			path = "../node_modules/react-native-vector-icons/Fonts";
+			sourceTree = "<group>";
+		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -864,6 +931,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				6AEEADBB230B3D6C00B9B0ED /* GoogleSignIn.bundle */,
+				6AEEAD612309B3A200B9B0ED /* Fonts */,
 				13B07FAE1A68108700A75B9A /* NottMyStyle */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* NottMyStyleTests */,
@@ -1505,6 +1574,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				6AEEADAA2309B3A200B9B0ED /* EvilIcons.ttf in Resources */,
+				6AEEADA62309B3A200B9B0ED /* Foundation.ttf in Resources */,
+				6AEEADA92309B3A200B9B0ED /* Zocial.ttf in Resources */,
+				6AEEADAC2309B3A200B9B0ED /* MaterialIcons.ttf in Resources */,
+				6AEEADA72309B3A200B9B0ED /* Ionicons.ttf in Resources */,
+				6AEEADAB2309B3A200B9B0ED /* SimpleLineIcons.ttf in Resources */,
+				6AEEADA22309B3A200B9B0ED /* Octicons.ttf in Resources */,
+				6AEEADA32309B3A200B9B0ED /* Feather.ttf in Resources */,
+				6AEEADA82309B3A200B9B0ED /* FontAwesome.ttf in Resources */,
+				6AEEADA42309B3A200B9B0ED /* Entypo.ttf in Resources */,
+				6AEEADA52309B3A200B9B0ED /* MaterialCommunityIcons.ttf in Resources */,
+				6AEEADBC230B3D6C00B9B0ED /* GoogleSignIn.bundle in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1668,6 +1749,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 83T6KRJL5P;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = NottMyStyle/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1687,6 +1773,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 83T6KRJL5P;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = NottMyStyle/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (

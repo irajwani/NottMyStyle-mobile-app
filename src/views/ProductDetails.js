@@ -90,6 +90,7 @@ class ProductDetails extends Component {
     this.state = {
       isGetting: true,
       cloudDatabaseUsers: false,
+      currency: this.props.navigation.state.params.currency,
       profile: {
         name: '',
         email: '',
@@ -1338,7 +1339,7 @@ class ProductDetails extends Component {
         visible={this.state.showPurchaseModal}
         >
           <WebView 
-            source={{uri: payPalEndpoint + `/?price=${finalPrice}&name=${this.state.name}&description=${this.state.description}&sku=${this.state.sku}`}} 
+            source={{uri: payPalEndpoint + `/?price=${finalPrice}&name=${this.state.name}&description=${this.state.description}&sku=${this.state.sku}&currency=${this.state.currency}`}} 
             onNavigationStateChange={data => this.handleResponse(data)}
             injectedJavaScript={`document.f1.submit()`}
           />
@@ -1519,16 +1520,16 @@ class ProductDetails extends Component {
             {text.original_price > 0 ?
               <View style={[styles.priceContainer]}>
                 <Text style={[styles.original_price, {color: 'black', textDecorationLine: 'line-through',}]} >
-                  £{text.original_price}
+                  {this.state.currency + text.original_price}
                 </Text>
                 <Text style={[styles.original_price, {color: limeGreen}]} >
-                  £{text.price}
+                  {this.state.currency + text.price}
                 </Text>
               </View>
             :
               <View style={[styles.priceContainer]}>
                 <Text style={[styles.original_price, {fontSize: 22, color: limeGreen}]} >
-                  £{text.price}
+                  {this.state.currency + text.price}
                 </Text>
               </View>
             }

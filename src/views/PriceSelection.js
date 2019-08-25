@@ -13,7 +13,13 @@ export default class PriceSelection extends Component {
           price: 0,
           original_price: 0,
           post_price: 0,
+          currency: ''
       }
+  }
+
+  componentDidMount = () => {
+    const currency = this.props.navigation.getParam('currency', '£');
+    this.setState({currency});
   }
   
   navToCreateItem = (typeOfPrice) => {
@@ -24,6 +30,7 @@ export default class PriceSelection extends Component {
   render() {
     const {navigation} = this.props;
     const typeOfPrice = navigation.getParam('typeOfPrice', 'sellingPrice');
+    const {currency} = this.state;
     // console.log(( (this.state.price > 0) && (Number.isFinite(this.state.price)) ) || ( (this.state.original_price > 0) && (Number.isFinite(this.state.original_price)) ));
 
     return (
@@ -51,7 +58,7 @@ export default class PriceSelection extends Component {
         <View style={styles.selectionContainer}>
 
             <TextInput 
-                placeholder={typeOfPrice == "sellingPrice" ? 'Selling Price (£)' : typeOfPrice == "retailPrice" ? 'Original price of this item (£)' : 'Estimated cost of postal services (£)'}
+                placeholder={typeOfPrice == "sellingPrice" ? `Selling Price (${currency})` : typeOfPrice == "retailPrice" ? `Original price of this item (${currency})` : `Estimated cost of postal services (${currency})`}
                 placeholderTextColor={lightGray}
                 value={typeOfPrice == "sellingPrice" ? this.state.price : typeOfPrice == "retailPrice" ? this.state.original_price : this.state.post_price}
                 maxLength={typeOfPrice == "postPrice" ? 2 : 3}

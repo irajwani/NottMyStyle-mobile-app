@@ -19,6 +19,7 @@ import { center } from '../constructors/center.js';
 import ImageResizer from 'react-native-image-resizer';
 
 const {width, height} = Dimensions.get('window');
+const resizedWidth = 4000, resizedHeight = 4000;
 
 // TODO: store these in common file as thumbnail spec for image resizing
 const maxWidth = 320, maxHeight = 320, suppressionLevel = 0;
@@ -27,7 +28,7 @@ const info = "In order to sign up, ensure that the values you input meet the fol
 const limeGreen = '#2e770f';
 
 // const locations = [{country: "UK", flag: "🇬🇧"},{country: "Pakistan", flag: "🇵🇰"},{country: "USA", flag: "🇺🇸"}]
-const locations = [{country: "UK", flag: "uk"},{country: "Pakistan", flag: "pk"},{country: "USA", flag: "usa"}]
+const locations = [{country: "UK", flag: "uk"},{country: "Pakistan", flag: "pk"},{country: "USA", flag: "usa"}];
 
 
 const Blob = RNFetchBlob.polyfill.Blob;
@@ -338,7 +339,7 @@ class CreateProfile extends Component {
         }
         else {
             console.log('user has chosen picture manually through photo lib or camera.')
-            let resizedImage = await ImageResizer.createResizedImage(uri,3000, 3000,'JPEG',suppressionLevel);
+            let resizedImage = await ImageResizer.createResizedImage(uri,resizedWidth, resizedHeight,'JPEG',suppressionLevel);
             const uploadUri = Platform.OS === 'ios' ? resizedImage.uri.replace('file://', '') : resizedImage.uri
             let uploadBlob = null
             const imageRef = firebase.storage().ref().child(`Users/${uid}/profile`);
@@ -478,7 +479,7 @@ class CreateProfile extends Component {
         }
         else {
             console.log('user has chosen picture manually through photo lib or camera, store it on cloud and generate a URL for it.')
-            let resizedImage = await ImageResizer.createResizedImage(uri,3000, 3000,'JPEG',suppressionLevel);
+            let resizedImage = await ImageResizer.createResizedImage(uri,resizedWidth, resizedHeight,'JPEG',suppressionLevel);
             const uploadUri = Platform.OS === 'ios' ? resizedImage.uri.replace('file://', '') : resizedImage.uri
             let uploadBlob = null
             const imageRef = firebase.storage().ref().child(`Users/${uid}/profile`);
@@ -589,10 +590,10 @@ class CreateProfile extends Component {
                         this.setState({country: location.country}, this.toggleShowCountrySelect)
                     }} 
                     style={[{flexDirection: 'row'}, {borderBottomColor: '#fff', borderBottomWidth: 1}]}>
-                        <View style={{margin: 5, ...new center()}}>
+                        <View style={styles.specificLocationContainer}>
                             <Image style={{width: 20, height: 20}} source={ location.flag == "usa" ? require('../images/usa.png') : location.flag == "uk" ? require('../images/uk.png') : require('../images/pk.png') }/>
                         </View>
-                        <View style={{margin: 5, ...new center()}}>
+                        <View style={styles.specificLocationContainer}>
                             <Text style={new avenirNextText("#fff", 20, "300")}>{location.country}</Text>
                         </View>
                     </TouchableOpacity>
@@ -1105,6 +1106,8 @@ const styles = StyleSheet.create({
         // paddingVertical: 5,
         // paddingHorizontal: 10
     },
+
+    specificLocationContainer: {margin: 5, justifyContent: 'center', alignItems: 'center'},
 
     modal: {flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center', padding: 10, marginTop: 22},
     modalHeader: {

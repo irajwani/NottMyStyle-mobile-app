@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import {View, Text, WebView, StyleSheet} from 'react-native'
-import firebase, {Notification, RemoteMessage} from 'react-native-firebase';
+import {View, Text, WebView, AsyncStorage, StyleSheet} from 'react-native'
+import firebase, {RemoteMessage} from 'react-native-firebase';
+// import type { Notification } from 'react-native-firebase';
+
 
 export default class Test extends Component {
   state = {
@@ -9,48 +11,104 @@ export default class Test extends Component {
     notification: '',
   }
 
-  componentDidMount = async () => {
-    setTimeout(async () => {
-      
-        try {
-          const res = await firebase.messaging().requestPermission();
-          const fcmToken = await firebase.messaging().getToken();
-          if (fcmToken) {
-            this.setState({token: fcmToken})
-            console.log('FCM Token: ', fcmToken);
-            const enabled = await firebase.messaging().hasPermission();
-            if (enabled) {
-              console.log('FCM messaging has permission:' + enabled)
-            } else {
-              try {
-                await firebase.messaging().requestPermission();
-                console.log('FCM permission granted')
-              } catch (error) {
-                console.log('FCM Permission Error', error);
-              }
-            }
-            firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-              // Process your notification as required
-              // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
-              this.setState({notification: notification})
-              console.log('Notification: ', notification)
-            });
-            this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-              this.setState({notification: notification})
-              console.log('Notification: ', notification)
-            });
-          } 
+  async componentDidMount() {
+    this.checkPermission();
+    this.createNotificationChannel();
+    this.createNotificationListeners();
+  }
+
+  createNotificationChannel = async () => {
+    const channel = new firebase.notifications.Android.Channel('test-channel', 'Test Channel', firebase.notifications.Android.Importance.Max)
+      .setDescription('My apps test channel');
+
+      // Create the channel
+    await firebase.notifications().android.createChannel(channel);
+  }
+
+  createNotificationListeners = async () => {
+
+    this.removeNotificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
+      // Process your notification as required
+      //iOS Only
+      // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+      this.setState({notification: "rNDL"})
+      console.log('Notification: ', notification)
+    });
+
+    this.removeNotificationListener = firebase.notifications().onNotification((notification) => {
+      this.setState({notification: "rNL"})
+      console.log("Standard Notification + Optional Data Notification");
+      console.log('Notification: ', notification)
+    });
+
+    /*
+    * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
+    * */
+    this.removeNotificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+        const { title, body } = notificationOpen.notification;
+        this.setState({notification: "rNOL"})
+        console.log(title, body);
+        // this.showAlert(title, body);
+    });
+
+
+    const notificationOpen = await firebase.notifications().getInitialNotification();
+    if (notificationOpen) {
+        const { title, body } = notificationOpen.notification;
+        console.log("App was closed and user interacted with it through notif.");
+        console.log(title, body);
+        // this.showAlert(title, body);
+    }
+
+    this.messageListener = firebase.messaging().onMessage((message) => {
+      //process data message
+      console.log(JSON.stringify(message));
+    });
           
-          else {
-            console.log('FCM Token not available');
-          }
-        } catch (e) {
-          console.log('Error initializing FCM', e);
-        }
+        
       
 
-    }, 2000);
-    
+  }
+
+
+  async checkPermission() {
+    const enabled = await firebase.messaging().hasPermission();
+    if (enabled) {
+        this.getToken();
+    } else {
+        this.requestPermission();
+    }
+  }
+
+    //3
+  async getToken() {
+    let fcmToken = await AsyncStorage.getItem('fcmToken');
+    console.log(fcmToken);
+    if (!fcmToken) {
+        fcmToken = await firebase.messaging().getToken();
+        if (fcmToken) {
+            // user has a device token
+            await AsyncStorage.setItem('fcmToken', fcmToken);
+        }
+    }
+  }
+
+    //2
+  async requestPermission() {
+    try {
+        await firebase.messaging().requestPermission();
+        // User has authorised
+        this.getToken();
+    } catch (error) {
+        // User has rejected permissions
+        console.log('permission rejected');
+    }
+  }
+
+  componentWillUnmount() {
+    this.removeNotificationDisplayedListener();
+    this.removeNotificationOpenedListener();
+    this.removeNotificationListener();
   }
 
   render() {
