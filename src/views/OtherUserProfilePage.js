@@ -9,24 +9,24 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Button, Divider} from 'react-native-elements'
 // import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import firebase from '../cloud/firebase.js';
-import { iOSColors, iOSUIKit, human,  } from 'react-native-typography';
+import { iOSColors,  } from 'react-native-typography';
 // import LinearGradient from 'react-native-linear-gradient'
 // import ReviewsList from '../components/ReviewsList.js';
 // import { PacmanIndicator } from 'react-native-indicators';
-import { bobbyBlue, lightGreen, highlightGreen, graphiteGray, flashOrange, avenirNext, coolBlack, yellowGreen } from '../colors.js';
+import { highlightGreen, yellowGreen } from '../colors.js';
 
 import {removeFalsyValuesFrom} from '../localFunctions/arrayFunctions.js'
 import { LoadingIndicator, ProfileMinutia } from '../localFunctions/visualFunctions.js';
-import { avenirNextText } from '../constructors/avenirNextText.js';
+// import { avenirNextText } from '../constructors/avenirNextText.js';
 // import { Hoshi, Sae } from 'react-native-textinput-effects';
 // import { TextField } from 'react-native-material-textfield';
 import ProgressiveImage from '../components/ProgressiveImage';
 
 import { textStyles } from '../styles/textStyles.js';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
-const resizeMode = 'center';
+// const resizeMode = 'center';
 
 const DismissKeyboardView = ({children}) => (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -40,12 +40,12 @@ const ButtonContainer = ({children}) => (
   </View>
 )
 
-const BlackCircleWithCount = ({count, left}) => (
-  <View style={[styles.smallBlackCircle]}>
-    <Text style={{fontFamily: 'Avenir Next', fontWeight: "700", fontSize: 12, color:'#fff'}}>{count}</Text>
-  </View>
+// const BlackCircleWithCount = ({count, left}) => (
+//   <View style={[styles.smallBlackCircle]}>
+//     <Text style={{fontFamily: 'Avenir Next', fontWeight: "700", fontSize: 12, color:'#fff'}}>{count}</Text>
+//   </View>
 
-)
+// )
 
 class OtherUserProfilePage extends Component {
 
@@ -124,6 +124,7 @@ class OtherUserProfilePage extends Component {
       // console.log(yourUsersBlocked);
 
       let profile = d[otherUserUid].profile;
+      let color = d[otherUserUid].color ? d[otherUserUid].color : yellowGreen;
       let {name, country, insta, uri} = profile;
 
       //get collection keys of current user
@@ -131,24 +132,25 @@ class OtherUserProfilePage extends Component {
       // var rawCollection = collection ? collection : {}
       // var collectionKeys = removeFalsyValuesFrom(rawCollection);  
 
-      var soldProducts = 0, numberProducts = 0;
-      //get profile data of seller of product
-      if(typeof d[otherUserUid].products === 'object') {
-        for(var p of Object.values(d[otherUserUid].products)) {
-          if(p.sold) {
-            soldProducts++
-          }
-        }
+      //TODO: Revive if you need the count again
+      // var soldProducts = 0, numberProducts = 0;
+      // //get profile data of seller of product
+      // if(typeof d[otherUserUid].products === 'object') {
+      //   for(var p of Object.values(d[otherUserUid].products)) {
+      //     if(p.sold) {
+      //       soldProducts++
+      //     }
+      //   }
         
-        var numberProducts = Object.keys(d[otherUserUid].products).length;
-      }
+      //   var numberProducts = Object.keys(d[otherUserUid].products).length;
+      // }
       
 
       // var date = (new Date()).getDate();
       // var month = (new Date()).getMonth();
       // var year = (new Date()).getFullYear();
 
-      this.setState({yourProfile, usersBlocked: yourUsersBlocked, yourUid: yourUid, otherUserUid: otherUserUid, profile, name, country, insta, uri, soldProducts, numberProducts, isGetting: false})
+      this.setState({yourProfile, usersBlocked: yourUsersBlocked, yourUid: yourUid, otherUserUid: otherUserUid, profile, name, country, insta, uri, color, isGetting: false})
     })
   }
 
@@ -218,7 +220,7 @@ class OtherUserProfilePage extends Component {
 
   render() {
 
-    const {report, name, country, insta, uri, usersBlocked, soldProducts, numberProducts, comments, yourUid, otherUserUid} = this.state;
+    const {report, name, country, insta, uri, color, usersBlocked, comments, yourUid, otherUserUid} = this.state;
     // const {params} = this.props.navigation.state;
     // const {uid} = params; //otherUserUid
     // console.log(usersBlocked, uid, usersBlocked.includes(uid));
@@ -240,7 +242,7 @@ class OtherUserProfilePage extends Component {
       <SafeAreaView style={styles.mainContainer}>
       <View style={styles.linearGradient}>
 
-        <View style={styles.oval}/>
+        <View style={[styles.oval, {backgroundColor: color}]}/>
 
 
         <View style={styles.topContainer}>
@@ -564,7 +566,7 @@ const styles = StyleSheet.create({
       {scaleX: 2}
     ],
     // top: 10,
-    backgroundColor: yellowGreen
+    // backgroundColor: yellowGreen
   },
 
   iconColumn: {

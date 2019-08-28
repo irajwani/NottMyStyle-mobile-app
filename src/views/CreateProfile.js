@@ -325,6 +325,7 @@ class CreateProfile extends Component {
     updates['/Users/' + uid + '/profile/'] = postData; 
     // updates['/Users/' + uid + '/status/'] = 'offline';
     updates['/Users/' + uid + '/products/'] = '';
+    updates['/Users/' + uid + '/appUsage/'] = 0;
     //Now we have a user who may go through the app without components crashing
     
     let promiseToUploadPhoto = new Promise(async (resolve, reject) => {

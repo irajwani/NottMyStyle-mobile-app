@@ -14,6 +14,12 @@ export default class AuthLoadingScreen extends Component {
     this.showAppOrAuth();
   }
 
+  // updateAppUse = () => {
+  //   let updates = {};
+  //   updates[`/Users/${this.uid}/appUse/`] 
+  //   firebase.database().ref().update(updates);
+  // }
+
   updateOnConnect = () => {
     var connectionRef = firebase.database().ref('.info/connected');
     // var disconnectionRef = firebase.database().ref().onDisconnect();
@@ -54,19 +60,22 @@ export default class AuthLoadingScreen extends Component {
   showAppOrAuth = () => {
     var unsubscribe = firebase.auth().onAuthStateChanged( async ( user ) => {
         unsubscribe();
-        this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
+        // If you want to get back to basic, re-enable this:
+        // this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
+        
         //If you want to re-enable presence checker in future
-        // if(user) {
-        //   console.log("USER IS: " + user);
-        //   this.uid = await user.uid;
-        //   await this.updateOnConnect();
-        //   this.props.navigation.navigate('AppStack');
-        // }
-        // else {
-        //   console.log("USER DISCONNECTED")
-        //   await this.updateOnConnect();
-        //   this.props.navigation.navigate('AuthStack');
-        // }
+        if(user) {
+          console.log("USER IS: " + user);
+          this.uid = await user.uid;
+          await this.updateOnConnect();
+          // await this.updateAppUse();
+          this.props.navigation.navigate('AppStack');
+        }
+        else {
+          console.log("USER DISCONNECTED")
+          await this.updateOnConnect();
+          this.props.navigation.navigate('AuthStack');
+        }
 
         
 

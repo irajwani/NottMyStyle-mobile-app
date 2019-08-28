@@ -137,6 +137,7 @@ class CreateItem extends Component {
     var uid = await firebase.auth().currentUser.uid;
     firebase.database().ref(`/Users/${uid}/profile/country/`).once('value',(snap)=>{
         var location = snap.val();
+        location = location.replace(/\s+/g, '').split(',')[1]
         var currency;
         switch(location) {
             case "UK":

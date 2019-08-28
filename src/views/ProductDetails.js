@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, TouchableWithoutFeedback, Keyboard, ScrollView, SafeAreaView, View, Text, TextInput, Image, TouchableHighlight, TouchableOpacity, Modal, Dimensions, StyleSheet, Linking, WebView } from 'react-native';
+import { Platform, TouchableWithoutFeedback, Keyboard, Animated, ScrollView, SafeAreaView, View, Text, TextInput, Image, TouchableHighlight, TouchableOpacity, Modal, Dimensions, StyleSheet, Linking, WebView } from 'react-native';
 
 import PushNotification from 'react-native-push-notification';
 // import {initializePushNotifications} from '../Services/NotificationService'
@@ -25,7 +25,7 @@ import { iOSColors } from 'react-native-typography';
 import Chatkit from "@pusher/chatkit-client";
 import { CHATKIT_INSTANCE_LOCATOR, CHATKIT_TOKEN_PROVIDER_ENDPOINT, CHATKIT_SECRET_KEY } from '../credentials/keys.js';
 import email from 'react-native-email';
-import { lightGreen, highlightGreen, treeGreen, graphiteGray, rejectRed, darkBlue, profoundPink, aquaGreen, bobbyBlue, mantisGreen, logoGreen, lightGray } from '../colors';
+import { almostWhite,lightGreen, highlightGreen, treeGreen, graphiteGray, rejectRed, darkBlue, profoundPink, aquaGreen, bobbyBlue, mantisGreen, logoGreen, lightGray } from '../colors';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 // import BackButton from '../components/BackButton';
 import { avenirNextText, delOpt, deliveryOptions } from '../constructors/avenirNextText';
@@ -42,6 +42,8 @@ const modalAnimationType = "slide";
 const paymentScreensIconSize = 45;
 const payPalEndpoint = "https://calm-coast-12842.herokuapp.com";
 // const payPalEndpoint = "https://localhost:5000";
+
+const inputRange = [0, 160, 280];
 
 const chatIcon = {
   title: 'Chat',
@@ -124,7 +126,10 @@ class ProductDetails extends Component {
       postOrNah: 'post',
 
       //Ability to chat with individual selling this product
-      canChatWithOtherUser: false
+      canChatWithOtherUser: false,
+
+      //stylistic stuff
+      scrollY: new Animated.Value(0)
     }
   }
 
@@ -1423,7 +1428,45 @@ class ProductDetails extends Component {
     
   }
 
+   _getHeaderColor = () => {
+    const {scrollY} = this.state;
+
+    return scrollY.interpolate({
+        inputRange,
+        outputRange: ['transparent', 'transparent', logoGreen],
+        extrapolate: 'clamp',
+        useNativeDriver: true
+    });
+  }
+
+  _getArrowColor = () => {
+    const {scrollY} = this.state;
+
+    return scrollY.interpolate({
+        inputRange,
+        outputRange: ['#fff', almostWhite, 'black'],
+        extrapolate: 'clamp',
+        useNativeDriver: true
+    });
+  }
+
+  _getHeaderLogoOpacity = () => {
+      const {scrollY} = this.state;
+
+      return scrollY.interpolate({
+          inputRange,
+          outputRange: [0, 0.1, 1],
+          extrapolate: 'clamp',
+          useNativeDriver: true
+      });
+
+  };
+
   render() {
+    const headerLogoOpacity = this._getHeaderLogoOpacity();
+    const headerColor = this._getHeaderColor();
+    // const arrowColor = this._getArrowColor();
+
     const { params } = this.props.navigation.state, { data, productKeys } = params, 
     { isGetting, profile, navToChatLoading, productComments, uid, collectionKeys } = this.state,
     {text} = data,
@@ -1460,25 +1503,37 @@ class ProductDetails extends Component {
 
     return (
       <SafeAreaView style={styles.mainContainer}>
-      <View style={styles.deliveryOptionHeader}>
+      {/* Header Bar */}
+      <Animated.View style={[styles.deliveryOptionHeader, {position: "absolute",zIndex: 1,width: "100%",backgroundColor: headerColor}]}>
         <FontAwesomeIcon
         name='arrow-left'
         size={30}
-        color={'black'}
+        color={"#fff"}
         onPress = { () => { 
             this.props.navigation.goBack();
             } }
         />
 
-        <Image style={styles.logo} source={require("../images/nottmystyleLogo.png")}/>
+        <Animated.Image style={{...styles.logo, opacity: headerLogoOpacity}} source={require("../images/nottmystyleLogo.png")}/>
             
         <FontAwesomeIcon
           name='close'
-          size={28}
-          color={logoGreen}
+          size={30}
+          color={'transparent'}
         />
-      </View>
-      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentContainer}>
+      </Animated.View>
+
+      <Animated.ScrollView 
+      onScroll={Animated.event(
+        [
+          {
+            nativeEvent: {contentOffset: {y: this.state.scrollY}}
+          }
+        ]
+      )}
+      style={styles.scrollContainer} 
+      contentContainerStyle={styles.contentContainer}
+      >
         
         {/* image carousel in center with back button on its left */}
         
@@ -1741,7 +1796,7 @@ class ProductDetails extends Component {
         {this.renderReportUserModal()}
         {this.renderPurchaseModal()}
         {/* {this.r()} */}
-      </ScrollView> 
+      </Animated.ScrollView> 
       </SafeAreaView>
     );
   }
@@ -2141,6 +2196,7 @@ deliveryOptionHeader: {
   alignItems: 'center',
   flexDirection: 'row',
   paddingHorizontal: 12,
+  
 },
 backIconContainer: {
   flex: 0.4,

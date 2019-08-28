@@ -337,6 +337,7 @@ class Products extends Component {
     firebase.database().ref().on('value', (snapshot) => {
       var {Products, Users} = snapshot.val();
       var location = Users[uid].profile.country;
+      location = location.replace(/\s+/g, '').split(',')[1]
       var currency;
       switch(location) {
         case "UK":
