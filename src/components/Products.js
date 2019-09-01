@@ -344,7 +344,7 @@ class Products extends Component {
           currency = '£';
           break;
         case "Pakistan":
-          currency = 'PKR';
+          currency = 'Rs.';
           break;
         default:
           currency = '$';

@@ -1679,7 +1679,7 @@ class ProductDetails extends Component {
               { Object.keys(details).map( (key, index) => ( 
                 <Text style={[styles.detailsText]} key={index}>
                 {/* {key.replace(key.charAt(0), key.charAt(0).toUpperCase())}: {details[key]} */}
-                {index == 5 ? details[key] > 0 ? `Price of Post: £${details[key]}` : null : `${key.replace(key.charAt(0), key.charAt(0).toUpperCase())}: ${details[key]}`}
+                {index == 5 ? details[key] > 0 ? `Price of Post: ${this.state.currency + details[key]}` : null : `${key.replace(key.charAt(0), key.charAt(0).toUpperCase())}: ${details[key]}`}
                 {/* {key === 'post_price' ? 'Retail Price' : key.replace(key.charAt(0), key.charAt(0).toUpperCase())}: {key === 'original_price' ? `£${details[key]}` : details[key]} */}
                 </Text>
               ) ) }

@@ -1,0 +1,49 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '9.0'
+
+target 'NottMyStyle' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+pre_install do |installer|
+  # workaround for https://github.com/CocoaPods/CocoaPods/issues/3289
+  Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+end
+
+  # Pods for NottMyStyle
+  rn_path = '../node_modules/react-native'
+  
+  # To fix "duplicate module name: react-native"
+  pod 'React', :path => '../node_modules/react-native'
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+  pod 'Firebase/Core'
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Database'
+  pod 'Firebase/Messaging'
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
+  
+  pod 'Folly', :podspec => "#{rn_path}/third-party-podspecs/Folly.podspec"
+
+  
+
+
+  target 'NottMyStyleTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
+
+target 'NottMyStyle-tvOS' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for NottMyStyle-tvOS
+
+  target 'NottMyStyle-tvOSTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end

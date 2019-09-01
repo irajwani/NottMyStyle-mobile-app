@@ -1,0 +1,6 @@
+framework module Pods_NottMyStyle_tvOS {
+  umbrella header "Pods-NottMyStyle-tvOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

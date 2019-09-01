@@ -144,7 +144,7 @@ class CreateItem extends Component {
                 currency = '£';
                 break;
             case "Pakistan":
-                currency = 'PKR';
+                currency = 'Rs.';
                 break;
             default:
                 currency = '$';
@@ -710,10 +710,10 @@ uploadToStore = (pictureuris, uid, postKey) => {
     ///
 
     //When the condition to submit a product has partially been satisfied:
-    var userChangedAtLeastOneField = (this.state.name) || (this.state.description) || (this.state.brand) || ( (Number.isFinite(original_price)) && (original_price > 0) && (price < 1001) ) || ( (Number.isFinite(price)) && (price > 0) && (price < 1001) ) || ( (Array.isArray(pictureuris) && pictureuris.length >= 1) ) || (this.state.paypal);
-    var partialConditionMet = (this.state.name) || (this.state.brand) || ( (Number.isFinite(price)) && (price > 0) && (price < 1001) ) || ( (Array.isArray(pictureuris) && pictureuris.length >= 1) ) || (condition);
+    var userChangedAtLeastOneField = (this.state.name) || (this.state.description) || (this.state.brand) || ( (Number.isFinite(original_price)) && (original_price > 0) ) || ( (Number.isFinite(price)) && (price > 0) ) || ( (Array.isArray(pictureuris) && pictureuris.length >= 1) ) || (this.state.paypal);
+    var partialConditionMet = (this.state.name) || (this.state.brand) || ( (Number.isFinite(price)) && (price > 0) ) || ( (Array.isArray(pictureuris) && pictureuris.length >= 1) ) || (condition);
     //The full condition for when a user is allowed to upload a product to the market
-    var conditionMet = (this.state.name) && (this.state.brand) && (Number.isFinite(price)) && (price > 0) && (price < 1001) && (Array.isArray(pictureuris) && pictureuris.length >= 1) && (type) && ( (this.state.gender == 2 ) || (this.state.gender < 2) && (size) ) && (condition);
+    var conditionMet = (this.state.name) && (this.state.brand) && (Number.isFinite(price)) && (price > 0) && (Array.isArray(pictureuris) && pictureuris.length >= 1) && (type) && ( (this.state.gender == 2 ) || (this.state.gender < 2) && (size) ) && (condition);
     //var priceIsWrong = (original_price != '') && ((price == 0) || (price.charAt(0) == 0 ) || (original_price == 0) || (original_price.charAt(0) == 0) )
 
     //console.log(priceIsWrong);

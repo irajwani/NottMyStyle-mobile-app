@@ -1,0 +1,6 @@
+framework module Pods_NottMyStyle_tvOSTests {
+  umbrella header "Pods-NottMyStyle-tvOSTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

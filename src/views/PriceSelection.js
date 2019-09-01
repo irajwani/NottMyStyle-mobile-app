@@ -61,7 +61,7 @@ export default class PriceSelection extends Component {
                 placeholder={typeOfPrice == "sellingPrice" ? `Selling Price (${currency})` : typeOfPrice == "retailPrice" ? `Original price of this item (${currency})` : `Estimated cost of postal services (${currency})`}
                 placeholderTextColor={lightGray}
                 value={typeOfPrice == "sellingPrice" ? this.state.price : typeOfPrice == "retailPrice" ? this.state.original_price : this.state.post_price}
-                maxLength={typeOfPrice == "postPrice" ? 2 : 3}
+                maxLength={currency == "Rs." ? typeOfPrice == "postPrice" ? 4 : 5 : typeOfPrice == "postPrice" ? 2 : 3}
                 onChangeText={p => {
                     this.setState(typeOfPrice == "sellingPrice" ? { price: Number(p) } : typeOfPrice == "retailPrice" ? { original_price: Number(p)} : { post_price: Number(p)});
                 }}
