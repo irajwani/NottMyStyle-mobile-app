@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {AsyncStorage} from 'react-native';
 import firebase from 'react-native-firebase';
-import Test from './src/views/Test';
+// import Test from './src/views/Test';
 import AuthOrAppSwitch from './src/switchNavigators/AuthOrAppSwitch';
 
 export default class App extends Component {

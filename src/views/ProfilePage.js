@@ -77,7 +77,7 @@ class ProfilePage extends Component {
 
     }
 
-    // this.uid = ''
+    this.uid = firebase.auth().currentUser.uid;
 
   }
 
@@ -85,11 +85,11 @@ class ProfilePage extends Component {
     await this.initializePushNotifications();
     this.timerId = setTimeout(() => {
       
-      const uid = firebase.auth().currentUser.uid;
-      this.uid = uid;
+      // const uid = firebase.auth().currentUser.uid;
+      // this.uid = uid;
       
 
-      this.getProfileAndCountOfProductsOnSaleAndSoldAndCommentsAndUpdatePushToken(uid);
+      this.getProfileAndCountOfProductsOnSaleAndSoldAndCommentsAndUpdatePushToken(this.uid);
     }, 200);
     
   }
@@ -170,10 +170,18 @@ class ProfilePage extends Component {
       // console.log(d.val(), d.Users, your_uid);
 
       //In the scenario where this is the person's first time logging in, update token in the cloud
+      //Freer condition for now to update push token based on if whether FCM token is absent in cloud or if there is a new token (device),
+      //to send notifs too
       var token = await AsyncStorage.getItem('fcmToken');
-      if(currentUser.pushToken == undefined && token) {
-        this.updatePushToken(your_uid, token);
+      if(token) {
+        if(currentUser.pushToken == undefined || currentUser.pushToken != token) {
+          this.updatePushToken(your_uid, token);
+        }
       }
+      
+      // if(currentUser.pushToken == undefined && token) {
+      //   this.updatePushToken(your_uid, token);
+      // }
 
       //TODO: Revive local notification functionality if FCM does not achieve goal
       //check if whether this person deserves Upload Item notification

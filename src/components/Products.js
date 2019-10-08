@@ -45,10 +45,13 @@ const timeToRefreshAfterLikeOrUnlike = 500;
 var {height, width} = Dimensions.get('window');
 
 
-const cardWidth = width/2 - 10;
+const cardWidth = width/2;
+const cardImageHeight = 200 - 37;
+const cardPriceAndIconRowHeight = 30;
 const cardHeaderHeight = 200;
-const cardContentHeight = 50
-const cardFull = cardHeaderHeight + cardContentHeight;
+const cardContentHeight = 60;
+const cardFull = cardImageHeight + cardPriceAndIconRowHeight + cardContentHeight;
+// const cardFull = cardHeaderHeight + cardContentHeight;
 const cardFullPlus = cardFull + 20;
 // const cardFullPlusPlus = cardFullPlus + 10;
 
@@ -344,7 +347,7 @@ class Products extends Component {
           currency = '£';
           break;
         case "Pakistan":
-          currency = 'Rs.';
+          currency = 'RS';
           break;
         default:
           currency = '$';
@@ -969,23 +972,20 @@ class Products extends Component {
     return (
       
       <TouchableOpacity
-      style={{height: section.isActive == true ? cardFull : cardHeaderHeight}}
+      // style={{height: section.isActive == true ? cardFull : cardImageHeight + cardPriceAndIconRowHeight}}
       underlayColor={'transparent'}
       onPress={() => {
         // section.isActive ? this.navToProductDetails(section, this.state.collectionKeys, this.state.productKeys) : null;
         !section.isActive ? expandFunction() : this.navToProductDetails(section, this.state.collectionKeys, this.state.productKeys, this.state.currency);
       }}
       >
-      
-        <View 
-          style={styles.card}
-        >
-        
+
         <View 
         style={[styles.card, section.isActive == true ? styles.active : styles.inactive]}
+        // fazool ki array of styles just to show I have control
         >
         
-          <View style={styles.productImageContainer}>
+          <View style={[styles.productImageContainer, {height: cardImageHeight}]}>
               <View style={styles.interactionButtonsRow}>
                 
                 <View style={styles.likesContainer}>
@@ -1060,19 +1060,20 @@ class Products extends Component {
               }  
           </View>
 
-          
+          {/* Price(s) and Dropdown arrow footer */}
           <TouchableOpacity 
           onPress={expandFunction}
-          style= { styles.headerPriceMagnifyingGlassRow }
+          // section.text.original_price.length > 3 || section.text.price.length > 3 
+          style= {[styles.headerPriceMagnifyingGlassRow, {height: cardPriceAndIconRowHeight}]}
           >
             
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+            <View style={{flexDirection: 'row',justifyContent: 'flex-start'}}>
               {(section.text.original_price > 0) == true?
-                <Text style={[styles.original_price, {textDecorationLine: 'line-through',}]}>{this.state.currency + section.text.original_price}</Text>
+                <Text style={[styles.price, {textDecorationLine: 'line-through', color: 'black', fontSize: String(section.text.original_price).length > 3 ? 13 : 17}]}>{this.state.currency + section.text.original_price}</Text>
                 :
                 null
               }
-              <Text style={styles.price}>{this.state.currency + section.text.price}</Text>
+              <Text style={[styles.original_price, {color: limeGreen, fontSize: String(section.text.price).length > 3 ? 13 : 17}]}>{this.state.currency + section.text.price}</Text>
             </View>
 
             {section.isActive == true? 
@@ -1096,7 +1097,7 @@ class Products extends Component {
 
         </View>  
         
-        </View>
+        
 
 
 
@@ -1803,7 +1804,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 5,
     // marginTop: 22,
     paddingBottom: 3,
-    paddingLeft: 6,
+    // paddingLeft: 6,
     // width: 320,
     // height: height,
     // flexDirection: 'column',
@@ -1829,7 +1830,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center'
   },    
 
-  sectionContainer: {width: cardWidth, padding: 3},
+  // sectionContainer: {width: cardWidth, padding: 3},
 
   filterScrollContainer: {
     flexDirection: 'column',
@@ -1843,15 +1844,16 @@ const styles = StyleSheet.create({
 
   headerPriceMagnifyingGlassRow: {
     flexDirection: 'row', justifyContent: 'space-between', 
+    alignItems: 'center',
     paddingTop: 2,
     paddingLeft: 5,
     paddingRight: 5,
-    paddingBottom: 0 
+    // paddingBottom: 0 
   },    
 
-  priceMagnifyingGlassRow: {
-    flexDirection: 'row', justifyContent: 'space-between', padding: 5 
-  },    
+  // priceMagnifyingGlassRow: {
+  //   flexDirection: 'row', justifyContent: 'space-between', padding: 5 
+  // },    
 
   brandAndSizeCol: {
     flex: 0.7,
@@ -2022,7 +2024,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     width: cardWidth,
     //width/2 - 0
-    height: cardHeaderHeight,
+    // height: cardHeaderHeight,
     //200
     //marginLeft: 2,
     //marginRight: 2,
@@ -2061,17 +2063,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 
-  original_price: {
-    ...textStyles.generic,
-    fontSize: 17,
-    color: 'black',
-    fontWeight: "500"
-  },
-
   price: {
     ...textStyles.generic,
-    fontSize: 17,
-    color: limeGreen,
     fontWeight: "500"
   },
 

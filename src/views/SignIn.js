@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Dimensions, View, Modal, Text, TextInput, Image, Platform, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { AsyncStorage, Dimensions, View, Fragment, Modal, Text, TextInput, Image, Platform, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 
 import PushNotification from 'react-native-push-notification';
 // import {initializePushNotifications} from '../Services/NotificationService'
@@ -31,6 +31,7 @@ import { LoadingIndicator, SignInTextInput, CustomTextInput } from '../localFunc
 import { filterObjectByKeys } from '../localFunctions/arrayFunctions.js';
 import Svg, { Path } from 'react-native-svg';
 import config from '../Config/index.js';
+import {geocodeKey} from '../credentials/keys';
 import { isUserRegistered } from '../Services/AuthService.js';
 // import { withNavigation } from 'react-navigation';
 const {width,} = Dimensions.get('window');
@@ -83,13 +84,16 @@ class SignIn extends Component {
         products: [], email: '', uid: '', pass: '', loading: false, loggedIn: false, 
         googleIconColor: '#db3236', fbIconColor: "#3b5998",
         saveUsernamePass: true,
-        showPasswordReset: false
-    };
-      }
+        showPasswordReset: false,
+
+        //userLocation
+        currentLocation: false,
+      };
+    }
 
     async componentWillMount () {
         await this.initializePushNotifications(true);
-
+        await this.getCurrentLocation();
         // let promiseToRetrieveBoolean = AsyncStorage.get('saveUsernamePass');
         // let promiseToSetCredentials = 
 
@@ -137,6 +141,51 @@ class SignIn extends Component {
 
     componentWillUnmount() {
         clearInterval(this.colorRefreshId);
+    }
+
+    getCurrentLocation = () => {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+              const currentLocation = JSON.stringify(position);
+              let {latitude, longitude} = position.coords;
+              fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${geocodeKey}`)
+              .then(async response => {
+                  let country;
+                  if(response.ok) {
+                    let json = JSON.parse(response.resp.data).results;
+                    
+                    await json[0].address_components.forEach(comp => {
+                        if(comp.types.includes('country')) {
+                            switch(comp.short_name) {
+                                case "US":
+                                    country = "USA";
+                                    break;
+                                case "GB":
+                                    country = "UK";
+                                    break;
+                                default:
+                                    country = "Pakistan";
+                                    break;
+                            }
+                        }
+                    })
+                  }
+                  else {
+                    country = false;
+                  }
+                  return country
+              })
+              .then(country => {
+                  this.setState({currentLocation: country})
+              })
+              .catch(err => {
+                  alert(err);
+              })
+              
+            },
+            error => alert(error.message),
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        );
     }
 
     initializePushNotifications = (willSaveToken) => {
@@ -283,15 +332,16 @@ class SignIn extends Component {
     attemptSignUp = (socialUser, googleUserBoolean, facebookUserBoolean) => {
         //check if user wishes to sign up through standard process (the former) or through google or through facebook so 3 cases
         //
-        console.log('attempting to sign up', socialUser);
+        // console.log('attempting to sign up', socialUser);
+        let {currentLocation} = this.state;
         this.setState({loading: false});
         !socialUser ? 
-            this.props.navigation.navigate('CreateProfile', {user: false, googleUserBoolean: false, facebookUserBoolean: false})
+            this.props.navigation.navigate('CreateProfile', {user: false, googleUserBoolean: false, facebookUserBoolean: false, currentLocation})
         :
             googleUserBoolean && !facebookUserBoolean ? 
-                this.props.navigation.navigate('CreateProfile', {user: socialUser, googleUserBoolean: true, facebookUserBoolean: false, pictureuris: [socialUser.user.photo],})
+                this.props.navigation.navigate('CreateProfile', {user: socialUser, googleUserBoolean: true, facebookUserBoolean: false, pictureuris: [socialUser.user.photo], currentLocation})
             :
-                this.props.navigation.navigate('CreateProfile', {user: socialUser, googleUserBoolean: false, facebookUserBoolean: true, pictureuris: [socialUser.user.picture.data.url],})
+                this.props.navigation.navigate('CreateProfile', {user: socialUser, googleUserBoolean: false, facebookUserBoolean: true, pictureuris: [socialUser.user.picture.data.url], currentLocation})
                 //this.props.navigation.navigate('CreateProfile', {user, googleUserBoolean, pictureuris: [user.photoURL],})
     }
 
@@ -684,6 +734,8 @@ class SignIn extends Component {
                     
                     <View style={styles.twoTextInputsContainer}>
                         
+                        {Platform.OS == 'android' &&
+                        <View>
                         <View style={styles.inputContainer}>
 
                             <View style={styles.input}>
@@ -728,8 +780,13 @@ class SignIn extends Component {
                                 />         
                             </View>
                         </View>
+                        </View>
+                        
+                        }
 
-                        {/* <View style={{paddingVertical: 2}}>
+                        {Platform.OS == 'ios' && 
+                        <View>
+                        <View style={{paddingVertical: 2}}>
                             <Hoshi
                                 label={'Email Address'}
                                 
@@ -765,7 +822,9 @@ class SignIn extends Component {
                                 ref={ref => this.passInput = ref}
                                 // onSubmitEditing={this.onSignInPress}
                             />
-                        </View> */}
+                        </View>
+                        </View>
+                        }
 
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginVertical: 15, marginHorizontal: 5}}>
                             <View style={{ justifyContent: 'center', alignItems: 'flex-start', marginHorizontal: 5}}>

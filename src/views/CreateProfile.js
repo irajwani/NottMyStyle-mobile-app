@@ -95,7 +95,7 @@ class CreateProfile extends Component {
           firstName: params.googleUserBoolean || params.facebookUserBoolean ? params.user.user.name.split(" ")[0] : '',
           lastName: params.googleUserBoolean || params.facebookUserBoolean ? params.user.user.name.split(" ")[1] : '',
           city: '',    
-          country: '',
+          country: params.currentLocation ? params.currentLocation : '',
         //   size: 1,
           uri: undefined,
           insta: '',
@@ -560,7 +560,7 @@ class CreateProfile extends Component {
 
         <TouchableOpacity style={{flex: 0.3, justifyContent: 'center'}} onPress={this.toggleShowCountrySelect}>
             <Text 
-            style={styles.inputText}
+            style={[styles.inputText, {color: this.state.country ? '#fff' : lightGray }]}
             >
             {this.state.country ? this.state.country : "Country"}
             </Text>
@@ -617,11 +617,12 @@ class CreateProfile extends Component {
     // console.log(params);
     //TODO: navigation.getParam would do wonders here;
     // var googleUserBoolean = params.googleUserBoolean ? params.googleUserBoolean : false;
-    var googleUser = params.googleUserBoolean ? true : false
-    var facebookUser = params.facebookUserBoolean ? true : false
+    var googleUser = params.googleUserBoolean ? true : false;
+    var facebookUser = params.facebookUserBoolean ? true : false;
+    
     //may be reusing booleans here, but this check on isUserGoogleUser? alright logically so far
     
-    var user = params.googleUserBoolean || params.facebookUserBoolean ? params.user : null //data for google user
+    var user = params.googleUserBoolean || params.facebookUserBoolean ? params.user : null; //data for google user
     // var googlePhotoURL = params.user.photoURL ? params.user.photoURL : false ;
     // googleUser && googlePhotoURL ? pictureuris = [googlePhotoURL] : 'nothing here';
 

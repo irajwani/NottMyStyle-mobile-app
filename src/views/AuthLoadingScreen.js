@@ -27,8 +27,13 @@ export default class AuthLoadingScreen extends Component {
       if(snap.val() === true) {
         this.updateStatus('online');
       }
+      // else {
+      //   this.updateStatus('offline');
+      // }
       
     })
+
+    
 
     // let update = {};
     // update['/Users/' + this.uid + '/status/'] = "offline";
