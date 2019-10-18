@@ -312,10 +312,14 @@ updateFirebaseAndNavToProfile = (pictureuris, mime = 'image/jpg', uid, type, pri
         time: oldItemPostKey ? oldItemUploadDate : Date.now(), //for now, do ot override initial upload Date
         dateSold: '',
         post_price: post_price ? post_price : 0,
-        paypal: paypal //TODO: test if paypal value is remembered and the user can't see it
+        paypal: paypal, //TODO: test if paypal value is remembered and the user can't see it
+        
      };
     
      updates[productTextPath] = postData;
+
+     var productViewsPath = '/Users/' + uid + '/products/' + actualPostKey + '/usersVisited/'; //TODO: iOS
+     updates[productViewsPath] = '';
  }
  
  updates['/Users/' + uid + '/profile/isNoob/'] = false;

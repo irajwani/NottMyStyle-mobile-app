@@ -211,6 +211,8 @@ class ProductDetails extends Component {
       // console.log("OVER HEREEEE:" + cloudDatabaseUsers[data.uid].products[data.key].uris.thumbnail);
       const uid = firebase.auth().currentUser.uid;
       const otherUserUid = data.uid;
+      
+      var seller = cloudDatabaseUsers[otherUserUid], views = 0;
 
       //get current user's profile info
       const yourProfile = d.Users[uid].profile;
@@ -269,10 +271,31 @@ class ProductDetails extends Component {
       //  = d.Users[data.uid].comments ? d.Users[data.uid].comments : {a: {text: 'No Reviews have been left for this seller.', name: 'NottMyStyle Team', time: `${year}/${month.toString().length == 2 ? month : '0' + month }/${date}`, uri: '' } };
       
       // var productComments = d.Users[data.uid].products[data.key].comments ? d.Users[data.uid].products[data.key].comments : {a: {text: 'No Reviews have been left for this product yet.', name: 'NottMyStyle Team', time: `${year}/${month.toString().length == 2 ? month : '0' + month }/${date}`, uri: '' } };
-      if(cloudDatabaseUsers[data.uid].products[data.key] != undefined) {
-        var productComments = cloudDatabaseUsers[data.uid].products[data.key].text.comments ? cloudDatabaseUsers[data.uid].products[data.key].text.comments : {a: "nothing"};
+      if(seller.products[data.key] != undefined) {
+        var productComments = seller.products[data.key].text.comments ? seller.products[data.key].text.comments : {a: "nothing"};
+
+        //TODO: iOS
+        //check if usersVisited array deserves an addition
+        if(seller.products[data.key].usersVisited == '') {
+          let update = {};
+          update[`/Users/${otherUserUid}/products/${data.key}/usersVisited/${uid}/`] = true;
+          firebase.database().ref().update(update);
+        }
+
+        else {
+
+          views = Object.values(seller.products[data.key].usersVisited).filter((u)=> {return u == true }).length;
+
+          if(!Object.keys(seller.products[data.key].usersVisited).includes(uid)) {
+            let update = {};
+            update[`/Users/${otherUserUid}/products/${data.key}/usersVisited/${uid}/`] = true;
+            firebase.database().ref().update(update);
+          }
+          
+        }
+        //TODO: iOS
+        
       }
-      
       
       //When this component launches for the first time, we want to retrieve the person's addresses from the cloud (if they have any)
       //When this function is run everytime after
@@ -292,6 +315,7 @@ class ProductDetails extends Component {
         productPictureURLs: cloudDatabaseUsers[data.uid].products[data.key].uris.thumbnail,
         sold: data.text.sold,
         price: data.text.price, name: data.text.name, sku: data.key, description: data.text.description.replace(/ +/g, " ").substring(0,124),
+        views, //TODO: iOS
         chat,
         totalPrice: Number(data.text.price) + Number(data.text.post_price),
         canChatWithOtherUser,
@@ -1468,7 +1492,10 @@ class ProductDetails extends Component {
     // const arrowColor = this._getArrowColor();
 
     const { params } = this.props.navigation.state, { data, productKeys } = params, 
-    { isGetting, profile, navToChatLoading, productComments, uid, collectionKeys } = this.state,
+    { 
+      isGetting, profile, navToChatLoading, productComments, uid, collectionKeys, 
+      views //TODO: iOS
+    } = this.state,
     {text} = data,
     details = {
       brand: text.brand,
@@ -1477,6 +1504,7 @@ class ProductDetails extends Component {
       type: text.type,
       condition: text.condition,
       post_price: text.post_price,
+      views, //TODO: iOS
       
       // original_price: text.original_price
     };
@@ -1574,16 +1602,16 @@ class ProductDetails extends Component {
           
             {text.original_price > 0 ?
               <View style={[styles.priceContainer]}>
-                <Text style={[styles.original_price, {color: 'black', textDecorationLine: 'line-through',}]} >
+                <Text style={[styles.original_price, {color: 'black', textDecorationLine: 'line-through', fontSize: String(text.original_price).length > 3 ? 11 : 17}]} >
                   {this.state.currency + text.original_price}
                 </Text>
-                <Text style={[styles.original_price, {color: limeGreen}]} >
+                <Text style={[styles.original_price, {color: limeGreen, fontSize: String(text.original_price).length > 3 ? 11 : 17}]} >
                   {this.state.currency + text.price}
                 </Text>
               </View>
             :
               <View style={[styles.priceContainer]}>
-                <Text style={[styles.original_price, {fontSize: 22, color: limeGreen}]} >
+                <Text style={[styles.original_price, {fontSize: String(text.price).length > 3 ? 11 : 17, color: limeGreen}]} >
                   {this.state.currency + text.price}
                 </Text>
               </View>

@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { Linking, Dimensions, Text, StyleSheet, SafeAreaView, View, Image, ScrollView, Platform, Modal, TouchableOpacity, Keyboard, KeyboardAvoidingView, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Button} from 'react-native-elements';
+// import {Button} from 'react-native-elements';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import Dialog, { DialogTitle, DialogContent, DialogButton, SlideAnimation } from 'react-native-popup-dialog';
+
 // import RNFetchBlob from 'react-native-fetch-blob';
 import RNFetchBlob from 'rn-fetch-blob';
 // import { Sae } from 'react-native-textinput-effects';
@@ -10,16 +12,16 @@ import firebase from '../cloud/firebase.js';
 import MultipleAddButton from '../components/MultipleAddButton.js';
 import { iOSColors } from 'react-native-typography';
 import { EulaTop, EulaBottom, TsAndCs, PrivacyPolicy, EulaLink } from '../legal/Documents.js';
-import { lightGray, treeGreen, bobbyBlue, mantisGreen, bgBlack, almostWhite, flashOrange, highlightGreen, logoGreen } from '../colors.js';
+import { lightGray, treeGreen, bobbyBlue, mantisGreen, bgBlack, flashOrange, logoGreen, woodBrown } from '../colors.js';
 // import { PacmanIndicator } from 'react-native-indicators';
-import {WhiteSpace, GrayLine, LoadingIndicator, CustomTextInput} from '../localFunctions/visualFunctions';
+import {GrayLine, LoadingIndicator, CustomTextInput} from '../localFunctions/visualFunctions';
 import { shadow } from '../constructors/shadow.js';
 import { avenirNextText } from '../constructors/avenirNextText.js';
 import { center } from '../constructors/center.js';
 import ImageResizer from 'react-native-image-resizer';
 
 const {width, height} = Dimensions.get('window');
-const resizedWidth = 4000, resizedHeight = 4000;
+const resizedWidth = 5000, resizedHeight = 5000;
 
 // TODO: store these in common file as thumbnail spec for image resizing
 const maxWidth = 320, maxHeight = 320, suppressionLevel = 0;
@@ -30,6 +32,7 @@ const limeGreen = '#2e770f';
 // const locations = [{country: "UK", flag: "🇬🇧"},{country: "Pakistan", flag: "🇵🇰"},{country: "USA", flag: "🇺🇸"}]
 const locations = [{country: "UK", flag: "uk"},{country: "Pakistan", flag: "pk"},{country: "USA", flag: "usa"}];
 
+const Bullet = '\u2022';
 
 const Blob = RNFetchBlob.polyfill.Blob;
 const fs = RNFetchBlob.fs;
@@ -76,6 +79,12 @@ window.Blob = Blob;
 //         />         
 //     </View>
 // )
+
+const TextForMissingDetail = ({detail}) => {
+    return (
+        <Text style={new avenirNextText(woodBrown, 22, "400")}>{Bullet + " " + detail}</Text>
+    )
+}
 
 class CreateProfile extends Component {
   constructor(props) {
@@ -340,8 +349,9 @@ class CreateProfile extends Component {
         }
         else {
             console.log('user has chosen picture manually through photo lib or camera.')
-            let resizedImage = await ImageResizer.createResizedImage(uri,resizedWidth, resizedHeight,'JPEG',suppressionLevel);
-            const uploadUri = Platform.OS === 'ios' ? resizedImage.uri.replace('file://', '') : resizedImage.uri
+            // let resizedImage = await ImageResizer.createResizedImage(uri,resizedWidth, resizedHeight,'JPEG',suppressionLevel);
+            // const uploadUri = Platform.OS === 'ios' ? resizedImage.uri.replace('file://', '') : resizedImage.uri
+            const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
             let uploadBlob = null
             const imageRef = firebase.storage().ref().child(`Users/${uid}/profile`);
             fs.readFile(uploadUri, 'base64')
@@ -480,8 +490,9 @@ class CreateProfile extends Component {
         }
         else {
             console.log('user has chosen picture manually through photo lib or camera, store it on cloud and generate a URL for it.')
-            let resizedImage = await ImageResizer.createResizedImage(uri,resizedWidth, resizedHeight,'JPEG',suppressionLevel);
-            const uploadUri = Platform.OS === 'ios' ? resizedImage.uri.replace('file://', '') : resizedImage.uri
+            // let resizedImage = await ImageResizer.createResizedImage(uri,resizedWidth, resizedHeight,'JPEG',suppressionLevel);
+            // const uploadUri = Platform.OS === 'ios' ? resizedImage.uri.replace('file://', '') : resizedImage.uri
+            const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
             let uploadBlob = null
             const imageRef = firebase.storage().ref().child(`Users/${uid}/profile`);
             fs.readFile(uploadUri, 'base64')
@@ -605,6 +616,20 @@ class CreateProfile extends Component {
     </Modal>
   )
 
+  renderPasswordsMatch = (doMatch) => {
+      doMatch ? 
+        <View style={styles.passwordStatusRow}>
+            <Text style={[styles.passwordStatusText, {color: mantisGreen}]}>Passwords Match!</Text>
+            <Icon 
+                name="verified" 
+                size={30} 
+                color={mantisGreen}
+            />
+        </View>
+        :
+        null
+  }
+
 
   ///////////////
 
@@ -710,38 +735,26 @@ class CreateProfile extends Component {
                             secureTextEntry={true}
                             
                             />
+                            
+                            <View style={{borderBottomWidth: this.state.pass && this.state.pass2 ? 0.5 : 0, borderBottomColor: passwordConditionMet ? mantisGreen : flashOrange}}>
+                                <CustomTextInput 
+                                placeholder={"Retype Password"} 
+                                value={this.state.pass2} 
+                                onChangeText={pass2 => this.setState({ pass2 })}
+                                maxLength={16}
+                                secureTextEntry={true}
+                                />
+                            </View>
 
-                            <CustomTextInput 
-                            placeholder={"Retype Password"} 
-                            value={this.state.pass2} 
-                            onChangeText={pass2 => this.setState({ pass2 })}
-                            maxLength={16}
-                            secureTextEntry={true}
-                            />
-                    
-                            {this.state.pass && this.state.pass2 ?
+                            {/* {this.state.pass && this.state.pass2 ?
                                 passwordConditionMet ?
-                                <View style={styles.passwordStatusRow}>
-                                    <Text style={[styles.passwordStatusText, {color: mantisGreen}]}>Passwords Match!</Text>
-                                    <Icon 
-                                        name="verified" 
-                                        size={30} 
-                                        color={mantisGreen}
-                                    />
-                                </View> 
+                                this.renderPasswordsMatch(true)
                                 :
-                                <View style={styles.passwordStatusRow}>
-                                    <Text style={[styles.passwordStatusText, {color: flashOrange}]}>Passwords Don't Match!</Text>
-                                    <Icon 
-                                        name="alert-circle" 
-                                        size={30} 
-                                        color={flashOrange}
-                                    />
-                                </View>
+                                this.renderPasswordsMatch(false)
                             :
                             null
                             
-                            }
+                            } */}
                         </View>
                         :
                         null
@@ -796,21 +809,33 @@ class CreateProfile extends Component {
                             
 
                             
+                            <View style={{flexDirection: 'row', borderWidth: this.state.pass && this.state.pass2 ? 0.5 : 0, borderColor: passwordConditionMet ? mantisGreen : flashOrange}}>
+                                <View style={{flex: passwordConditionMet ? 1 : 0.85}}>
+                                    <CustomTextInput 
+                                    placeholder={"Retype Password"} 
+                                    value={this.state.pass2} 
+                                    onChangeText={pass2 => this.setState({ pass2 })}
+                                    maxLength={16}
+                                    secureTextEntry={true}
+                                    />
+                                </View>
+                                {passwordConditionMet && 
+                                <View style={{flex: 0.15, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Icon 
+                                        name="verified" 
+                                        size={30} 
+                                        color={mantisGreen}
+                                    />
+                                </View>}
 
-                            <CustomTextInput 
-                            placeholder={"Retype Password"} 
-                            value={this.state.pass2} 
-                            onChangeText={pass2 => this.setState({ pass2 })}
-                            maxLength={16}
-                            secureTextEntry={true}
-                            />
+                            </View>
 
                             
 
                             
                             
                     
-                            {this.state.pass && this.state.pass2?
+                            {/* {this.state.pass && this.state.pass2?
                                 passwordConditionMet ?
                                 <View style={styles.passwordStatusRow}>
                                 <Text style={[styles.passwordStatusText, {color: mantisGreen}]}>Passwords Match!</Text>
@@ -831,7 +856,7 @@ class CreateProfile extends Component {
                                 </View>
                             :
                             null
-                            }
+                            } */}
                         </View>
                         :
                         null
@@ -955,7 +980,38 @@ class CreateProfile extends Component {
             </Modal>
     
             {/* Modal to explicate details required to sign up */}
-            <Modal
+            <Dialog
+            visible={this.state.infoModalVisible}
+            dialogAnimation={new SlideAnimation({
+            slideFrom: 'top',
+            })}
+            dialogTitle={<DialogTitle title="You forgot to fill in:" titleTextStyle={new avenirNextText('black', 22, "500")} />}
+            actions={[ 
+            <DialogButton
+            text="OK"
+            onPress={() => {this.setState({ infoModalVisible: false });}}
+            />,
+            ]}
+            onTouchOutside={() => {
+            this.setState({ infoModalVisible: false });
+            }}
+            >
+            <DialogContent>
+                <View style={{padding: 5,}}>
+                { !(Array.isArray(pictureuris)) || !(pictureuris.length == 1) ? <TextForMissingDetail detail={'Profile Picture'} /> : null }
+                { !this.state.email ? <TextForMissingDetail detail={'Email Address'} /> : null }
+                { !passwordConditionMet ? <TextForMissingDetail detail={'Matching Passwords'} /> : null }
+                { !this.state.firstName ? <TextForMissingDetail detail={'First Name'} /> : null }
+                { !this.state.lastName ? <TextForMissingDetail detail={'Last Name'} /> : null }
+                { !this.state.city ? <TextForMissingDetail detail={'City'} /> : null }
+                
+                
+                
+                </View>
+            </DialogContent>
+            </Dialog>
+
+            {/* <Modal
             animationType="slide"
             transparent={false}
             visible={this.state.infoModalVisible}
@@ -971,7 +1027,7 @@ class CreateProfile extends Component {
                         Got It!
                     </Text>
                 </View>
-            </Modal>
+            </Modal> */}
 
             {/* Action Buttons */}
 

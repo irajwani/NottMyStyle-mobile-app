@@ -1115,7 +1115,7 @@ class Products extends Component {
                   
                 
                 <Animatable.View style={styles.brandAndSizeCol} transition='backgroundColor'>
-                  <Animatable.Text style={styles.contentCardText} direction={column == 'left' ? 'normal' : 'alternate'} easing={textAnimationEasing} duration={textAnimationDuration} animation={section.isActive ? 'bounceInRight' : undefined}>{section.text.name.length > 11 ? section.text.brand.substring(0,9) + '..' : section.text.brand}</Animatable.Text>
+                  <Animatable.Text style={styles.contentCardText} direction={column == 'left' ? 'normal' : 'alternate'} easing={textAnimationEasing} duration={textAnimationDuration} animation={section.isActive ? 'bounceInRight' : undefined}>{section.text.name.length > 13 ? section.text.brand.substring(0,12) + '..' : section.text.brand}</Animatable.Text>
                   <Animatable.Text style={styles.contentCardText} direction={column == 'left' ? 'normal' : 'alternate'}  easing={textAnimationEasing} duration={textAnimationDuration} animation={section.isActive ? 'bounceInLeft' : undefined}>{section.text.gender == "Accessories" ? "Accessory" : `Size: ${section.text.size.length > 8 ? section.text.size.substring(0,7) + ".." : section.text.size}`}</Animatable.Text>
                 </Animatable.View>
 

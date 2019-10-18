@@ -93,7 +93,7 @@ class SignIn extends Component {
 
     async componentWillMount () {
         await this.initializePushNotifications(true);
-        await this.getCurrentLocation();
+        // await this.getCurrentLocation();
         // let promiseToRetrieveBoolean = AsyncStorage.get('saveUsernamePass');
         // let promiseToSetCredentials = 
 

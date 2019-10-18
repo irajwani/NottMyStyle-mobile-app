@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { SafeAreaView, Platform } from 'react-native'
+import { SafeAreaView, View, Text, Platform } from 'react-native'
 import { LoadingIndicator } from '../localFunctions/visualFunctions';
 import { lightGreen } from '../colors';
 import firebase from '../cloud/firebase';
+import VersionNumber from 'react-native-version-number';
 
 export default class AuthLoadingScreen extends Component {
   constructor(props) {
@@ -121,8 +122,13 @@ export default class AuthLoadingScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center'}}>
-        <LoadingIndicator isVisible={true} color={lightGreen} type={'Wordpress'} />
+      <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+        <View style={{flex: 0.9, justifyContent: 'center', alignItems: 'center'}}>
+          <LoadingIndicator isVisible={true} color={lightGreen} type={'Wordpress'} />
+        </View>
+        <View style={{flex: 0.1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>Version {VersionNumber.buildVersion}</Text>
+        </View>
       </SafeAreaView>
     )
   }

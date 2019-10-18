@@ -42,6 +42,8 @@ import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 //import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 
+import com.apsl.versionnumber.RNVersionNumberPackage;
+
 
 
 public class MainApplication extends Application implements ReactApplication {
@@ -75,7 +77,8 @@ public class MainApplication extends Application implements ReactApplication {
           new ImagePickerPackage(),
           new RNFirebasePackage(),
           new RNFirebaseMessagingPackage(),
-          new RNFirebaseNotificationsPackage()
+          new RNFirebaseNotificationsPackage(),
+          new RNVersionNumberPackage()
 //          new RNFirebaseNotificationsPackage()
       );
     }

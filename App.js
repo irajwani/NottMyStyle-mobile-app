@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, Platform} from 'react-native';
 import firebase from 'react-native-firebase';
 // import Test from './src/views/Test';
 import AuthOrAppSwitch from './src/switchNavigators/AuthOrAppSwitch';
 
 export default class App extends Component {
 
+  isAndroid = Platform.OS == "android"
+
   async componentDidMount() {
-    this.checkPermission();
-    this.createNotificationChannel();
-    this.createNotificationListeners();
+    if(this.isAndroid) {
+      this.checkPermission();
+      this.createNotificationChannel();
+      this.createNotificationListeners();
+    }
   }
 
   createNotificationChannel = async () => {
@@ -101,9 +105,11 @@ export default class App extends Component {
   }
 
   componentWillUnmount() {
-    this.removeNotificationDisplayedListener();
-    this.removeNotificationOpenedListener();
-    this.removeNotificationListener();
+    if(this.isAndroid) {
+      this.removeNotificationDisplayedListener();
+      this.removeNotificationOpenedListener();
+      this.removeNotificationListener();
+    }
   }
 
   render() {
