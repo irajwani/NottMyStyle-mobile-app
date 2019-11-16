@@ -55,6 +55,7 @@
     "@babel/core": "^7.5.5",
     "@babel/runtime": "^7.5.5",
     "babel-jest": "^24.8.0",
+    "fsevents": "^2.1.2",
     "jest": "^24.8.0",
     "jetifier": "^1.6.1",
     "metro-react-native-babel-preset": "^0.55.0",

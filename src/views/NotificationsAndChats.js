@@ -18,7 +18,8 @@ import { textStyles } from '../styles/textStyles';
 
 
 // const express_app_uri = "http://localhost:5000/leaveYourRooms";
-const express_app_uri = "https://calm-coast-12842.herokuapp.com/leaveYourRooms"
+// const express_app_uri = "https://calm-coast-12842.herokuapp.com/leaveYourRooms"
+const express_app_uri = "https://glacial-island-26545.herokuapp.com/leaveYourRooms"
 const noChatsText = "You have not initiated any chats 😳. Choose a product from the marketplace and then converse with the seller about your preferred method of payment (Cash or PayPal), and if whether you'd like the item posted to you or not.";
 const DaysOfTheWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const {width} = Dimensions.get('window');

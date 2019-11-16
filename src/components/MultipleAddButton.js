@@ -195,13 +195,21 @@ class MultipleAddButton extends Component {
           
             {pictureuris === 'nothing here' ? 
               <View style={[this.props.navToComponent == "CreateProfile" ? styles.mainPictureCP : styles.mainPicture, {justifyContent: 'center', alignItems: 'center'}]}>
-                <NothingHere/>
+                {
+                  this.props.navToComponent == "CreateProfile" || this.props.navToComponent == "EditProfile" ? 
+                  <Image 
+                    source={require('../images/blank.jpg')}
+                    style={styles.mainPictureBlank}
+                  /> 
+                  : 
+                  <NothingHere/>
+                }
               </View>
               :
               <Image 
-            source={{uri: pictureuris[0]} } 
-            style={this.props.navToComponent == "CreateProfile" ? [styles.mainPictureCP, {backgroundColor: 'transparent'}] : styles.mainPicture} 
-            /> 
+              source={{uri: pictureuris[0]} } 
+              style={this.props.navToComponent == "CreateProfile" ? [styles.mainPictureCP, {backgroundColor: 'transparent'}] : styles.mainPicture} 
+              /> 
             }
             
         </TouchableHighlight>        
@@ -246,7 +254,7 @@ class MultipleAddButton extends Component {
           <ActionSheet
           ref={o => this.ActionSheet = o}
           title={'Method to Select Picture:'}
-          options={['Camera', 'PhotoLibrary', 'cancel']}
+          options={['Camera', 'Photo Library', 'cancel']}
           cancelButtonIndex={2}
           destructiveButtonIndex={1}
           onPress={(index) => { this.cameraOrGallery(index, this.props.navToComponent) }}
@@ -271,7 +279,7 @@ class MultipleAddButton extends Component {
           <ActionSheet
           ref={o => this.ActionSheet = o}
           title={'Choose picture selection option'}
-          options={['Camera', 'PhotoLibrary', 'cancel']}
+          options={['Camera', 'Photo Library', 'cancel']}
           cancelButtonIndex={2}
           destructiveButtonIndex={1}
           onPress={(index) => { this.cameraOrGallery(index, this.props.navToComponent) }}
@@ -350,6 +358,12 @@ const styles = StyleSheet.create( {
     height: 130,
     borderRadius: 65,
     backgroundColor: '#fff'
+  },
+
+  mainPictureBlank: {
+    width: 130,
+    height: 130,
+    borderRadius: 65,
   },
 
   otherPicturesRow: {

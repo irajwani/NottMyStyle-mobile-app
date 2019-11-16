@@ -23,6 +23,8 @@ import { iOSColors } from 'react-native-typography';
 // import { PacmanIndicator } from 'react-native-indicators';
 
 import Chatkit from "@pusher/chatkit-client";
+
+import {Config} from '../Config';
 import { CHATKIT_INSTANCE_LOCATOR, CHATKIT_TOKEN_PROVIDER_ENDPOINT, CHATKIT_SECRET_KEY } from '../credentials/keys.js';
 import email from 'react-native-email';
 import { almostWhite,lightGreen, highlightGreen, treeGreen, graphiteGray, rejectRed, darkBlue, profoundPink, aquaGreen, bobbyBlue, mantisGreen, logoGreen, lightGray } from '../colors';
@@ -42,7 +44,7 @@ const limeGreen = '#2e770f';
 // const profoundPink = '#c64f5f';
 const modalAnimationType = "slide";
 const paymentScreensIconSize = 45;
-const payPalEndpoint = "https://calm-coast-12842.herokuapp.com";
+const payPalEndpoint = Config.API_URL;
 // const payPalEndpoint = "https://localhost:5000";
 
 const inputRange = [0, 160, 280];
@@ -1370,7 +1372,7 @@ class ProductDetails extends Component {
         visible={this.state.showPurchaseModal}
         >
           <WebView 
-            source={{uri: payPalEndpoint + `/?price=${finalPrice}&name=${this.state.name}&description=${this.state.description}&sku=${this.state.sku}&currency=${this.state.currency}`}} 
+            source={{uri: payPalEndpoint + `?price=${finalPrice}&name=${this.state.name}&description=${this.state.description}&sku=${this.state.sku}&currency=${this.state.currency}`}} 
             onNavigationStateChange={data => this.handleResponse(data)}
             injectedJavaScript={`document.f1.submit()`}
           />

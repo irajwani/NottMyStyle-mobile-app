@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { SafeAreaView, View, Text, Platform } from 'react-native'
+import { SafeAreaView, View, ImageBackground, Text, Platform } from 'react-native'
 import { LoadingIndicator } from '../localFunctions/visualFunctions';
 import { lightGreen } from '../colors';
+import {Images} from '../Theme'
 import firebase from '../cloud/firebase';
 import VersionNumber from 'react-native-version-number';
 
@@ -63,6 +64,15 @@ export default class AuthLoadingScreen extends Component {
     // }
   }
 
+  updateAppUsage = () => {
+    firebase.database().ref(`/Users/${this.uid}/appUsage/`).once('value', (snapshot) => {
+      var appUsage = snapshot.val();
+      var updates = {};
+      updates['/Users/' + this.uid + '/appUsage/'] = appUsage+1;
+      firebase.database().ref().update(updates);
+    })
+  }
+
   showAppOrAuth = () => {
     var unsubscribe = firebase.auth().onAuthStateChanged( async ( user ) => {
         unsubscribe();
@@ -74,6 +84,7 @@ export default class AuthLoadingScreen extends Component {
           console.log("USER IS: " + user);
           this.uid = await user.uid;
           await this.updateOnConnect();
+          await this.updateAppUsage();
           // await this.updateAppUse();
           this.props.navigation.navigate('AppStack');
         }
@@ -120,17 +131,27 @@ export default class AuthLoadingScreen extends Component {
     })
   }
 
+  renderHangerAnimationScreen = () => (
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+      <View style={{flex: 0.9, justifyContent: 'center', alignItems: 'center'}}>
+        <LoadingIndicator isVisible={true} color={lightGreen} type={'Wordpress'} />
+      </View>
+      <View style={{flex: 0.1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>Version {VersionNumber.buildVersion}</Text>
+      </View>
+    </SafeAreaView>
+  )
+
+  renderSplashScreen = () => (
+    <SafeAreaView style={{flex: 1}}>
+      <ImageBackground source={Images.splashScreen} style={{width: '100%', height: '100%'}}>
+
+      </ImageBackground>
+    </SafeAreaView>
+  )
+
   render() {
-    return (
-      <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
-        <View style={{flex: 0.9, justifyContent: 'center', alignItems: 'center'}}>
-          <LoadingIndicator isVisible={true} color={lightGreen} type={'Wordpress'} />
-        </View>
-        <View style={{flex: 0.1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>Version {VersionNumber.buildVersion}</Text>
-        </View>
-      </SafeAreaView>
-    )
+    return this.renderSplashScreen()
   }
 }
 

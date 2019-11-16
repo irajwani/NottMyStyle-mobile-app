@@ -188,6 +188,9 @@ class Products extends Component {
         emptyCollection: false,
         refreshing: false,
         ////////////
+        // For likes modal
+        ////////////
+        isUpdating: false,
 
 
 
@@ -428,8 +431,11 @@ class Products extends Component {
             // console.log("OVER HERE"+Products)
             // console.log('before split: ' + all);
             // var {leftProducts, rightProducts} = splitArrayIntoArraysOfSuccessiveElements(all);
-            var leftProducts = Products.filter( (e, index) => index % 2 == 0);
-            var rightProducts = Products.filter( (e, index) => index % 2 != 0);
+
+
+            //TODO: fix force split of products
+            // var leftProducts = Products.filter( (e, index) => index % 2 == 0);
+            // var rightProducts = Products.filter( (e, index) => index % 2 != 0);
 
             //Second Level is to extract list of information to be displayed in the filterModal
             //first extract the list of current brands:
@@ -480,7 +486,14 @@ class Products extends Component {
 
             var name = Users[uid].profile.name;
 
-            this.setState({uid, emptyMarket, currency, collectionKeys, productKeys, leftProducts, rightProducts, typesForCategory, brands, conditions, sizes, name, isGetting: false, noResultsFromFilter: false});
+            this.setState({
+              uid, 
+              emptyMarket, currency, collectionKeys, productKeys, 
+              Products,
+              // leftProducts, rightProducts, 
+              typesForCategory, brands, conditions, sizes, name, 
+              isGetting: false, noResultsFromFilter: false
+            });
 
           }
 
@@ -776,7 +789,7 @@ class Products extends Component {
       //   alert("This product is already in your Wish List.")
       // } 
       // else {
-        // this.setState({isGetting: true});
+        this.setState({isUpdating: true});
         var userCollectionUpdates = {};
         userCollectionUpdates['/Users/' + this.state.uid + '/collection/' + key + '/'] = true;
         let promiseToUpdateCollection = firebase.database().ref().update(userCollectionUpdates);
@@ -796,6 +809,7 @@ class Products extends Component {
           state[specificArrayOfProducts][index].text.likes += 1;
           // state[specificArrayOfProducts][key].text.likes += 1;
           state.collectionKeys.push(key);
+          state.isUpdating = false;
           this.setState(state);
           // setTimeout(() => {
           //   this.getMarketPlace(this.state.uid);  
@@ -843,6 +857,7 @@ class Products extends Component {
     //this func applies when heart icon is red
     // console.log('decrement number of likes');
     // if(this.state.collectionKeys.includes(key) == true) {
+      this.setState({isUpdating: true});
       var userCollectionUpdates = {};
       // let promiseToUpdateCollection = firebase.database().ref().update(userCollectionUpdates);
       userCollectionUpdates['/Users/' + firebase.auth().currentUser.uid + '/collection/' + key + '/'] = false;
@@ -861,6 +876,7 @@ class Products extends Component {
         //by locally changing the state to reflect as such
         state[specificArrayOfProducts][index].text.likes -= 1;
         state.collectionKeys = state.collectionKeys.filter( collectionKey => collectionKey != key );
+        state.isUpdating = false;
         this.setState(state);
         // setTimeout(() => {
         //   this.getMarketPlace(this.state.uid);  
@@ -967,6 +983,106 @@ class Products extends Component {
   navToProductDetails(data, collectionKeys, productKeys, currency) {
       this.props.navigation.navigate('ProductDetails', {data: data, collectionKeys: collectionKeys, productKeys: productKeys, currency})
   }
+
+  renderFilterBar = () => (
+    <View style={styles.quickFilterBar}>
+      {/* {.map()} */}
+    </View>
+
+  )
+
+  renderProductsScroll = () => (
+    <ScrollView style={styles.productScrollContainer}>
+      <FlatList 
+        data={this.state.Products}
+        showsVerticalScrollIndicator={true}
+        renderItem={item => this.renderRow(item.item)}
+        keyExtractor={item => item.key}
+        numColumns={2}
+      />
+    </ScrollView>
+
+
+  )
+
+  renderProductsScroll_Old =  () => (
+    <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainerStyle}>
+
+          <ListView
+              contentContainerStyle={styles.listOfProducts}
+              dataSource={this.state.leftDS.cloneWithRows(this.state.leftProducts)}
+              renderRow={(rowData) => this.renderRow(
+                rowData, 
+                () => {
+                    
+                    this.props.showYourProducts ? this.hideMenus() : null;
+
+                    let index = this.state.leftProducts.indexOf(rowData);
+                    this.state.leftProducts[index].isActive = !this.state.leftProducts[index].isActive;
+                    this.setState({leftProducts: this.state.leftProducts});
+                    },
+                () => {
+                    this.incrementLikes(rowData.text.likes, rowData.uid, rowData.key, this.state.leftProducts.indexOf(rowData), 'leftProducts')
+                },
+                () => {
+                    this.decrementLikes(rowData.text.likes, rowData.uid, rowData.key, this.state.leftProducts.indexOf(rowData), 'leftProducts')
+                },
+                () => {
+                  let index = this.state.leftProducts.indexOf(rowData);
+                  this.state.leftProducts[index].isMenuActive = !this.state.leftProducts[index].isMenuActive;
+                  this.setState({leftProducts: this.state.leftProducts});
+                },
+                "left"
+                  
+              )
+              }
+              enableEmptySections={true}
+              removeClippedSubviews={false}
+          />
+
+          
+          { this.state.rightProducts ?
+            <ListView
+              contentContainerStyle={styles.listOfProducts}
+              dataSource={this.state.rightDS.cloneWithRows(this.state.rightProducts)}
+              renderRow={(rowData) => this.renderRow(
+                rowData, 
+                () => {
+                  
+                  this.props.showYourProducts ? this.hideMenus() : null;
+
+                  let index = this.state.rightProducts.indexOf(rowData);
+                  this.state.rightProducts[index].isActive = !this.state.rightProducts[index].isActive;
+                  this.setState({rightProducts: this.state.rightProducts});
+                },
+                () => {
+                  this.incrementLikes(rowData.text.likes, rowData.uid, rowData.key, this.state.rightProducts.indexOf(rowData), 'rightProducts')
+                },
+                () => {
+                  this.decrementLikes(rowData.text.likes, rowData.uid, rowData.key, this.state.rightProducts.indexOf(rowData), 'rightProducts')
+                },
+                () => {
+                  let index = this.state.rightProducts.indexOf(rowData);
+                  this.state.rightProducts[index].isMenuActive = !this.state.rightProducts[index].isMenuActive;
+                  this.setState({rightProducts: this.state.rightProducts});
+                },
+                "right"
+              )}
+              enableEmptySections={true}
+              removeClippedSubviews={false}
+          />
+          :
+          null
+          }
+        
+
+
+        {/* TODO: revive {this.renderFilterModal()} */}
+
+      </ScrollView>
+  )
 
   renderRow = (section, expandFunction, incrementLikesFunction, decrementLikesFunction, menuExpandFunction, column) => {
     return (
@@ -1427,6 +1543,43 @@ class Products extends Component {
 
   }
 
+  renderFilterButton = () => (
+    <View style={styles.filterButtonContainer}>
+      <TouchableOpacity 
+      onPress={() => this.setState({ showFilterModal: true }) } 
+      style={styles.filterButton}>
+      
+        <Icon 
+          name="filter-outline" 
+          size={15} 
+          color='#fff'
+        />
+      
+      </TouchableOpacity>
+    </View>
+  )
+
+  renderLoadingModal = () => (
+    
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={this.state.isUpdating}
+        onRequestClose={() => {
+          this.setState({isUpdating: false})
+          
+        }}
+        >
+          <View
+          style={{flex: 1, justifyContent: 'center', alignItems: 'center',}}
+          >
+            <LoadingIndicator />
+          </View>
+          
+        </Modal>
+      
+  )
+
   render() {
     // var {showCollection, showYourProducts, showSoldProducts} = this.props;
     var {isGetting, emptyMarket, noResultsFromFilter} = this.state;
@@ -1434,7 +1587,7 @@ class Products extends Component {
     if(isGetting == true) {
       return ( 
         <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff'}}>
-            <LoadingIndicator isVisible={isGetting} color={darkGreen} type={'Wordpress'}/>            
+            <LoadingIndicator />            
         </SafeAreaView>
       )
     }
@@ -1480,100 +1633,14 @@ class Products extends Component {
     return (
 
       <SafeAreaView style={{flex: 1}}>
+
       
 
-      <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainerStyle}>
+        {this.renderProductsScroll()}
 
-            
-            
-              <ListView
-                  contentContainerStyle={styles.listOfProducts}
-                  dataSource={this.state.leftDS.cloneWithRows(this.state.leftProducts)}
-                  renderRow={(rowData) => this.renderRow(
-                    rowData, 
-                    () => {
-                        
-                        this.props.showYourProducts ? this.hideMenus() : null;
+        {this.renderFilterButton()}
 
-                        let index = this.state.leftProducts.indexOf(rowData);
-                        this.state.leftProducts[index].isActive = !this.state.leftProducts[index].isActive;
-                        this.setState({leftProducts: this.state.leftProducts});
-                        },
-                    () => {
-                        this.incrementLikes(rowData.text.likes, rowData.uid, rowData.key, this.state.leftProducts.indexOf(rowData), 'leftProducts')
-                    },
-                    () => {
-                        this.decrementLikes(rowData.text.likes, rowData.uid, rowData.key, this.state.leftProducts.indexOf(rowData), 'leftProducts')
-                    },
-                    () => {
-                      let index = this.state.leftProducts.indexOf(rowData);
-                      this.state.leftProducts[index].isMenuActive = !this.state.leftProducts[index].isMenuActive;
-                      this.setState({leftProducts: this.state.leftProducts});
-                    },
-                    "left"
-                      
-                  )
-                  }
-                  enableEmptySections={true}
-                  removeClippedSubviews={false}
-              />
-
-              
-              { this.state.rightProducts ?
-                <ListView
-                  contentContainerStyle={styles.listOfProducts}
-                  dataSource={this.state.rightDS.cloneWithRows(this.state.rightProducts)}
-                  renderRow={(rowData) => this.renderRow(
-                    rowData, 
-                    () => {
-                      
-                      this.props.showYourProducts ? this.hideMenus() : null;
-
-                      let index = this.state.rightProducts.indexOf(rowData);
-                      this.state.rightProducts[index].isActive = !this.state.rightProducts[index].isActive;
-                      this.setState({rightProducts: this.state.rightProducts});
-                    },
-                    () => {
-                      this.incrementLikes(rowData.text.likes, rowData.uid, rowData.key, this.state.rightProducts.indexOf(rowData), 'rightProducts')
-                    },
-                    () => {
-                      this.decrementLikes(rowData.text.likes, rowData.uid, rowData.key, this.state.rightProducts.indexOf(rowData), 'rightProducts')
-                    },
-                    () => {
-                      let index = this.state.rightProducts.indexOf(rowData);
-                      this.state.rightProducts[index].isMenuActive = !this.state.rightProducts[index].isMenuActive;
-                      this.setState({rightProducts: this.state.rightProducts});
-                    },
-                    "right"
-                  )}
-                  enableEmptySections={true}
-                  removeClippedSubviews={false}
-              />
-              :
-              null
-              }
-            
-
-            {this.renderFilterModal()}
-
-          </ScrollView>
-
-        <View style={styles.filterButtonContainer}>
-
-            <TouchableOpacity 
-            onPress={() => this.setState({ showFilterModal: true }) } 
-            style={styles.filterButton}>
-            
-              <Icon 
-                name="filter-outline" 
-                size={15} 
-                color='#fff'
-              />
-            
-            </TouchableOpacity>
-          </View>
+        {this.renderLoadingModal()}
       
       </SafeAreaView>
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Linking, Dimensions, Text, StyleSheet, SafeAreaView, View, Image, ScrollView, Platform, Modal, TouchableOpacity, Keyboard, KeyboardAvoidingView, TextInput } from 'react-native';
+import { Linking, Dimensions, Text, StyleSheet, SafeAreaView, View, Fragment,Image, ScrollView, Platform, Modal, TouchableOpacity, Keyboard, KeyboardAvoidingView, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import {Button} from 'react-native-elements';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -33,6 +33,8 @@ const limeGreen = '#2e770f';
 const locations = [{country: "UK", flag: "uk"},{country: "Pakistan", flag: "pk"},{country: "USA", flag: "usa"}];
 
 const Bullet = '\u2022';
+
+const avatarUri = "https://firebasestorage.googleapis.com/v0/b/nottmystyle-447aa.appspot.com/o/Placeholders%2Fblank.jpg?alt=media&token=38926661-a722-4305-94ad-b8ad9a78dcdf";
 
 const Blob = RNFetchBlob.polyfill.Blob;
 const fs = RNFetchBlob.fs;
@@ -82,7 +84,7 @@ window.Blob = Blob;
 
 const TextForMissingDetail = ({detail}) => {
     return (
-        <Text style={new avenirNextText(woodBrown, 22, "400")}>{Bullet + " " + detail}</Text>
+        <Text style={new avenirNextText('black', 22, "400")}>{Bullet + " " + detail}</Text>
     )
 }
 
@@ -98,6 +100,7 @@ class CreateProfile extends Component {
       this.editProfileBoolean = this.props.navigation.getParam('editProfileBoolean', false)
       this.state = {
           uid:  this.editProfileBoolean ? firebase.auth().currentUser.uid : '',
+          username: '',
           email: params.googleUserBoolean || params.facebookUserBoolean ? params.user.user.email : '',
           pass: '',
           pass2: '',
@@ -319,6 +322,7 @@ class CreateProfile extends Component {
 
     var postData = {
         name: data.firstName + " " + data.lastName, //data.firstName.concat(" ", data.lastName)
+        username: data.username,
         country: data.city + ", " + data.country,
         // size: data.size,
         insta: data.insta,
@@ -342,13 +346,18 @@ class CreateProfile extends Component {
         //and then upload them to cloud storage, and store the url refs on cloud db;
 
         if(uri.includes('googleusercontent') || uri.includes('platform')) {
-            console.log(`We already have a googlePhoto url: ${uri}, so need for interaction with cloud storage`)
+            // console.log(`We already have a googlePhoto url: ${uri}, so need for interaction with cloud storage`)
             
             // const imageRef = firebase.storage().ref().child(`Users/${uid}/profile`);
             resolve(uri);
         }
+
+        else if(uri == "nothing here") {
+            resolve(avatarUri)
+        }
+
         else {
-            console.log('user has chosen picture manually through photo lib or camera.')
+            // console.log('user has chosen picture manually through photo lib or camera.')
             // let resizedImage = await ImageResizer.createResizedImage(uri,resizedWidth, resizedHeight,'JPEG',suppressionLevel);
             // const uploadUri = Platform.OS === 'ios' ? resizedImage.uri.replace('file://', '') : resizedImage.uri
             const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
@@ -359,7 +368,7 @@ class CreateProfile extends Component {
                 return Blob.build(data, { type: `${mime};BASE64` })
             })
             .then((blob) => {
-                console.log('got to blob')
+                // console.log('got to blob')
                 uploadBlob = blob
                 return imageRef.put(blob, { contentType: mime })
             })
@@ -428,8 +437,14 @@ class CreateProfile extends Component {
         profile = snap.val().Users[uid].profile;
 
         //pull uri as well and store it in pictureuris, and if there's no uri, MAB doesn't show anything
-        var {name, country, insta} = profile;
-        this.setState({editProfileBoolean: true, firstName: name.split(" ")[0], lastName: name.split(" ")[1], city: country.split(", ")[0],country: country.split(", ")[1], insta, previousUri: profile.uri ? profile.uri : false })
+        var {name, country, insta, username} = profile;
+        this.setState({
+            editProfileBoolean: true, 
+            username, firstName: name.split(" ")[0], lastName: name.split(" ")[1], 
+            city: country.split(", ")[0],country: country.split(", ")[1], 
+            insta, 
+            previousUri: profile.uri ? profile.uri : false 
+        })
 
 
       })
@@ -483,13 +498,18 @@ class CreateProfile extends Component {
     let promiseToUploadPhoto = new Promise(async (resolve, reject) => {
 
         if(uri.includes('googleusercontent') || uri.includes('platform') || uri.includes('firebasestorage')) {
-            console.log(`We already have a url for this image: ${uri}, so need for interaction with cloud storage, just store URL in cloud db`);
+            // console.log(`We already have a url for this image: ${uri}, so need for interaction with cloud storage, just store URL in cloud db`);
             
             // const imageRef = firebase.storage().ref().child(`Users/${uid}/profile`);
             resolve(uri);
         }
+
+        else if(uri == "nothing here") {
+            resolve(avatarUri)
+        }
+
         else {
-            console.log('user has chosen picture manually through photo lib or camera, store it on cloud and generate a URL for it.')
+            // console.log('user has chosen picture manually through photo lib or camera, store it on cloud and generate a URL for it.')
             // let resizedImage = await ImageResizer.createResizedImage(uri,resizedWidth, resizedHeight,'JPEG',suppressionLevel);
             // const uploadUri = Platform.OS === 'ios' ? resizedImage.uri.replace('file://', '') : resizedImage.uri
             const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
@@ -500,7 +520,7 @@ class CreateProfile extends Component {
             return Blob.build(data, { type: `${mime};BASE64` })
             })
             .then((blob) => {
-            console.log('got to blob')
+            // console.log('got to blob')
             uploadBlob = blob
             return imageRef.put(blob, { contentType: mime })
             })
@@ -630,6 +650,35 @@ class CreateProfile extends Component {
         null
   }
 
+  renderEditableInputFields = () => (
+      <View>
+        <CustomTextInput maxLength={20} placeholder={"Username"} value={this.state.username} onChangeText={username => this.setState({ username })}/>
+
+        <CustomTextInput 
+        placeholder={"First Name"} 
+        value={this.state.firstName} 
+        onChangeText={firstName => this.setState({ firstName })}
+        maxLength={13}
+        />
+
+        <CustomTextInput 
+        placeholder={"Last Name"} 
+        value={this.state.lastName} 
+        onChangeText={lastName => this.setState({ lastName })}
+        maxLength={13}
+        />
+
+        {this.renderLocationSelect()}
+
+        <CustomTextInput 
+        placeholder={"Instagram Handle (w/o @)"} 
+        value={this.state.insta} 
+        onChangeText={insta => this.setState({ insta })}
+        maxLength={16}
+        />
+      </View>
+  )
+
 
   ///////////////
 
@@ -657,10 +706,11 @@ class CreateProfile extends Component {
     // console.log(pictureuris);
     // console.log(pictureuris[0].includes('googleusercontent'))
     // console.log(googleUser, googleUserBoolean, pictureuris);
-    var conditionMet = (this.state.firstName) && (this.state.lastName) && (this.state.country) && (this.state.city) && (Array.isArray(pictureuris) && pictureuris.length == 1) && (this.state.pass == this.state.pass2) && (this.state.pass.length >= 6);
+    // (Array.isArray(pictureuris) && pictureuris.length == 1)
+    var conditionMet = (this.state.firstName) && (this.state.lastName) && (this.state.country) && (this.state.city) && (this.state.pass == this.state.pass2) && (this.state.pass.length >= 6);
     var passwordConditionMet = (this.state.pass == this.state.pass2) && (this.state.pass.length > 0);
     // var googleUserConditionMet = (this.state.firstName) && (this.state.lastName) && (this.state.country) && (Array.isArray(pictureuris) && pictureuris.length == 1);
-    var editProfileConditionMet = (this.state.firstName) && (this.state.lastName) && (this.state.country) && (Array.isArray(pictureuris) && pictureuris.length == 1);
+    var editProfileConditionMet = (this.state.firstName) && (this.state.lastName) && (this.state.country);
     
     
     if(pictureuris[0].includes('googleusercontent')) {
@@ -719,8 +769,6 @@ class CreateProfile extends Component {
 
                         <View>
 
-                            
-
                             <CustomTextInput 
                             maxLength={40} placeholder={"Email Address"} 
                             value={this.state.email} onChangeText={email => this.setState({ email })}
@@ -760,38 +808,17 @@ class CreateProfile extends Component {
                         null
                     }   
 
-                    <CustomTextInput 
-                    placeholder={"First Name"} 
-                    value={this.state.firstName} 
-                    onChangeText={firstName => this.setState({ firstName })}
-                    maxLength={13}
-                    />
-
-                    <CustomTextInput 
-                    placeholder={"Last Name"} 
-                    value={this.state.lastName} 
-                    onChangeText={lastName => this.setState({ lastName })}
-                    maxLength={13}
-                    />
-                    
-                    {this.renderLocationSelect()}
-
-                    <CustomTextInput 
-                    placeholder={"Instagram Handle (w/o @)"} 
-                    value={this.state.insta} 
-                    onChangeText={insta => this.setState({ insta })}
-                    maxLength={16}
-                    />
+                    {this.renderEditableInputFields()}
 
                     
                     </KeyboardAvoidingView>
-                    :
+                :
                     <View>
                     {
                         !this.state.editProfileBoolean ?
 
                         <View>
-
+                            
                             <CustomTextInput maxLength={40} placeholder={"Email Address"} value={this.state.email} onChangeText={email => this.setState({ email })}/>
 
                             
@@ -857,33 +884,16 @@ class CreateProfile extends Component {
                             :
                             null
                             } */}
+
+
+
+
                         </View>
                         :
                         null
                     }   
 
-                    <CustomTextInput 
-                    placeholder={"First Name"} 
-                    value={this.state.firstName} 
-                    onChangeText={firstName => this.setState({ firstName })}
-                    maxLength={13}
-                    />
-
-                    <CustomTextInput 
-                    placeholder={"Last Name"} 
-                    value={this.state.lastName} 
-                    onChangeText={lastName => this.setState({ lastName })}
-                    maxLength={13}
-                    />
-
-                    {this.renderLocationSelect()}
-
-                    <CustomTextInput 
-                    placeholder={"Instagram Handle (w/o @)"} 
-                    value={this.state.insta} 
-                    onChangeText={insta => this.setState({ insta })}
-                    maxLength={16}
-                    />
+                    {this.renderEditableInputFields()}
 
                     </View>
             }
@@ -930,7 +940,7 @@ class CreateProfile extends Component {
 
                     <TouchableOpacity
                         style={[styles.decisionButton, {backgroundColor: mantisGreen}]}
-                        onPress={() => {console.log('Sign Up Initiated') ; googleUser ? this.createProfileForGoogleOrFacebookUser(user, pictureuris[0], 'google') : facebookUser ? this.createProfileForGoogleOrFacebookUser(user, pictureuris[0], 'facebook') : this.createProfile(this.state.email, this.state.pass, pictureuris[0]) ;}} 
+                        onPress={() => {console.log('Sign Up Initiated') ; googleUser ? this.createProfileForGoogleOrFacebookUser(user, pictureuris == "nothing here" ? "" : pictureuris[0], 'google') : facebookUser ? this.createProfileForGoogleOrFacebookUser(user, pictureuris[0], 'facebook') : this.createProfile(this.state.email, this.state.pass, pictureuris[0]) ;}} 
                     >
                         <Text style={new avenirNextText('#fff', 16, "500")}>Accept</Text>
                     </TouchableOpacity>
@@ -998,7 +1008,7 @@ class CreateProfile extends Component {
             >
             <DialogContent>
                 <View style={{padding: 5,}}>
-                { !(Array.isArray(pictureuris)) || !(pictureuris.length == 1) ? <TextForMissingDetail detail={'Profile Picture'} /> : null }
+                {/* { !(Array.isArray(pictureuris)) || !(pictureuris.length == 1) ? <TextForMissingDetail detail={'Profile Picture'} /> : null } */}
                 { !this.state.email ? <TextForMissingDetail detail={'Email Address'} /> : null }
                 { !passwordConditionMet ? <TextForMissingDetail detail={'Matching Passwords'} /> : null }
                 { !this.state.firstName ? <TextForMissingDetail detail={'First Name'} /> : null }

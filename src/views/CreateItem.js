@@ -4,7 +4,7 @@ import {StackActions,NavigationActions,withNavigation} from 'react-navigation';
 // import { Jiro } from 'react-native-textinput-effects';
 // import NumericInput from 'react-native-numeric-input' 
 import {Button, ButtonGroup, Divider} from 'react-native-elements';
-import Dialog, { DialogTitle, DialogContent, DialogButton, SlideAnimation } from 'react-native-popup-dialog';
+import Dialog, { DialogTitle, DialogContent, DialogFooter, DialogButton, SlideAnimation } from 'react-native-popup-dialog';
 // import RNFetchBlob from 'react-native-fetch-blob';
 import RNFetchBlob from 'rn-fetch-blob';
 import MultipleAddButton from '../components/MultipleAddButton';
@@ -70,7 +70,7 @@ function incrementPrice(previousState, currentProps) {
 
 const TextForMissingDetail = ({detail}) => {
  return (
- <Text style={new avenirNextText(woodBrown, 22, "400")}>{Bullet + " " + detail}</Text>
+ <Text style={new avenirNextText('black', 22, "400")}>{Bullet + " " + detail}</Text>
  )
 }
  
@@ -1177,12 +1177,20 @@ uploadToStore = (pictureuris, uid, postKey) => {
             slideFrom: 'top',
             })}
             dialogTitle={<DialogTitle title="You forgot to fill in:" titleTextStyle={new avenirNextText('black', 22, "500")} />}
-            actions={[ 
-            <DialogButton
-            text="OK"
-            onPress={() => {this.setState({ helpDialogVisible: false });}}
-            />,
-            ]}
+            // actions={[ 
+            // <DialogButton
+            // text="OK"
+            // onPress={() => {this.setState({ helpDialogVisible: false });}}
+            // textStyle={{color: 'black'}}
+            // />,
+            // ]}
+            footer={
+            <DialogFooter>
+                <TouchableOpacity style={{width: 90, height: 40, justifyContent: 'center'}} onPress={() => {this.setState({ helpDialogVisible: false });}}>
+                    <Text style={{...textStyles.generic, color: 'black'}}>OK</Text>
+                </TouchableOpacity>
+            </DialogFooter>
+            }
             onTouchOutside={() => {
             this.setState({ helpDialogVisible: false });
             }}

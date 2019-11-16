@@ -40,6 +40,7 @@ const limeGreen = '#2e770f';
 // const profoundPink = '#c64f5f';
 const modalAnimationType = "slide";
 const paymentScreensIconSize = 45;
+// const payPalEndpoint = 
 const payPalEndpoint = "https://calm-coast-12842.herokuapp.com";
 // const payPalEndpoint = "https://localhost:5000";
 

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {AsyncStorage, Platform} from 'react-native';
 import firebase from 'react-native-firebase';
+// import as oldFirebase from 'firebase';
 // import Test from './src/views/Test';
 import AuthOrAppSwitch from './src/switchNavigators/AuthOrAppSwitch';
 
@@ -8,13 +9,39 @@ export default class App extends Component {
 
   isAndroid = Platform.OS == "android"
 
+  // minutes = 0
+
   async componentDidMount() {
+    // this.beginAppUsageTimer();
     if(this.isAndroid) {
       this.checkPermission();
       this.createNotificationChannel();
       this.createNotificationListeners();
     }
+
+    
   }
+
+  // componentWillUnmount = () => {
+  //   this.updateAppUsage();
+  // }
+
+  
+
+  // beginAppUsageTimer = () => {
+  //   let sec = 1000;
+  //   let min = 60000;
+  //   setInterval(() => {
+  //     this.minutes++
+  //     console.log(this.minutes);
+  //   }, sec);
+  // }
+
+  // updateAppUsage = () => {
+  //   let updates = {};
+  //   updates['/Users/' + oldFirebase.auth().currentUser.uid + '/appUsage/'] = this.minutes;
+  //   oldFirebase.database().ref().update(updates);
+  // }
 
   createNotificationChannel = async () => {
     const channel = new firebase.notifications.Android.Channel('test-channel', 'Test Channel', firebase.notifications.Android.Importance.Max)
@@ -119,6 +146,9 @@ export default class App extends Component {
     );
   }
 }
+
+
+
 
 // Pre-build fix for Android
 // implementation "androidx.appcompat:appcompat:1.0.+"

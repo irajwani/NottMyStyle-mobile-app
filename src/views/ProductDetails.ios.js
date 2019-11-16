@@ -40,7 +40,7 @@ const limeGreen = '#2e770f';
 // const profoundPink = '#c64f5f';
 const modalAnimationType = "slide";
 const paymentScreensIconSize = 45;
-const payPalEndpoint = "https://calm-coast-12842.herokuapp.com";
+const payPalEndpoint = "https://calm-coast-12842.herokuapp.com/";
 // const payPalEndpoint = "https://localhost:5000";
 
 const inputRange = [0, 160, 280];
@@ -1344,7 +1344,7 @@ class ProductDetails extends Component {
         visible={this.state.showPurchaseModal}
         >
           <WebView 
-            source={{uri: payPalEndpoint + `/?price=${finalPrice}&name=${this.state.name}&description=${this.state.description}&sku=${this.state.sku}&currency=${this.state.currency}`}} 
+            source={{uri: payPalEndpoint + `?price=${finalPrice}&name=${this.state.name}&description=${this.state.description}&sku=${this.state.sku}&currency=${this.state.currency}`}} 
             onNavigationStateChange={data => this.handleResponse(data)}
             injectedJavaScript={`document.f1.submit()`}
           />
