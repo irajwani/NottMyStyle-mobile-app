@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:opacity="opaque">-->
+
+    <!--&lt;!&ndash; The background color, preferably the same as your normal theme &ndash;&gt;-->
+    <!--<item android:drawable="@android:color/white"/>-->
+
+    <!--&lt;!&ndash; Your product logo - 144dp color version of your app icon &ndash;&gt;-->
+    <!--<item>-->
+
+        <!--<bitmap-->
+            <!--android:src="@drawable/product_logo_144dp"-->
+            <!--android:gravity="center"/>-->
+
+    <!--</item>-->
+
+<!--</layer-list>-->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

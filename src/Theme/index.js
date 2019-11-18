@@ -1,3 +1,4 @@
 import Images from './Images';
-
-export {Images}
+import Metrics from './Metrics';
+import Colors from './Colors';
+export {Images, Metrics, Colors}

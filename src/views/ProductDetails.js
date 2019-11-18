@@ -138,14 +138,16 @@ class ProductDetails extends Component {
   }
 
   async componentDidMount() {
+    const uid = firebase.auth().currentUser.uid;
     const {params} = this.props.navigation.state;
     await this.initializePushNotifications();
     setTimeout(() => {
-      this.getUserAndProductAndOtherUserData(params.data);
+      this.getUserAndProductAndOtherUserData(params.data, uid);
+      this.updateProductViews(params.data.uid, params.data.key);
     }, 4);
 
     setInterval(() => {
-      this.getUserAndProductAndOtherUserData(params.data);
+      this.getUserAndProductAndOtherUserData(params.data, uid);
     }, 10000);
 
   }
@@ -207,13 +209,13 @@ class ProductDetails extends Component {
   // }
 
 
-  getUserAndProductAndOtherUserData(data) {
+  getUserAndProductAndOtherUserData(data, uid) {
     firebase.database().ref().once("value", (snapshot) => {
       console.log('Preparing Product Details')
       var d = snapshot.val();
       var cloudDatabaseUsers = d.Users;
       // console.log("OVER HEREEEE:" + cloudDatabaseUsers[data.uid].products[data.key].uris.thumbnail);
-      const uid = firebase.auth().currentUser.uid;
+      // const uid = firebase.auth().currentUser.uid;
       const otherUserUid = data.uid;
       
       var seller = cloudDatabaseUsers[otherUserUid], views = 0;
@@ -277,28 +279,6 @@ class ProductDetails extends Component {
       // var productComments = d.Users[data.uid].products[data.key].comments ? d.Users[data.uid].products[data.key].comments : {a: {text: 'No Reviews have been left for this product yet.', name: 'NottMyStyle Team', time: `${year}/${month.toString().length == 2 ? month : '0' + month }/${date}`, uri: '' } };
       if(seller.products[data.key] != undefined) {
         var productComments = seller.products[data.key].text.comments ? seller.products[data.key].text.comments : {a: "nothing"};
-
-        //TODO: iOS
-        //check if usersVisited array deserves an addition
-        if(seller.products[data.key].usersVisited == '') {
-          let update = {};
-          update[`/Users/${otherUserUid}/products/${data.key}/usersVisited/${uid}/`] = true;
-          firebase.database().ref().update(update);
-        }
-
-        else {
-
-          views = Object.values(seller.products[data.key].usersVisited).filter((u)=> {return u == true }).length;
-
-          if(!Object.keys(seller.products[data.key].usersVisited).includes(uid)) {
-            let update = {};
-            update[`/Users/${otherUserUid}/products/${data.key}/usersVisited/${uid}/`] = true;
-            firebase.database().ref().update(update);
-          }
-          
-        }
-        //TODO: iOS
-        
       }
       
       //When this component launches for the first time, we want to retrieve the person's addresses from the cloud (if they have any)
@@ -326,6 +306,46 @@ class ProductDetails extends Component {
       } )
     })
     
+  }
+
+  updateProductViews = (otherUserUid, key) => {
+    firebase.database().ref(`/Users/${otherUserUid}/`).once("value", (snapshot) => {
+      const seller = snapshot.val();
+      //TODO: iOS
+      //NEW WAY: every time a user visits the product, update the views by 1
+      let usersVisited = seller.products[key].usersVisited;
+      if(usersVisited == '') {
+        let update = {};
+        update[`/Users/${otherUserUid}/products/${key}/usersVisited/`] = 1;
+        firebase.database().ref().update(update);  
+      }
+
+      else {
+        let update = {};
+        update[`/Users/${otherUserUid}/products/${key}/usersVisited/`] = usersVisited + 1;
+        firebase.database().ref().update(update);
+      }
+
+      //OLD WAY: check if usersVisited array deserves an addition based on if whether the current user has already visited prod or not
+      // if(seller.products[data.key].usersVisited == '') {
+      //   let update = {};
+      //   update[`/Users/${otherUserUid}/products/${data.key}/usersVisited/${uid}/`] = true;
+      //   firebase.database().ref().update(update);
+      // }
+
+      // else {
+
+      //   views = Object.values(seller.products[data.key].usersVisited).filter((u)=> {return u == true }).length;
+
+      //   if(!Object.keys(seller.products[data.key].usersVisited).includes(uid)) {
+      //     let update = {};
+      //     update[`/Users/${otherUserUid}/products/${data.key}/usersVisited/${uid}/`] = true;
+      //     firebase.database().ref().update(update);
+      //   }
+        
+      // }
+      //TODO: iOS
+    })
   }
 
   incrementLikes = (likes, key) => {

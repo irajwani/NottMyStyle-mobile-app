@@ -17,9 +17,17 @@ const splitArrayIntoArraysOfSuccessiveElements = (array) => {
 
 } 
 
+const removeValueFromArray = (arr, value) => {
+
+  return arr.filter(function(ele){
+      return ele != value;
+  });
+
+}
+
 const filterObjectByKeys = (obj, keys) => {
   var newObj = Object.keys(obj).filter( key => !keys.includes(key)).forEach( key => delete obj[key]);
   return newObj
 }
 
-export {removeFalsyValuesFrom, splitArrayIntoArraysOfSuccessiveElements, filterObjectByKeys}  
+export {removeFalsyValuesFrom, removeValueFromArray, splitArrayIntoArraysOfSuccessiveElements, filterObjectByKeys}  
