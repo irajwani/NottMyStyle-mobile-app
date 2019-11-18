@@ -74,8 +74,11 @@ export default class AuthLoadingScreen extends Component {
   }
 
   showAppOrAuth = () => {
-    var unsubscribe = firebase.auth().onAuthStateChanged( async ( user ) => {
-        unsubscribe();
+
+    // firebase.auth().get
+    // var unsubscribe = 
+    firebase.auth().onAuthStateChanged( async ( user ) => {
+        // unsubscribe();
         // If you want to get back to basic, re-enable this:
         // this.props.navigation.navigate(user ? 'AppStack' : 'AuthStack');
         

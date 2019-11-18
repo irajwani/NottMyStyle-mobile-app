@@ -89,7 +89,7 @@ class ProfilePage extends Component {
       // this.uid = uid;
       
 
-      this.getProfileAndCountOfProductsOnSaleAndSoldAndCommentsAndUpdatePushToken(this.uid);
+      // this.getProfileAndCountOfProductsOnSaleAndSoldAndCommentsAndUpdatePushToken(this.uid);
     }, 200);
     
   }
@@ -157,6 +157,15 @@ class ProfilePage extends Component {
     var updates = {};
     updates[`/Users/${uid}/pushToken`] = token;
     firebase.database().ref().update(updates);
+  }
+
+  handlePushToken = async () => {
+    var token = await AsyncStorage.getItem('fcmToken');
+    if(token) {
+      if(currentUser.pushToken == undefined || currentUser.pushToken != token) {
+        this.updatePushToken(this.uid, token);
+      }
+    }
   }
 
   getProfileAndCountOfProductsOnSaleAndSoldAndCommentsAndUpdatePushToken(your_uid) {
