@@ -539,7 +539,12 @@ class Chats extends Component {
 class Notifications extends Component {
     constructor(props) {
         super(props);
-        this.state={isGetting:true, noNotifications: false, showDetails: false, details: false, notificationType: false, notificationKey: false};
+        this.state={
+          isGetting:true, noNotifications: false, showDetails: false, 
+          details: false, notificationType: false, notificationKey: false,
+          currency: '',
+
+        };
     }
   
     componentWillMount() {
@@ -561,8 +566,22 @@ class Notifications extends Component {
         const uid = this.props.uid;
         if(d.Users[uid].notifications) {
           const notifications = d.Users[uid].notifications 
+          var location = d.Users[uid].profile.country;
+          location = location.replace(/\s+/g, '').split(',')[1]
+          var currency;
+          switch(location) {
+            case "UK":
+              currency = '£';
+              break;
+            case "Pakistan":
+              currency = 'RS';
+              break;
+            default:
+              currency = '$';
+              break;
+          }
           // console.log('Whole Notifications Obj is: ' + notifications);
-          this.setState({notifications});
+          this.setState({notifications, currency});
         } 
         else {
           this.setState({noNotifications: true})
@@ -725,7 +744,7 @@ class Notifications extends Component {
 
     renderDetailsModal = () => {
 
-      const {notificationType, details} = this.state;
+      const {notificationType, details, currency} = this.state;
       const {deliveryOptionBody, productImageContainer, detailsTextContainer, detailsScroll,buttonContainer} = styles
       
       if(notificationType=="Item Sold!"){
@@ -771,7 +790,7 @@ class Notifications extends Component {
             <Text style={styles.detailsText}>Hi {details.sellerName},</Text>
             <Text style={styles.detailsText}>
             
-            Now that your item, {details.name}, has sold for £{details.price} to {details.buyerName}, please make sure to send it on time so we can transfer your money accordingly.
+            Now that your item, {details.name}, has sold for {currency}{details.price} to {details.buyerName}, please make sure to send it on time so we can transfer your money accordingly.
             </Text>
             <WhiteSpace height={10}/>
             {details.address ?
@@ -916,7 +935,7 @@ class Notifications extends Component {
               
             <NotificationTextScroll customFlex={0.6}>
               <Text style={styles.detailsText}>
-              Congratulations! You have successfully bought {details.name} for £{details.price}.
+              Congratulations! You have successfully bought {details.name} for {currency}{details.price}.
               </Text>
               <WhiteSpace height={10}/>
               <Text style={styles.detailsText}>
@@ -1049,7 +1068,7 @@ class Notifications extends Component {
               </View>
 
               <NotificationTextScroll customFlex={0.6}>
-                <Text style={styles.detailsText}>We noticed your item, {details.name} has been on the marketplace for a week, and hasn't sold. In order to make it more likely to sell, we recommend you reduce your price to £{Math.floor(0.90*details.price)}. Consider editing this item's details from its description page.</Text>
+                <Text style={styles.detailsText}>We noticed your item, {details.name} has been on the marketplace for a week, and hasn't sold. In order to make it more likely to sell, we recommend you reduce your price to {currency}{Math.floor(0.90*details.price)}. Consider editing this item's details from its description page.</Text>
                 
               </NotificationTextScroll>
               

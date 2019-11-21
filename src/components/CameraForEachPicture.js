@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import ImagePicker from 'react-native-image-picker';
 import { avenirNext, logoGreen, lightGray } from '../colors';
+import { textStyles } from '../styles/textStyles';
 
 
 
@@ -68,14 +69,32 @@ export default class CameraForEachPicture extends Component {
     
 
     _renderItem = (picture, index) => {
+        let text;
+        switch(index) {
+            case 0:
+                text = "Front";
+                break;
+            case 1:
+                text = "Back";
+                break;
+            default:
+                text = "Side";
+                break;
+        }
         return (
-            <TouchableOpacity key={index} style={styles.pictureContainer} onPress={() => this.openCamera(index)}>
-                {picture.uri ? 
-                    <Image source={{uri: picture.uri}} style={styles.picture}/>
-                    :
-                    <Icon name={'plus'} size={70} color={placeholderColor} />
-                }
-            </TouchableOpacity>
+            <View key={index} style={{marginBottom: 10,}}>
+                <TouchableOpacity  style={styles.pictureContainer} onPress={() => this.openCamera(index)}>
+                    {picture.uri ? 
+                        <Image source={{uri: picture.uri}} style={styles.picture}/>
+                        :
+                        <Icon name={'plus'} size={70} color={placeholderColor} />
+                    }
+                </TouchableOpacity>
+                <View style={styles.pictureText}>
+                    <Text style={{...textStyles.generic, fontWeight: "600"}}>{text}</Text>
+                </View>
+                
+            </View>
         )
     }
 
@@ -136,19 +155,22 @@ const styles = StyleSheet.create({
     },
 
     pictureContainer: {
+        flex: 0.8,
         width: 120,
         height: 120,
         margin: 10,
         borderColor: placeholderColor,
         borderRadius: 10,
         borderWidth: 3,
-        borderStyle: 'dashed',
+        borderStyle: 'solid',
         justifyContent: 'center',
         alignItems: 'center',
         // backgroundColor: 'yellow'
     },
 
     picture: {width: 120, height: 120},
+
+    pictureText: {flex: 0.2, justifyContent: 'center', alignItems: 'center'},
 
     saveButton: {
         flex: 0.1,

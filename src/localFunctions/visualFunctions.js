@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, Easing, View, TouchableWithoutFeedback, Keyboard, TouchableOpacity, Text, TextInput, Platform, StyleSheet } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
-import { darkGray, lightGray, rejectRed, almostWhite, flagRed, highlightGreen, mantisGreen, treeGreen } from '../colors';
+import { darkGray, lightGray, rejectRed, almostWhite, flagRed, highlightGreen, mantisGreen, treeGreen, silver } from '../colors';
 import Spinner from 'react-native-spinkit';
 import { avenirNextText } from '../constructors/avenirNextText';
 import {shadow} from '../constructors/shadow';
@@ -16,6 +16,10 @@ const GrayLine = () => (
 
 const WhiteSpace = ({height}) => (
     <View style={{backgroundColor: '#fff', height: height}}/>
+)
+
+const GraySeparation = () => (
+  <View style={{backgroundColor: "#edeff2", height: 20}}/>
 )
 
 const DismissKeyboardView = ({children}) => (
@@ -325,7 +329,7 @@ class BadgeIcon extends React.Component {
 
 
 
-export {GrayLine, WhiteSpace, ProfileMinutia, BasicLoadingIndicator, LoadingIndicator, DismissKeyboardView, CustomTouchableO, CustomTextInput, SignInTextInput, MarketplaceIcon, BadgeIcon}
+export {GrayLine, GraySeparation, WhiteSpace, ProfileMinutia, BasicLoadingIndicator, LoadingIndicator, DismissKeyboardView, CustomTouchableO, CustomTextInput, SignInTextInput, MarketplaceIcon, BadgeIcon}
 
 const styles = StyleSheet.create({
   inputContainer: {

@@ -89,7 +89,7 @@ class ProfilePage extends Component {
       // this.uid = uid;
       
 
-      // this.getProfileAndCountOfProductsOnSaleAndSoldAndCommentsAndUpdatePushToken(this.uid);
+      this.getProfileAndCountOfProductsOnSaleAndSoldAndCommentsAndUpdatePushToken(this.uid);
     }, 200);
     
   }
