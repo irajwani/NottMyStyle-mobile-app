@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { AsyncStorage, Platform, Dimensions, Text, StyleSheet, ScrollView, View, Image, TouchableHighlight, TouchableOpacity, SafeAreaView } from 'react-native'
+import { AsyncStorage, Platform, Dimensions, Text, StyleSheet, ImageBackground, ScrollView, View, Image, TouchableHighlight, TouchableOpacity, SafeAreaView } from 'react-native'
 
 import Svg, { Path } from 'react-native-svg';
 
@@ -24,6 +24,7 @@ import { LoadingIndicator, ProfileMinutia } from '../localFunctions/visualFuncti
 import ProgressiveImage from '../components/ProgressiveImage';
 import { stampShadow, lowerShadow } from '../styles/shadowStyles.js';
 import { textStyles } from '../styles/textStyles.js';
+import { Images, Fonts } from '../Theme/index.js';
 const {width, height} = Dimensions.get('window');
 
 const resizeMode = 'center';
@@ -490,9 +491,9 @@ class ProfilePage extends Component {
       <SafeAreaView style={styles.mainContainer}>
       
 
-        <View style={styles.linearGradient}>
+        <ImageBackground source={Images.profileBackground} style={styles.linearGradient}>
           
-          <View style={[styles.oval, {backgroundColor: this.props.navigation.getParam('backgroundColor', this.state.backgroundColor)}]}/>
+          {/* <View style={[styles.oval, {backgroundColor: this.props.navigation.getParam('backgroundColor', this.state.backgroundColor)}]}/> */}
           
           
         
@@ -612,7 +613,7 @@ class ProfilePage extends Component {
           
 
 
-      </View>
+      </ImageBackground>
       
       {/* <Svg height="50%" width="50%" viewBox="0 0 100 100">
           <Circle
@@ -641,6 +642,8 @@ class ProfilePage extends Component {
           </View>    
         
       </View> */}
+
+      {/* Top 70% ends here */}
       
       
       <View style={styles.footerContainer} >
@@ -757,7 +760,7 @@ const styles = StyleSheet.create({
     flex: 0.7,
     // overflow: 'hidden',
     // position: "relative",
-    // backgroundColor: "#c8f966",
+    // backgroundColor: "blue",
     //backgroundColor: 'red',
     // borderWidth:2,
     // borderColor:'black',
@@ -969,10 +972,10 @@ const styles = StyleSheet.create({
   },
   profilepic: {
     //flex: 1,
-    width: 130,
-    height: 130,
+    width: 170,
+    height: 170,
     alignSelf: 'center',
-    borderRadius: 65,
+    borderRadius: 85,
     borderColor: '#fff',
     borderWidth: 0,
     ...stampShadow,
@@ -995,8 +998,9 @@ const styles = StyleSheet.create({
   name: {
     ...textStyles.generic,
     marginTop: 10,
-    fontSize: 18,
-    color: 'black'
+    ...Fonts.h3,
+    fontWeight: "700",
+    // color: 'black'
   },
   pos: {
     ...textStyles.generic,
