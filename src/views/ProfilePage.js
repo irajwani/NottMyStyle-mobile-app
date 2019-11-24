@@ -4,6 +4,7 @@ import { AsyncStorage, Platform, Dimensions, Text, StyleSheet, ImageBackground, 
 import Svg, { Path } from 'react-native-svg';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Button, Divider} from 'react-native-elements'
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import firebase from '../cloud/firebase.js';
@@ -31,10 +32,13 @@ const resizeMode = 'center';
 
 const noReviewsText = "No Reviews have been\n left for you thus far.";
 
-const ButtonContainer = ({children}) => (
-  <View style={{flex: 0.33, alignItems: 'center', justifyContent: 'center'}}>
+const ButtonContainer = ({children, text, onPress}) => (
+  <TouchableOpacity onPress={() => onPress()} style={{flexDirection: 'row', flex: 0.5, justifyContent: 'flex-start', alignItems: 'center', margin: 10}}>
     {children}
-  </View>
+    <View style={styles.buttonTextContainer}>
+      <Text style={{...textStyles.generic, color: '#fff', ...Fonts.big, fontWeight: "300"}}>{text}</Text>
+    </View>
+  </TouchableOpacity>
 )
 
 
@@ -495,12 +499,11 @@ class ProfilePage extends Component {
           
           {/* <View style={[styles.oval, {backgroundColor: this.props.navigation.getParam('backgroundColor', this.state.backgroundColor)}]}/> */}
           
-          
-        
-          <View style={styles.topContainer}>
             
-          
-            <View style={styles.iconColumn}>
+            {/* Top Icons */}
+
+            <View style={styles.iconRow}>
+              
               <Icon 
                 name="settings" 
                 size={30} 
@@ -509,9 +512,57 @@ class ProfilePage extends Component {
 
               />
               
+
+              
+              <View>
+
+                <View style={{flex: 0.5, alignItems: 'center'}}>
+                  {this.state.isMenuActive ?
+                  <Icon 
+                  name={"chevron-down"} 
+                  size={40} 
+                  color={'#fff'}
+                  onPress={this.toggleMenu}
+                  
+                  />
+                  :
+                  <Icon 
+                    name={"logout"} 
+                    size={30} 
+                    color={'#020002'}
+                    onPress={this.toggleMenu}
+                    
+                  />
+                  }
+                </View>
+
+                <View style={{flex: 0.5, alignItems: 'center', backgroundColor: 'red'}}>
+                  {this.state.isMenuActive ? 
+                  
+                    <TouchableOpacity
+                    underlayColor={'transparent'} 
+                    onPress={this.logOut}  
+                    style={styles.popDownMenu}>
+                    <Text
+                        
+                      style={new avenirNextText('black', 13, "300")}>Log Out</Text>
+                      
+                      
+                    </TouchableOpacity>
+                    :
+                    null
+                  }
+                </View>
+
+              </View>
+              
+                
+              
             </View>  
 
-            <View style={styles.profileColumn}>
+            {/* Profile pic, name etc. */}
+
+            <View style={styles.profileRow}>
               {this.state.uri ?
               <TouchableOpacity style={{...stampShadow}} onPress={this.navToEditProfile}>
                 <ProgressiveImage 
@@ -534,50 +585,15 @@ class ProfilePage extends Component {
               
             </View>  
 
-            <View style={styles.iconColumn}>
-
-              {this.state.isMenuActive ?
-                <Icon 
-                name={"chevron-down"} 
-                size={40} 
-                color={'#fff'}
-                onPress={this.toggleMenu}
-                
-                />
-              :
-                <Icon 
-                  name={"logout"} 
-                  size={30} 
-                  color={'#020002'}
-                  onPress={this.toggleMenu}
-                  
-                />
-              }
-              
-              {this.state.isMenuActive ? 
-                
-                <TouchableOpacity
-                underlayColor={'transparent'} 
-                onPress={this.logOut}  
-                style={styles.popDownMenu}>
-                <Text
-                    
-                  style={new avenirNextText('black', 13, "300")}>Log Out</Text>
-                  
-                  
-                </TouchableOpacity>
-                :
-                null
-                }
-            </View>
+            
                 
 
-          </View>
           
           
-          <View style={styles.bottomContainer}>
-              <ButtonContainer>
-                <TouchableOpacity onPress={() => {this.props.navigation.navigate('YourProducts')}} style={[styles.blackCircle]}>
+          
+          <View style={styles.buttonsContainer}>
+              <ButtonContainer onPress={() => {this.props.navigation.navigate('YourProducts')}} text={"On Sale"}>
+                <View  style={[styles.blackCircle]}>
                   <Svg height={"60%"} width={"60%"} fill={'#fff'} viewBox="0 0 47.023 47.023">
                       <Path d="M45.405,25.804L21.185,1.61c-1.069-1.067-2.539-1.639-4.048-1.603L4.414,0.334C2.162,0.39,0.349,2.205,0.296,4.455
         L0.001,17.162c-0.037,1.51,0.558,2.958,1.627,4.026L25.848,45.38c2.156,2.154,5.646,2.197,7.8,0.042l11.761-11.774
@@ -593,19 +609,24 @@ class ProfilePage extends Component {
         l-0.965,0.979l-3.366-3.322l5.209-5.276l3.255,3.215L35.307,31.818z" stroke="#fff" strokeWidth="0.8"/>
                       <Path d="M23.068,23.788l1.166,1.151l1.499-2.741C25.347,22.434,23.068,23.788,23.068,23.788z" stroke="#fff" strokeWidth="0.8"/>
                   </Svg>
-                </TouchableOpacity>
+                </View>
               </ButtonContainer>
 
-              <ButtonContainer>
+              {/* <ButtonContainer>
                 <TouchableOpacity onPress={() => {this.props.navigation.navigate('Sell')}} style={styles.whiteCircle}>
                   <Icon name={'plus'} size={60} color='black'/>
                 </TouchableOpacity>
-              </ButtonContainer>
+              </ButtonContainer> */}
 
-              <ButtonContainer>
-                <TouchableOpacity onPress={() => {this.props.navigation.navigate('SoldProducts')}} style={styles.blackCircle}>
-                  <Text style={{fontFamily: 'Avenir Next', fontWeight: "700", fontSize: 16, color:'#fff'}}>SOLD</Text>
-                </TouchableOpacity>
+              <ButtonContainer onPress={() => {this.props.navigation.navigate('SoldProducts')}} text={"Sold"}>
+                <View style={styles.blackCircle}>
+                  <FontAwesomeIcon 
+                    name={"paper-plane"} 
+                    size={30} 
+                    color={'#fff'}
+                  />
+                  {/* <Text style={{fontFamily: 'Avenir Next', fontWeight: "700", fontSize: 16, color:'#fff'}}>SOLD</Text> */}
+                </View>
               </ButtonContainer>
 
           </View>
@@ -758,6 +779,7 @@ const styles = StyleSheet.create({
 
   linearGradient: {
     flex: 0.7,
+    ...lowerShadow,
     // overflow: 'hidden',
     // position: "relative",
     // backgroundColor: "blue",
@@ -790,9 +812,9 @@ const styles = StyleSheet.create({
     flex: 0.65
   },
 
-  bottomContainer: {
-    flex: 0.35,    
-    flexDirection: 'row'
+  buttonsContainer: {
+    flex: 0.25,    
+    flexDirection: 'row',
     // borderBottomColor: 'black',
     // borderBottomWidth: 1,
     // backgroundColor: 'red',    
@@ -822,9 +844,10 @@ const styles = StyleSheet.create({
     // backgroundColor: yellowGreen
   },
 
-  iconColumn: {
-    flex: 0.25,
-    // justifyContent: 'flex-start',
+  iconRow: {
+    flex: 0.15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     margin: 10,
     // marginVertical: 25,
@@ -832,8 +855,8 @@ const styles = StyleSheet.create({
     // height: 150,
   },
 
-  profileColumn: {
-    flex: 0.5,
+  profileRow: {
+    flex: 0.6,
     marginTop: 25,
     justifyContent: 'center',
     alignItems: 'center',
@@ -906,7 +929,7 @@ const styles = StyleSheet.create({
   },
 
   blackCircle: {
-    marginBottom: 10,
+    // marginBottom: 10,
     width: 65,
     height: 65,
     borderRadius: 32.5,
@@ -914,6 +937,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'black',
+    borderColor: '#fff',
+    borderWidth: 0.3,
     // ...stampShadow,
   },
 
@@ -1012,6 +1037,24 @@ const styles = StyleSheet.create({
     fontWeight: "200"
     // fontStyle: 'italic'
   },
+
+  ///////// 
+  // On Sale and Sold buttons
+
+  buttonTextContainer: {
+    borderRadius: 20,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    width: width/3,
+    position: 'absolute',
+    zIndex: -1,
+    left: 37,
+  },
+
+  /////////////
+  /////////////
 
   companyLogoContainer: {
     justifyContent: 'center',

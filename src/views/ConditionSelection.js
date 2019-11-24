@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, SafeAreaView, View, ScrollView, TouchableOpacity, Dimensions } from 'react-native'
 // import { Jiro } from 'react-native-textinput-effects';
-import { darkGray } from '../colors';
+import { darkGray, silver } from '../colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { avenirNextText } from '../constructors/avenirNextText';
 import { GrayLine, WhiteSpace } from '../localFunctions/visualFunctions';
@@ -124,7 +124,7 @@ export default class ConditionSelection extends Component {
             </View>   
         </View>
 
-        <View style={{height: 1, backgroundColor: darkGray}}/>
+        <View style={{height: 1, backgroundColor: silver}}/>
 
         
 
@@ -135,7 +135,7 @@ export default class ConditionSelection extends Component {
                             <TouchableOpacity underlayColor={'#fff'} onPress={()=>this.navToCreateItem('type', t)}>
                                 <Text style={[styles.condition, {fontSize: 22}]}>{t}</Text>
                             </TouchableOpacity>
-                            {/* <GrayLine/> */}
+                            
 
                         </View>
                 
@@ -153,12 +153,11 @@ export default class ConditionSelection extends Component {
                         {
                             sizes.map( (s, index) => 
                                 <View key={index} style={styles.conditionRow}>
-                                    {/* {index == 0 ? <GrayLine/> : null} */}
+                                    
                                     <TouchableOpacity underlayColor={'#fff'} onPress={()=>this.navToCreateItem('size', s)}>
                                         <Text style={styles.condition}>{s}</Text>
                                     </TouchableOpacity>
-                                    {/* <GrayLine/> */}
-                                    {/* <WhiteSpace height={5}/> */}
+                                    
                                 </View>
                             )
                         }
@@ -171,8 +170,7 @@ export default class ConditionSelection extends Component {
                                 <TouchableOpacity underlayColor={'#fff'} onPress={()=>this.navToCreateItem('condition', c)}>
                                     <Text style={styles.condition}>{c}</Text>
                                 </TouchableOpacity>
-                                {/* <GrayLine/> */}
-                                {/* <WhiteSpace height={5}/> */}
+                                
                             </View>
                         
                         )
@@ -217,8 +215,8 @@ const styles = StyleSheet.create({
     selectionContainer: {
         // backgroundColor: 'red',
         flex: 0.91,
-        paddingHorizontal: 3,
-        paddingVertical: 4,
+        // paddingHorizontal: 3,
+        // paddingVertical: 4,
         // justifyContent: 'space-evenly'
     },
 
@@ -230,19 +228,20 @@ const styles = StyleSheet.create({
 
     conditionRow: {
         backgroundColor: '#fff',
-        margin: 10,
-        borderRadius: 15,
-        borderWidth: 0.3,
+        // margin: 10,
+        // borderRadius: 15,
+        borderBottomWidth: 0.7,
         borderColor: 'black',
         // justifyContent: 'center', 
         // paddingLeft: 8, 
         padding: 8,
         // paddingHorizontal: 5, paddingVertical: 3, 
-        width: width - 30,
-        shadowOpacity: 1,
-        shadowRadius: 0.5,
-        shadowColor: 'black',
-        shadowOffset: {width: -1, height: 1},
+        // width: width - 30,
+        width: width,
+        // shadowOpacity: 1,
+        // shadowRadius: 0.5,
+        // shadowColor: 'black',
+        // shadowOffset: {width: -1, height: 1},
     },
 
     condition: {
