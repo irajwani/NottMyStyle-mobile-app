@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Linking, Dimensions, Text, StyleSheet, SafeAreaView, View, Fragment,Image, ScrollView, Platform, Modal, TouchableOpacity, Keyboard, KeyboardAvoidingView, TextInput } from 'react-native';
+import { ImageBackground, Linking, Dimensions, Text, StyleSheet, SafeAreaView, View, Fragment,Image, ScrollView, Platform, Modal, TouchableOpacity, Keyboard, KeyboardAvoidingView, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import {Button} from 'react-native-elements';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -19,6 +19,7 @@ import { shadow } from '../constructors/shadow.js';
 import { avenirNextText } from '../constructors/avenirNextText.js';
 import { center } from '../constructors/center.js';
 import ImageResizer from 'react-native-image-resizer';
+import { Images } from '../Theme/index.js';
 
 const {width, height} = Dimensions.get('window');
 const resizedWidth = 5000, resizedHeight = 5000;
@@ -650,6 +651,80 @@ class CreateProfile extends Component {
         null
   }
 
+  renderAuthInputFields = (passwordConditionMet) => (
+      <View>
+                            
+        <CustomTextInput maxLength={40} placeholder={"Email Address"} value={this.state.email} onChangeText={email => this.setState({ email })}/>
+
+        
+
+        <CustomTextInput 
+        placeholder={"Password"} 
+        value={this.state.pass} 
+        onChangeText={pass => this.setState({ pass })}
+        maxLength={16}
+        secureTextEntry={true}
+        />
+
+        
+
+        
+        <View style={{flexDirection: 'row', borderWidth: this.state.pass && this.state.pass2 ? 0.5 : 0, borderColor: passwordConditionMet ? mantisGreen : flashOrange}}>
+            <View style={{flex: passwordConditionMet ? 1 : 0.85}}>
+                <CustomTextInput 
+                placeholder={"Retype Password"} 
+                value={this.state.pass2} 
+                onChangeText={pass2 => this.setState({ pass2 })}
+                maxLength={16}
+                secureTextEntry={true}
+                />
+            </View>
+            {passwordConditionMet && 
+            <View style={{flex: 0.15, justifyContent: 'center', alignItems: 'center'}}>
+                <Icon 
+                    name="verified" 
+                    size={30} 
+                    color={mantisGreen}
+                />
+            </View>
+            }
+
+        </View>
+
+        
+
+        
+        
+
+        {/* {this.state.pass && this.state.pass2?
+            passwordConditionMet ?
+            <View style={styles.passwordStatusRow}>
+            <Text style={[styles.passwordStatusText, {color: mantisGreen}]}>Passwords Match!</Text>
+            <Icon 
+                name="verified" 
+                size={30} 
+                color={mantisGreen}
+            />
+            </View> 
+            :
+            <View style={styles.passwordStatusRow}>
+            <Text style={[styles.passwordStatusText, {color: flashOrange}]}>Passwords Don't Match!</Text>
+            <Icon 
+                name="alert-circle" 
+                size={30} 
+                color={flashOrange}
+            />
+            </View>
+        :
+        null
+        } */}
+
+
+
+
+    </View>
+  )
+
   renderEditableInputFields = () => (
       <View>
         <CustomTextInput maxLength={20} placeholder={"Username"} value={this.state.username} onChangeText={username => this.setState({ username })}/>
@@ -727,12 +802,13 @@ class CreateProfile extends Component {
 
     return (
         <SafeAreaView style={styles.mainContainer}>
+        <ImageBackground source={Images.createProfileBg} style={styles.mainContainer}>
 
-            <View style={styles.backIconAndMABAndHelpContainer}>
+            <View style={styles.headerRow}>
                 <View style={{flex: 0.1, justifyContent: 'flex-start',}}>
                     <FontAwesomeIcon
                     name='arrow-left'
-                    size={28}
+                    size={38}
                     color={'#fff'}
                     onPress = { () => { 
                         this.props.navigation.goBack();
@@ -741,7 +817,7 @@ class CreateProfile extends Component {
                     />
                 </View>
                 <View style={{flex: 0.80, justifyContent: 'flex-start', alignItems: 'center',  }}>
-                    <MultipleAddButton navToComponent={'CreateProfile'} pictureuris={pictureuris} />
+                    <Text>Sign Up</Text>
                 </View>
                 <View style={{flex: 0.1, justifyContent: 'flex-start', alignItems: 'center'}}>
                     <Icon
@@ -754,8 +830,12 @@ class CreateProfile extends Component {
                 </View>    
             </View>
 
+            <View style={styles.pictureRow}>
+                <MultipleAddButton navToComponent={'CreateProfile'} pictureuris={pictureuris} />
+            </View>
 
-            <ScrollView style={{flex: 0.375}} contentContainerStyle={[styles.container, {paddingBottom: this.state.keyboardShown ? height/5 : 0}]}>
+
+            <ScrollView style={styles.inputsRow} contentContainerStyle={[styles.container, {paddingBottom: this.state.keyboardShown ? height/5 : 0}]}>
             
             {/* <Text style={{fontFamily: 'Avenir Next', fontWeight: '300', fontSize: 20, textAlign: 'center'}}>Choose Profile Picture:</Text> */}
             
@@ -817,78 +897,7 @@ class CreateProfile extends Component {
                     {
                         !this.state.editProfileBoolean ?
 
-                        <View>
-                            
-                            <CustomTextInput maxLength={40} placeholder={"Email Address"} value={this.state.email} onChangeText={email => this.setState({ email })}/>
-
-                            
-
-                            <GrayLine/>
-
-                            <CustomTextInput 
-                            placeholder={"Password"} 
-                            value={this.state.pass} 
-                            onChangeText={pass => this.setState({ pass })}
-                            maxLength={16}
-                            secureTextEntry={true}
-                            />
-
-                            
-
-                            
-                            <View style={{flexDirection: 'row', borderWidth: this.state.pass && this.state.pass2 ? 0.5 : 0, borderColor: passwordConditionMet ? mantisGreen : flashOrange}}>
-                                <View style={{flex: passwordConditionMet ? 1 : 0.85}}>
-                                    <CustomTextInput 
-                                    placeholder={"Retype Password"} 
-                                    value={this.state.pass2} 
-                                    onChangeText={pass2 => this.setState({ pass2 })}
-                                    maxLength={16}
-                                    secureTextEntry={true}
-                                    />
-                                </View>
-                                {passwordConditionMet && 
-                                <View style={{flex: 0.15, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Icon 
-                                        name="verified" 
-                                        size={30} 
-                                        color={mantisGreen}
-                                    />
-                                </View>}
-
-                            </View>
-
-                            
-
-                            
-                            
-                    
-                            {/* {this.state.pass && this.state.pass2?
-                                passwordConditionMet ?
-                                <View style={styles.passwordStatusRow}>
-                                <Text style={[styles.passwordStatusText, {color: mantisGreen}]}>Passwords Match!</Text>
-                                <Icon 
-                                    name="verified" 
-                                    size={30} 
-                                    color={mantisGreen}
-                                />
-                                </View> 
-                                :
-                                <View style={styles.passwordStatusRow}>
-                                <Text style={[styles.passwordStatusText, {color: flashOrange}]}>Passwords Don't Match!</Text>
-                                <Icon 
-                                    name="alert-circle" 
-                                    size={30} 
-                                    color={flashOrange}
-                                />
-                                </View>
-                            :
-                            null
-                            } */}
-
-
-
-
-                        </View>
+                        this.renderAuthInputFields(passwordConditionMet)
                         :
                         null
                     }   
@@ -1065,7 +1074,7 @@ class CreateProfile extends Component {
             </TouchableOpacity>
         </TouchableOpacity>
         
-
+        </ImageBackground>
         </SafeAreaView>
         )
       
@@ -1091,7 +1100,7 @@ const styles = StyleSheet.create({
 
     mainContainer: {
         flex: 1,
-        backgroundColor: bgBlack,
+        // backgroundColor: bgBlack,
         // height: '100%',
         // justifyContent: 'space-around',
         // left: 0,
@@ -1120,11 +1129,27 @@ const styles = StyleSheet.create({
 
     },
 
-    backIconAndMABAndHelpContainer: {
-        flex: 0.4,flexDirection: 'row', 
+    headerRow: {
+        flex: 0.1,
+        flexDirection: 'row', 
+        justifyContent: 'space-between',
+        alignItems: 'center',
+
         // backgroundColor: 'red',
         margin: 5,
-        paddingVertical: 3, paddingRight: 2, paddingLeft: 1 
+        paddingVertical: 1, paddingHorizontal: 10,
+    },
+
+    pictureRow: {
+        flex: 0.275,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        margin: 5,
+        marginBottom: 10,
+    },
+
+    inputsRow: {
+        flex: 0.4
     },
 
     inputContainer: {

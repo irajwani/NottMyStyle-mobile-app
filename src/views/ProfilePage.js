@@ -536,7 +536,7 @@ class ProfilePage extends Component {
                   }
                 </View>
 
-                <View style={{flex: 0.5, alignItems: 'center', backgroundColor: 'red'}}>
+                <View style={{flex: 0.5, position: 'absolute', top: 30, alignItems: 'center', backgroundColor: 'red'}}>
                   {this.state.isMenuActive ? 
                   
                     <TouchableOpacity
@@ -550,7 +550,7 @@ class ProfilePage extends Component {
                       
                     </TouchableOpacity>
                     :
-                    null
+                    <View/>
                   }
                 </View>
 
