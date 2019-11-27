@@ -48,7 +48,7 @@ const CustomTextInput = ({placeholder, onChangeText, value, autoCapitalize, maxL
           secureTextEntry={secureTextEntry ? true : false}
           style={styles.inputText}
           placeholder={placeholder}
-          placeholderTextColor={lightGray}
+          placeholderTextColor={"#fff"}
           onChangeText={onChangeText}
           value={value}
           multiline={false}
@@ -337,8 +337,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     // flexDirection: ''
     // justifyContent: 'center',
-    // borderBottomWidth: 0.2,
-    // borderBottomColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#fff',
     alignItems: 'stretch'
 },
 
@@ -353,7 +353,7 @@ input: {
   ...new shadow(2,2, color = mantisGreen, -1, 1)
 },
 
-inputText: { fontFamily: 'Avenir Next', fontSize: 16, fontWeight: "500", color: "#fff"},
+inputText: { fontFamily: 'Avenir Next', fontSize: 16, fontWeight: "700", color: "#fff"},
 
 loadingIndicatorContainer: {justifyContent: 'center', alignItems: 'center', width: 75, height: 75},
 

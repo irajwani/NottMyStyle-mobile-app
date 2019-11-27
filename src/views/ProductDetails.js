@@ -1606,9 +1606,15 @@ class ProductDetails extends Component {
         
           {/* Product Name (Not Brand) and Price Row */}
         <View style={styles.nameAndPriceRow}>
+          <Text style={new avenirNextText('black', 18, "300")}>{text.name.toUpperCase().replace(/ +/g, " ")}</Text>
+          <Text style={[styles.original_price, {fontSize: String(text.price).length > 3 ? 11 : 17, color: limeGreen}]} >
+            {this.state.currency + text.price}
+          </Text>
+          
           <View style={styles.nameContainer}>
             <Text style={new avenirNextText('black', 18, "300")}>{text.name.toUpperCase().replace(/ +/g, " ")}</Text>
           </View>
+
           <View style={styles.likesContainer}>
             
             <Icon name={collectionKeys.includes(params.data.key) ? "heart" : "heart-outline" }
@@ -1644,6 +1650,8 @@ class ProductDetails extends Component {
             }
           
         </View>
+
+
         <View style={{backgroundColor: 'black', height: 1.5}} />
             {/* Profile And Actions Row */}
         <View style={styles.sellerProfileAndActionsRow}>
@@ -1876,7 +1884,7 @@ const styles = StyleSheet.create( {
     paddingHorizontal: 5,
   },
   scrollContainer: {
-    flex: 0.9,
+    flex: 1,
     // marginTop: 10
   },
   contentContainer: {
@@ -1890,7 +1898,7 @@ const styles = StyleSheet.create( {
     // marginBottom: 5
   },
   carouselContainer: {
-    flex: 2,
+    flex: 0.55,
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'green',
@@ -1899,6 +1907,8 @@ const styles = StyleSheet.create( {
   backIconAndCarouselContainer: {marginTop: 5, flex: 2, flexDirection: 'row', paddingVertical: 5, paddingRight: 2, paddingLeft: 1 },
   nameAndPriceRow: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     // backgroundColor: 'red',
     padding: 5,
     // margin: 5

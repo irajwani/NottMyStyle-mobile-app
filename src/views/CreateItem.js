@@ -974,7 +974,7 @@ uploadToStore = (pictureuris, uid, postKey) => {
 
             <GraySeparation/>
             
-            <TouchableHighlight underlayColor={'#fff'} style={[styles.navToFillDetailRow, silverBorderTop, silverBorderBottom]} onPress={() => this.navToFillPrice("retailPrice")}>
+            {/* <TouchableHighlight underlayColor={'#fff'} style={[styles.navToFillDetailRow, silverBorderTop, silverBorderBottom]} onPress={() => this.navToFillPrice("retailPrice")}>
             <View style={[styles.navToFillDetailRow, {borderBottomWidth: 0}]}>
             
                 <View style={[styles.detailHeaderContainer, {flex: original_price > 0 ? 0.5 : 0.8}]}>
@@ -994,7 +994,7 @@ uploadToStore = (pictureuris, uid, postKey) => {
                 </View>
 
             </View>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
 
             
 

@@ -6,7 +6,7 @@ import Lightbox from 'react-native-lightbox';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { graphiteGray, treeGreen, optionLabelBlue, lightPurple } from '../colors';
 
-const {width} = Dimensions.get('window')
+const {width, height} = Dimensions.get('window')
 // import { iOSColors } from 'react-native-typography';
 
 class CustomCarousel extends Component {
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width,
-    height: 245,
+    height: 0.55*height,
     // borderWidth: 2,
     // borderColor: "#2c2d2d",
     // position: 'absolute'

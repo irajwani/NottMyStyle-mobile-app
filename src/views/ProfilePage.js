@@ -506,7 +506,7 @@ class ProfilePage extends Component {
               
               <Icon 
                 name="settings" 
-                size={30} 
+                size={40} 
                 color={'black'}
                 onPress={() => this.props.navigation.navigate('Settings')}
 
@@ -514,7 +514,7 @@ class ProfilePage extends Component {
               
 
               
-              <View>
+              <View style={{alignItems: 'center'}}>
 
                 <View style={{flex: 0.5, alignItems: 'center'}}>
                   {this.state.isMenuActive ?
@@ -526,17 +526,26 @@ class ProfilePage extends Component {
                   
                   />
                   :
-                  <Icon 
-                    name={"logout"} 
-                    size={30} 
-                    color={'#020002'}
-                    onPress={this.toggleMenu}
-                    
-                  />
+                  <View style={{flexDirection: 'row', }}>
+                    <FontAwesomeIcon 
+                      name={"door-closed"} 
+                      size={40} 
+                      color={'#020002'}
+                      onPress={this.toggleMenu}
+                    />
+                    <View style={{zIndex: 8889, position: 'absolute', right: 10}}>
+                      <FontAwesomeIcon 
+                        name={"arrow-left"} 
+                        size={40} 
+                        color={'#020002'}
+                        onPress={this.toggleMenu}
+                      />
+                    </View>
+                  </View>
                   }
                 </View>
 
-                <View style={{flex: 0.5, position: 'absolute', top: 30, alignItems: 'center', backgroundColor: 'red'}}>
+                <View style={{flex: 0.5, position: 'absolute', top: 30, padding: 10, alignItems: 'center'}}>
                   {this.state.isMenuActive ? 
                   
                     <TouchableOpacity
@@ -674,7 +683,7 @@ class ProfilePage extends Component {
           <Text style={styles.reviewsHeader}>REVIEWS</Text>
           {this.state.noComments ? null : Object.keys(comments).map(
                   (comment) => (
-                  <View key={comment} style={[styles.commentContainer, Platform.OS == 'android' ? {borderWidth: 0.5, borderColor: 'black'} : null]}>
+                  <View key={comment} style={styles.commentContainer}>
 
                       <View style={styles.commentPicAndTextRow}>
 
@@ -850,6 +859,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     margin: 10,
+    paddingHorizontal: 20,
     // marginVertical: 25,
     // backgroundColor: 'red'
     // height: 150,
@@ -858,7 +868,7 @@ const styles = StyleSheet.create({
   profileRow: {
     flex: 0.6,
     marginTop: 25,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     // marginVertical: 20
   },
@@ -937,8 +947,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'black',
-    borderColor: '#fff',
-    borderWidth: 0.3,
+    // borderColor: '#fff',
+    // borderWidth: 0.3,
     // ...stampShadow,
   },
 
@@ -1104,10 +1114,10 @@ commentContainer: {
   borderRadius: 10,
   // width: width - 15,
   backgroundColor: "#fff",
-  shadowOpacity: 0.5,
-  shadowRadius: 1.3,
-  shadowColor: 'black',
-  shadowOffset: {width: 0, height: 0},
+  // shadowOpacity: 0.5,
+  // shadowRadius: 1.3,
+  // shadowColor: 'black',
+  // shadowOffset: {width: 0, height: 0},
   padding: 5,
   marginVertical: 4
 

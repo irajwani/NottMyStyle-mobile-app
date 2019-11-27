@@ -16,6 +16,7 @@ import { lightGray, treeGreen, bobbyBlue, mantisGreen, bgBlack, flashOrange, log
 // import { PacmanIndicator } from 'react-native-indicators';
 import {GrayLine, LoadingIndicator, CustomTextInput} from '../localFunctions/visualFunctions';
 import { shadow } from '../constructors/shadow.js';
+import { textStyles } from '../styles/textStyles.js';
 import { avenirNextText } from '../constructors/avenirNextText.js';
 import { center } from '../constructors/center.js';
 import ImageResizer from 'react-native-image-resizer';
@@ -575,11 +576,11 @@ class CreateProfile extends Component {
 
   renderLocationSelect = () => (
     <View style={[{flexDirection: 'row'}, styles.inputContainer]}>
-        <View style={{flex: 0.7}}>
+        <View style={{flex: 0.7, marginHorizontal: 5, borderBottomWidth: 1, borderColor: '#fff', marginRight: 10}}>
             <TextInput 
             style={styles.inputText}
             placeholder={"City"} 
-            placeholderTextColor={lightGray}
+            placeholderTextColor={"#fff"}
             value={this.state.city} 
             onChangeText={city => this.setState({ city })}
             maxLength={16}
@@ -590,9 +591,10 @@ class CreateProfile extends Component {
             
         </View>
 
-        <TouchableOpacity style={{flex: 0.3, justifyContent: 'center'}} onPress={this.toggleShowCountrySelect}>
+        <TouchableOpacity style={{flex: 0.3, justifyContent: 'center', borderBottomWidth: 1, borderColor: '#fff'}} onPress={this.toggleShowCountrySelect}>
             <Text 
-            style={[styles.inputText, {color: this.state.country ? '#fff' : lightGray }]}
+            style={styles.inputText}
+            // style={[styles.inputText, {color: this.state.country ? '#fff' : lightGray }]}
             >
             {this.state.country ? this.state.country : "Country"}
             </Text>
@@ -624,10 +626,10 @@ class CreateProfile extends Component {
                     }} 
                     style={[{flexDirection: 'row'}, {borderBottomColor: '#fff', borderBottomWidth: 1}]}>
                         <View style={styles.specificLocationContainer}>
-                            <Image style={{width: 20, height: 20}} source={ location.flag == "usa" ? require('../images/usa.png') : location.flag == "uk" ? require('../images/uk.png') : require('../images/pk.png') }/>
+                            <Image style={{width: 30, height: 30}} source={ location.flag == "usa" ? require('../images/usa.png') : location.flag == "uk" ? require('../images/uk.png') : require('../images/pk.png') }/>
                         </View>
                         <View style={styles.specificLocationContainer}>
-                            <Text style={new avenirNextText("#fff", 20, "300")}>{location.country}</Text>
+                            <Text style={new avenirNextText("black", 24, "600")}>{location.country}</Text>
                         </View>
                     </TouchableOpacity>
                 ))}
@@ -725,25 +727,35 @@ class CreateProfile extends Component {
     </View>
   )
 
-  renderEditableInputFields = () => (
+  renderEditableInputFields = (passwordConditionMet) => (
       <View>
         <CustomTextInput maxLength={20} placeholder={"Username"} value={this.state.username} onChangeText={username => this.setState({ username })}/>
 
-        <CustomTextInput 
-        placeholder={"First Name"} 
-        value={this.state.firstName} 
-        onChangeText={firstName => this.setState({ firstName })}
-        maxLength={13}
-        />
+        <View style={{flexDirection: 'row', }}>
+            <View style={{flex: 0.5, marginRight: 10}}>
+                <CustomTextInput 
+                placeholder={"First Name"} 
+                value={this.state.firstName} 
+                onChangeText={firstName => this.setState({ firstName })}
+                maxLength={13}
+                />
+            </View>
+            <View style={{flex: 0.5}}>
+                <CustomTextInput 
+                placeholder={"Last Name"} 
+                value={this.state.lastName} 
+                onChangeText={lastName => this.setState({ lastName })}
+                maxLength={13}
+                />
+            </View>
+        </View>
 
-        <CustomTextInput 
-        placeholder={"Last Name"} 
-        value={this.state.lastName} 
-        onChangeText={lastName => this.setState({ lastName })}
-        maxLength={13}
-        />
+        {!this.state.editProfileBoolean ?
 
-        {this.renderLocationSelect()}
+            this.renderAuthInputFields(passwordConditionMet)
+            :
+            null
+        } 
 
         <CustomTextInput 
         placeholder={"Instagram Handle (w/o @)"} 
@@ -751,6 +763,10 @@ class CreateProfile extends Component {
         onChangeText={insta => this.setState({ insta })}
         maxLength={16}
         />
+
+        {this.renderLocationSelect()}
+
+        
       </View>
   )
 
@@ -817,12 +833,12 @@ class CreateProfile extends Component {
                     />
                 </View>
                 <View style={{flex: 0.80, justifyContent: 'flex-start', alignItems: 'center',  }}>
-                    <Text>Sign Up</Text>
+                    <Text style={{...textStyles.generic, color: '#fff', fontWeight: "700", fontSize: 28}}>{!this.state.editProfileBoolean ? "Sign Up" : "Edit Profile" }</Text>
                 </View>
                 <View style={{flex: 0.1, justifyContent: 'flex-start', alignItems: 'center'}}>
                     <Icon
                     name='information-variant'
-                    size={28}
+                    size={38}
                     color={'#fff'}
                     onPress={() => this.setState({infoModalVisible: true}) } 
 
@@ -845,64 +861,17 @@ class CreateProfile extends Component {
             {
                 Platform.OS == 'ios' ?
                     <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={80} enabled={this.state.keyboardShown ? true : false}>
-                        {!this.state.editProfileBoolean ?
+                          
 
-                        <View>
-
-                            <CustomTextInput 
-                            maxLength={40} placeholder={"Email Address"} 
-                            value={this.state.email} onChangeText={email => this.setState({ email })}
-                                
-                            />
-
-                            <CustomTextInput 
-                            placeholder={"Password"} 
-                            value={this.state.pass} 
-                            onChangeText={pass => this.setState({ pass })}
-                            maxLength={16}
-                            secureTextEntry={true}
-                            
-                            />
-                            
-                            <View style={{borderBottomWidth: this.state.pass && this.state.pass2 ? 0.5 : 0, borderBottomColor: passwordConditionMet ? mantisGreen : flashOrange}}>
-                                <CustomTextInput 
-                                placeholder={"Retype Password"} 
-                                value={this.state.pass2} 
-                                onChangeText={pass2 => this.setState({ pass2 })}
-                                maxLength={16}
-                                secureTextEntry={true}
-                                />
-                            </View>
-
-                            {/* {this.state.pass && this.state.pass2 ?
-                                passwordConditionMet ?
-                                this.renderPasswordsMatch(true)
-                                :
-                                this.renderPasswordsMatch(false)
-                            :
-                            null
-                            
-                            } */}
-                        </View>
-                        :
-                        null
-                    }   
-
-                    {this.renderEditableInputFields()}
+                        {this.renderEditableInputFields(passwordConditionMet)}
 
                     
                     </KeyboardAvoidingView>
                 :
                     <View>
-                    {
-                        !this.state.editProfileBoolean ?
+                        
 
-                        this.renderAuthInputFields(passwordConditionMet)
-                        :
-                        null
-                    }   
-
-                    {this.renderEditableInputFields()}
+                        {this.renderEditableInputFields(passwordConditionMet)}
 
                     </View>
             }
