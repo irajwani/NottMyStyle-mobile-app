@@ -27,11 +27,12 @@ import Chatkit from "@pusher/chatkit-client";
 import {Config} from '../Config';
 import { CHATKIT_INSTANCE_LOCATOR, CHATKIT_TOKEN_PROVIDER_ENDPOINT, CHATKIT_SECRET_KEY } from '../credentials/keys.js';
 import email from 'react-native-email';
-import { almostWhite,lightGreen, highlightGreen, treeGreen, graphiteGray, rejectRed, darkBlue, profoundPink, aquaGreen, bobbyBlue, mantisGreen, logoGreen, lightGray } from '../colors';
+import { almostWhite,lightGreen, highlightGreen, treeGreen, graphiteGray, rejectRed, darkBlue, profoundPink, aquaGreen, bobbyBlue, mantisGreen, logoGreen, lightGray, silver } from '../colors';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import {Fonts} from '../Theme';
 // import BackButton from '../components/BackButton';
 import { avenirNextText, delOpt, deliveryOptions } from '../constructors/avenirNextText';
-import { WhiteSpace, LoadingIndicator, CustomTouchableO } from '../localFunctions/visualFunctions';
+import { WhiteSpace, LoadingIndicator, CustomTouchableO, GraySeparation } from '../localFunctions/visualFunctions';
 import NottLogo from '../../nottLogo/ios/NottLogo.js';
 import { textStyles } from '../styles/textStyles';
 
@@ -87,6 +88,13 @@ const DismissKeyboardView = ({children}) => (
 
 const SelectedOptionBullet = () => (
   <View style={{width: 20, height: 20, borderRadius: 10, backgroundColor: 'black'}}/>
+)
+
+const DetailCard = ({type, value, key}) => (
+  <View key={key} style={{flexDirection: 'row', borderBottomWidth: 0.7, borderColor: silver, justifyContent: 'space-between', paddingHorizontal: 10, paddingVertical: 17}}>
+    <Text style={{...textStyles.generic, fontWeight: "600", }}>{type}</Text>
+    <Text style={{...textStyles.generic, }}>{value}</Text>
+  </View>
 )
 
 class ProductDetails extends Component {
@@ -1606,54 +1614,32 @@ class ProductDetails extends Component {
         
           {/* Product Name (Not Brand) and Price Row */}
         <View style={styles.nameAndPriceRow}>
-          <Text style={new avenirNextText('black', 18, "300")}>{text.name.toUpperCase().replace(/ +/g, " ")}</Text>
-          <Text style={[styles.original_price, {fontSize: String(text.price).length > 3 ? 11 : 17, color: limeGreen}]} >
+          <Text style={new avenirNextText('black', 18, "500")}>{text.name.toUpperCase().replace(/ +/g, " ")}</Text>
+          <Text style={[styles.original_price, {fontSize: String(text.price).length > 3 ? Fonts.small.fontSize : Fonts.h4.fontSize, color: mantisGreen}]} >
             {this.state.currency + text.price}
           </Text>
           
-          <View style={styles.nameContainer}>
-            <Text style={new avenirNextText('black', 18, "300")}>{text.name.toUpperCase().replace(/ +/g, " ")}</Text>
-          </View>
-
-          <View style={styles.likesContainer}>
-            
-            <Icon name={collectionKeys.includes(params.data.key) ? "heart" : "heart-outline" }
-            size={37} 
-            color='#800000'
-            onPress={() => {collectionKeys.includes(params.data.key) ? 
-              this.decrementLikes(this.state.likes, params.data.key)
-            : 
-              this.incrementLikes(this.state.likes, params.data.key)
-            }}
-            />
-            {/* <View style={{justifyContent: 'center', position: 'absolute', paddingBottom: 5}}>
-              <Text style={[styles.likes, {color: collectionKeys.includes(params.data.key) ? 'black' : rejectRed} ]}>{params.data.text.likes}</Text>
-            </View> */}
-          
-          </View> 
-          
-            {text.original_price > 0 ?
-              <View style={[styles.priceContainer]}>
-                <Text style={[styles.original_price, {color: 'black', textDecorationLine: 'line-through', fontSize: String(text.original_price).length > 3 ? 11 : 17}]} >
-                  {this.state.currency + text.original_price}
-                </Text>
-                <Text style={[styles.original_price, {color: limeGreen, fontSize: String(text.original_price).length > 3 ? 11 : 17}]} >
-                  {this.state.currency + text.price}
-                </Text>
-              </View>
-            :
-              <View style={[styles.priceContainer]}>
-                <Text style={[styles.original_price, {fontSize: String(text.price).length > 3 ? 11 : 17, color: limeGreen}]} >
-                  {this.state.currency + text.price}
-                </Text>
-              </View>
-            }
-          
         </View>
 
+        {text.description !== "Seller did not specify a description" ?
+          <View style={styles.descriptionRow}>
+          {text.description.replace(/\s*$/,'').replace(/ +/g, " ").length >= 131 ?
+              <Text 
+              onPress={()=>{this.setState({showFullDescription: !this.state.showFullDescription})}} 
+              style={styles.description}>
+                {this.state.showFullDescription ? text.description.replace(/ +/g, " ").replace(/\s*$/,'') : text.description.replace(/ +/g, " ").replace(/\s*$/,'').substring(0,124) + "...." + "  " +  "(Show More?)"}
+              </Text>
+            :
+              <Text style={styles.description}>{text.description.replace(/\s*$/,'')}</Text>
+          }
+          </View>
+        :
+          null
+        }
 
-        <View style={{backgroundColor: 'black', height: 1.5}} />
-            {/* Profile And Actions Row */}
+        <GraySeparation/>
+        
+        {/* Profile And Actions Row */}
         <View style={styles.sellerProfileAndActionsRow}>
             
           <TouchableOpacity style={styles.profilePictureContainer} onPress={() => {firebase.auth().currentUser.uid == data.uid ? this.props.navigation.navigate('Profile') : this.navToOtherUserProfilePage(data.uid)}}>
@@ -1663,48 +1649,39 @@ class ProductDetails extends Component {
               source={profile.uri ? {uri: profile.uri} : require('../images/blank.jpg')}
             />
           </TouchableOpacity>
+
           <View style={styles.profileTextContainer}>
             <Text onPress={() => 
             {this.state.uid == data.uid ? this.props.navigation.navigate('Profile') : this.navToOtherUserProfilePage(data.uid)}}
-            style={styles.profileText}>
+            style={styles.profileName}>
               {profile.name}
             </Text>
-            <Text style={styles.profileText}>
+            <Text style={styles.profileMinutia}>
               {profile.country}
             </Text>
             {profile.insta ? 
-              <Text onPress={()=>Linking.openURL(`https://instagram.com/${profile.insta}`)} style={[styles.profileText, {color: "black"}]}>@{profile.insta.length > 12 ? profile.insta.substring(0,12) + '...' : profile.insta}</Text>
+              <Text onPress={()=>Linking.openURL(`https://instagram.com/${profile.insta}`)} style={styles.profileMinutia}>@{profile.insta.length > 12 ? profile.insta.substring(0,12) + '...' : profile.insta}</Text>
              : 
               null
             }
           </View>
-          {productKeys.includes(data.key) ?
-            <View style={styles.actionIconContainer}>
-              {isProductSold ?
-                <View
-                  style={[styles.purchaseButton, {backgroundColor: graphiteGray}]}
-                >
-                  <Text style={new avenirNextText("#fff",16,"400")}>Sold</Text>
-                </View>
+          
+          <View style={styles.actionIconContainer}>
+            {productKeys.includes(data.key) ?
+              <Icon
+                name='wrench'
+                size={32}
+                color={'black'}
+                onPress = { () => { 
+                    // console.log('going to edit item details');
+                    //subscribe to room key
+                    this.navToEditItem(data);
+                    } }
+              />
               :
-                <Icon
-                  name='wrench'
-                  size={32}
-                  color={'black'}
-                  onPress = { () => { 
-                      // console.log('going to edit item details');
-                      //subscribe to room key
-                      this.navToEditItem(data);
-                      } }
-                />
-              
-              }
-            </View>
-            :
-            <View style={styles.actionIconContainer}>
               <Icon
                 name='message-text-outline'
-                size={38}
+                size={45}
                 color={chatIcon.color}
                 onPress = {
                   this.state.sold ? 
@@ -1722,143 +1699,37 @@ class ProductDetails extends Component {
                       }    
                   }
               />
-              <TouchableOpacity
-                disabled={isProductSold ? true : false} 
-                style={[styles.purchaseButton, {backgroundColor: isProductSold ? graphiteGray : mantisGreen}]}
-                onPress={() => {this.setState({showPurchaseModal: true})}} 
-              >
-                <Text style={new avenirNextText("#fff",16,"400")}>{isProductSold ? "Sold":"Buy"}</Text>
-              </TouchableOpacity>
-            </View>
-          }
-        </View>
-        <View style={{backgroundColor: 'black', height: 1.5}} />
-        {/* Details and Report Item Row */}
-        <View style={styles.detailsAndReportItemRow}>
-            <View style={styles.detailsColumn}>
-              <Text style={styles.descriptionHeader}>DETAILS</Text>
-              {/* Specific Details */}
-              { Object.keys(details).map( (key, index) => ( 
-                <Text style={[styles.detailsText]} key={index}>
-                {/* {key.replace(key.charAt(0), key.charAt(0).toUpperCase())}: {details[key]} */}
-                {index == 5 ? details[key] > 0 ? `Price of Post: ${this.state.currency + details[key]}` : null : `${key.replace(key.charAt(0), key.charAt(0).toUpperCase())}: ${details[key]}`}
-                {/* {key === 'post_price' ? 'Retail Price' : key.replace(key.charAt(0), key.charAt(0).toUpperCase())}: {key === 'original_price' ? `£${details[key]}` : details[key]} */}
-                </Text>
-              ) ) }
-              {/* Optional Product Description Row */}
-              {/* {text.description !== "Seller did not specify a description" ?
-                text.description.replace(/ +/g, " ").length >= 131 ?
-                    <Text 
-                    onPress={()=>{this.setState({showFullDescription: !this.state.showFullDescription})}} 
-                    style={styles.detailsText}>
-                    Description: {this.state.showFullDescription ? text.description : text.description.replace(/ +/g, " ").substring(0,124) + "...." + "  " +  "(Show More?)"}
-                    </Text>
-                  :
-                    <Text style={styles.detailsText}>Description: {text.description}</Text>
-              :
-                null} */}
-            </View>
-            <View style={styles.secondaryActionsColumn}>
-            {productKeys.includes(data.key) ?
-              null
-            :
-              <View style={styles.buyOrReportActionContainer}>
-                <Icon
-                  name="flag-variant-outline" 
-                  size={40}  
-                  color={'#800'}
-                  onPress = { () => { 
-                    this.setState({showReportUserModal: true})
-                  } }
-                />
-              </View>
-              
+
             }
-              
-            </View>
-        </View>
-        <View style={{backgroundColor: 'black', height: 1.5}} />
-        {/* Optional Product Description Row */}
-        { text.description !== "Seller did not specify a description" ?
-            <View>
-            <View style={styles.optionalDescriptionRow}>
-                <View style={styles.descriptionHeaderContainer}>
-                    <Text style={styles.descriptionHeader}>DESCRIPTION</Text>
-                </View>
-                <View style={styles.descriptionContainer}>
-                  {text.description.replace(/ +/g, " ").length >= 131 ?
-                    <Text 
-                    onPress={()=>{this.setState({showFullDescription: !this.state.showFullDescription})}} 
-                    style={styles.description}>
-                    {this.state.showFullDescription ? text.description.replace(/ +/g, " ") : text.description.replace(/ +/g, " ").substring(0,124) + "...." + "  " +  "(Show More?)"}
-                    </Text>
-                  :
-                    <Text style={styles.description}>{text.description}</Text>
-                  }
-                </View>
-                <WhiteSpace height={3}/>
-              
-            </View>
-            <View style={{backgroundColor: 'black', height: 1.5}} />
-            </View>
-          :
-          null
-        }
-        
-        {/* comments */}
-        
-          
-          <View style={styles.reviewsHeaderContainer}>
-            <Text style={styles.reviewsHeader}>REVIEWS</Text>
-            <FontAwesomeIcon 
-              name="edit" 
-              style={styles.users}
-              size={35} 
-              color={iOSColors.black}
-              onPress={() => {this.navToProductComments(data)}}
-            /> 
           </View>
           
-          {productComments['a'] ? <WhiteSpace height={20}/> : Object.keys(productComments).map(
-                  (comment) => (
-                  <View key={comment} style={styles.commentContainer}>
-                      <View style={styles.commentPicAndTextRow}>
-                        {productComments[comment].uri ?
-                          <TouchableHighlight 
-                            onPress={() => this.state.uid == productComments[comment].uid ? this.props.navigation.navigate('Profile') : this.navToOtherUserProfilePage(productComments[comment].uid)} 
-                            style={styles.commentPic}
-                          >
-                            <ProgressiveImage 
-                              style= {styles.commentPic} 
-                              thumbnailSource={ require('../images/blank.jpg') }
-                              source={ {uri: productComments[comment].uri} }
-                            />
-                          </TouchableHighlight>  
-                        :
-                          <Image style= {styles.commentPic} source={ require('../images/companyLogo2.jpg') }/>
-                        }
-                          
-                        <View style={styles.textContainer}>
-                            <Text style={ styles.commentName }> {productComments[comment].name} </Text>
-                            <Text style={styles.comment}> {productComments[comment].text}  </Text>
-                        </View>
-                      </View>
-                      <View style={styles.commentTimeRow}>
-                        <Text style={ styles.commentTime }> {productComments[comment].time} </Text>
-                      </View>
-                      {productComments[comment].uri ? <View style={styles.separator}/> : null}
-                      
-                  </View>
-                  
-              )
-                      
-              )}
-          
+
+        </View>
+
+        <GraySeparation/>
+
+        {Object.keys(details).map((key, index) => (
+          <DetailCard 
+          key={key} 
+          type={index == 5 ? details[key] > 0 ? "Price of post:" : null : `${key.replace(key.charAt(0), key.charAt(0).toUpperCase())}`} 
+          value={index == 5 ? details[key] > 0 ? `${this.state.currency + details[key]}` : null : `${details[key]}`}
+
+          />
+        ))}
+        
         {/* {this.renderPictureModal()} */}
         {this.renderReportUserModal()}
         {this.renderPurchaseModal()}
         {/* {this.r()} */}
       </Animated.ScrollView> 
+
+      <TouchableOpacity  
+      onPress={() => {this.setState({showPurchaseModal: true})}}
+      disabled={isProductSold ? true : false}  
+      style={{flex: 0.1, backgroundColor: logoGreen, justifyContent: 'center', alignItems: 'center'}}
+      >
+        <Text style={{...textStyles.generic, color: '#fff', ...Fonts.big, fontWeight: "600"}}>{isProductSold ? "Sold":"Buy"}</Text>
+      </TouchableOpacity>
       </SafeAreaView>
     );
   }
@@ -1884,7 +1755,7 @@ const styles = StyleSheet.create( {
     paddingHorizontal: 5,
   },
   scrollContainer: {
-    flex: 1,
+    flex: 0.9,
     // marginTop: 10
   },
   contentContainer: {
@@ -1904,14 +1775,23 @@ const styles = StyleSheet.create( {
     // backgroundColor: 'green',
     width: "100%"
   },
-  backIconAndCarouselContainer: {marginTop: 5, flex: 2, flexDirection: 'row', paddingVertical: 5, paddingRight: 2, paddingLeft: 1 },
+  // backIconAndCarouselContainer: {marginTop: 5, flex: 2, flexDirection: 'row', paddingVertical: 5, paddingRight: 2, paddingLeft: 1 },
   nameAndPriceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flex: 0.1,
     // backgroundColor: 'red',
-    padding: 5,
+    paddingHorizontal: 10,
+    paddingTop: 15,
     // margin: 5
+  },
+
+  descriptionRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    // backgroundColor: 'red'
+    // flex: 0.1
   },
   nameContainer: {
     justifyContent: 'center',
@@ -1929,17 +1809,17 @@ const styles = StyleSheet.create( {
     // backgroundColor: 'blue'
   },
   sellerProfileAndActionsRow: {
-    height: 90,
+    height: 115,
     flexDirection: 'row',
     paddingVertical: 10,
-    paddingHorizontal: 5
+    paddingHorizontal: 8
   },
   profilePicture: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    borderColor: 'black',
-    borderWidth: 1,
+    width: 85,
+    height: 85,
+    borderRadius: 42.5,
+    // borderColor: 'black',
+    // borderWidth: 1,
   },
   profilePictureContainer: {
     flex: 0.2,
@@ -1950,24 +1830,26 @@ const styles = StyleSheet.create( {
     // backgroundColor: 'yellow'
   },
   profileTextContainer: {
-    flex: 0.4,
+    flex: 0.6,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignContent: 'flex-end',
+    // alignContent: 'flex-end',
     alignItems: 'center',
     // backgroundColor: 'red'
   },
-  profileText: {
-    ...textStyles.generic,
-    fontSize: 14,
-    color: 'black'
+
+  profileName: {
+    ...textStyles.generic, ...Fonts.big, fontWeight: "600",
   },
+
+  profileMinutia: {...textStyles.generic, ...Fonts.normal, fontWeight: "300", fontStyle: "italic"},
+  
   likeIconContainer: {
     padding: 5
   },
   original_price: {
     fontFamily: 'Avenir Next',
-    fontWeight: '400',
+    fontWeight: '600',
     fontSize: 17
   },
   price: {
@@ -1976,10 +1858,10 @@ const styles = StyleSheet.create( {
     
   },
   actionIconContainer: {
-    flex: 0.4,
+    flex: 0.2,
     flexDirection: 'row',
     // backgroundColor: 'brown',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     alignItems: 'center',
     padding: 0
   },
@@ -2214,7 +2096,7 @@ descriptionHeader: {
 descriptionContainer: {
   justifyContent: 'flex-start'
 },
-description: {textAlign: 'justify', ...textStyles.generic, color: graphiteGray},
+description: {textAlign: 'justify', ...textStyles.generic, color: 'black'},
 ////Picture Modal Stuff
 pictureModal: {
   flex: 1,

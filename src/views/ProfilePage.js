@@ -526,22 +526,9 @@ class ProfilePage extends Component {
                   
                   />
                   :
-                  <View style={{flexDirection: 'row', }}>
-                    <FontAwesomeIcon 
-                      name={"door-closed"} 
-                      size={40} 
-                      color={'#020002'}
-                      onPress={this.toggleMenu}
-                    />
-                    <View style={{zIndex: 8889, position: 'absolute', right: 10}}>
-                      <FontAwesomeIcon 
-                        name={"arrow-left"} 
-                        size={40} 
-                        color={'#020002'}
-                        onPress={this.toggleMenu}
-                      />
-                    </View>
-                  </View>
+                  <TouchableOpacity onPress={this.toggleMenu}>
+                    <Image style={{width: 40, height: 40}} source={Images.logout}/>
+                  </TouchableOpacity>
                   }
                 </View>
 

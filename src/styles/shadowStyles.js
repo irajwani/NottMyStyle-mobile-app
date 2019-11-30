@@ -1,4 +1,4 @@
-export const stampShadow = {
+const stampShadow = {
     shadowColor: "black",
     shadowOffset: {
         width: 1,
@@ -10,7 +10,7 @@ export const stampShadow = {
     elevation: 5,
 }
 
-export const lowerShadow = {
+const lowerShadow = {
     shadowColor: "black",
     shadowOffset: {
         width: 0,
@@ -21,3 +21,18 @@ export const lowerShadow = {
 
     elevation: 5,
 }
+
+const evenShadow = {
+    shadowColor: "#fff",
+    shadowOffset: {
+        width: 0,
+        height: 0,
+    },
+    shadowOpacity: 2,
+    shadowRadius: 1,
+
+    elevation: 5,
+}
+
+export {stampShadow, lowerShadow, evenShadow}
+

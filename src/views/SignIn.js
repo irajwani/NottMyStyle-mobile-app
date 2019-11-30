@@ -719,7 +719,7 @@ class SignIn extends Component {
         
         
         return (
-            <SafeAreaView style={[{flex: 1, backgroundColor: "#122021"}]}>
+            <SafeAreaView style={{flex: 1}}>
             <ImageBackground source={Images.loginBg} style={{flex: 1}}>
             <View style={styles.signInContainer}>
 
@@ -905,7 +905,7 @@ class SignIn extends Component {
                             </View>
 
                             <View style={{ paddingVertical:10 }}>
-                            <Button
+                            {/* <Button
                                 title='Create Account' 
                                 titleStyle={styles.authButtonText}
                                 buttonStyle={{
@@ -918,23 +918,22 @@ class SignIn extends Component {
                                 
                                 onPress={
                                     () => {
-                                        // this.props.navigation.navigate('CreateProfile')
                                         this.attemptSignUp(user = false, googleUserBoolean = false, facebookUserBoolean = false)
                                         } 
                                     }
-                            />
+                            /> */}
                             </View>
                         
                     </View>
 
                     <ViewWithChildAtPosition flex={1/7} >
 
-                        <Icon
+                        {/* <Icon
                             name="facebook-box" 
                             size={33} 
                             color={this.state.fbIconColor}
                             onPress={() => this.signInWithFacebook()}
-                        />
+                        /> */}
                             
                     </ViewWithChildAtPosition>
 

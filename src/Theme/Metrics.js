@@ -4,6 +4,7 @@ const { width, height } = Dimensions.get('window')
 
 // Used via Metrics.baseMargin
 export default {
+  platform: Platform.OS,
   marginHorizontal: 10,
   marginVertical: 10,
   marginTop: 10,

@@ -319,7 +319,7 @@ updateFirebaseAndNavToProfile = (pictureuris, mime = 'image/jpg', uid, type, pri
         original_price: original_price ? original_price : "",
         type: type,
         size: size,
-        description: description ? description : 'Seller did not specify a description',
+        description: description ? description.replace(/\s*$/,'') : 'Seller did not specify a description',
         gender: gender,
         condition: condition,
         sold: false,
