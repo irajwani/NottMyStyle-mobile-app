@@ -12,7 +12,7 @@ import firebase from '../cloud/firebase.js';
 import MultipleAddButton from '../components/MultipleAddButton.js';
 import { iOSColors } from 'react-native-typography';
 import { EulaTop, EulaBottom, TsAndCs, PrivacyPolicy, EulaLink } from '../legal/Documents.js';
-import { lightGray, treeGreen, bobbyBlue, mantisGreen, bgBlack, flashOrange, logoGreen, woodBrown } from '../colors.js';
+import { lightGray, treeGreen, bobbyBlue, mantisGreen, bgBlack, flashOrange, logoGreen, woodBrown, darkGreen } from '../colors.js';
 // import { PacmanIndicator } from 'react-native-indicators';
 import {GrayLine, LoadingIndicator, CustomTextInput} from '../localFunctions/visualFunctions';
 import { shadow } from '../constructors/shadow.js';
@@ -671,7 +671,10 @@ class CreateProfile extends Component {
         
 
         
-        <View style={{flexDirection: 'row', borderWidth: this.state.pass && this.state.pass2 ? 0.5 : 0, borderColor: passwordConditionMet ? mantisGreen : flashOrange}}>
+        <View style={{
+            flexDirection: 'row', 
+            // borderWidth: this.state.pass && this.state.pass2 ? 0.5 : 0, borderColor: passwordConditionMet ? mantisGreen : flashOrange
+            }}>
             <View style={{flex: passwordConditionMet ? 1 : 0.85}}>
                 <CustomTextInput 
                 placeholder={"Retype Password"} 
@@ -686,7 +689,7 @@ class CreateProfile extends Component {
                 <Icon 
                     name="verified" 
                     size={30} 
-                    color={mantisGreen}
+                    color={darkGreen}
                 />
             </View>
             }

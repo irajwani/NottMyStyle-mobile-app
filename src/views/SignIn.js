@@ -93,7 +93,7 @@ class SignIn extends Component {
     }
 
     async componentWillMount () {
-        await this.initializePushNotifications(true);
+        // await this.initializePushNotifications(true);
         // await this.getCurrentLocation();
         // let promiseToRetrieveBoolean = AsyncStorage.get('saveUsernamePass');
         // let promiseToSetCredentials = 
@@ -118,31 +118,11 @@ class SignIn extends Component {
         
     }
 
-    componentDidMount() {
-        Platform.OS === "ios" ?
-            GoogleSignin.configure({
-                iosClientId: '791527199565-tcd1e6eak6n5fcis247mg06t37bfig63.apps.googleusercontent.com',
-            })
-            :
-            GoogleSignin.configure();
-        
+    
 
-        let i = 0;
-        const googleIconColors = ['#3cba54', '#db3236', '#f4c20d', '#4885ed'];
-        const fbIconColors = ["#3b5998", "#8a3ab9", "#cd486b", almostWhite];
-        this.colorRefreshId = setInterval( () => {
-            // i = Math.random() > 0.5 ? Math.random() > 0.5 ? Math.random() > 0.5 ? 1 : 2 : 4 : 3
-            i++
-            // console.log(googleIconColors[i % 4])
-            this.setState({googleIconColor: googleIconColors[i % 4], fbIconColor: fbIconColors[i % 4]})
-        }, 3500)
-        // .then( () => {console.log('google sign in is now possible')})
-
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.colorRefreshId);
-    }
+    // componentWillUnmount() {
+    //     clearInterval(this.colorRefreshId);
+    // }
 
     getCurrentLocation = () => {
         navigator.geolocation.getCurrentPosition(
@@ -189,52 +169,7 @@ class SignIn extends Component {
         );
     }
 
-    initializePushNotifications = (willSaveToken) => {
-        console.log('About to ask user for access')
-        // PushNotification.requestPermissions(); 
-        PushNotification.configure({
-      
-          // (optional) Called when Token is generated (iOS and Android)
-          onRegister: function(token) {
-              console.log( 'TOKEN:', token );
-              willSaveToken ? AsyncStorage.setItem('token', token.token) : null;
-          },
-      
-          // (required) Called when a remote or local notification is opened or received
-          onNotification: function(notification) {
-              const {userInteraction} = notification;
-              console.log( 'NOTIFICATION:', notification, userInteraction );
-            //   if(userInteraction) {
-            //     //this.props.navigation.navigate('YourProducts');
-            //     alert("To edit a particular product's details, magnify to show full product details \n Select Edit Item. \n (Be warned, you will have to take new pictures)");
-            //   }
-              
-              //userInteraction ? this.navToEditItem() : console.log('user hasnt pressed notification, so do nothing');
-          },
-      
-          // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications) 
-          //senderID: "YOUR GCM SENDER ID",
-      
-          // IOS ONLY (optional): default: all - Permissions to register.
-          permissions: {
-              alert: true,
-              badge: true,
-              sound: true
-          },
-      
-          // Should the initial notification be popped automatically
-          // default: true
-          popInitialNotification: true,
-      
-          /**
-            * (optional) default: true
-            * - Specified if permissions (ios) and token (android and ios) will requested or not,
-            * - if not, you must call PushNotificationsHandler.requestPermissions() later
-            */
-          requestPermissions: true,
-      });
-      
-    }
+    
 
     // saveEmailForFuture = async email => {
     //     try {
@@ -659,7 +594,7 @@ class SignIn extends Component {
             transparent={false}
             visible={this.state.showPasswordReset}
             >
-                <View style={[styles.signInContainer, {padding: 0, marginHorizontal: 0, marginTop: Platform.OS == 'ios' ? 22 : 0}]}>
+                <View style={[styles.signInContainer, {backgroundColor: '#122021', padding: 0, marginHorizontal: 0, marginTop: Platform.OS == 'ios' ? 22 : 0}]}>
                     <View style={styles.headerBar}>
                         <FontAwesomeIcon
                         name='close'
@@ -863,7 +798,7 @@ class SignIn extends Component {
                 
                 {loading ? 
                     <View style={styles.allAuthButtonsContainer}>
-                        <LoadingIndicator isVisible={loading} color={lightGreen} type={'Wordpress'}/>
+                        <LoadingIndicator />
                     </View>
                 :
                     
@@ -904,24 +839,13 @@ class SignIn extends Component {
                             />
                             </View>
 
-                            <View style={{ paddingVertical:10 }}>
-                            {/* <Button
-                                title='Create Account' 
-                                titleStyle={styles.authButtonText}
-                                buttonStyle={{
-                                backgroundColor: darkGreen,
-                                //#2ac40f
-                                borderColor: "#226b13",
-                                borderWidth: 0,
-                                borderRadius: 5
-                                }}
-                                
-                                onPress={
-                                    () => {
-                                        this.attemptSignUp(user = false, googleUserBoolean = false, facebookUserBoolean = false)
-                                        } 
-                                    }
-                            /> */}
+                            <View style={{ paddingVertical:10, justifyContent: 'center', alignItems: 'center' }}>
+                                <Icon
+                                    name={"arrow-left"}
+                                    size={40}
+                                    color={"#fff"}
+                                    onPress={()=>this.props.navigation.goBack()}
+                                />
                             </View>
                         
                     </View>
@@ -1029,7 +953,7 @@ const styles = StyleSheet.create({
 
   inputContainer: {
       marginVertical: 7,
-      marginHorizontal: 5,
+    //   marginHorizontal: 5,
       justifyContent: 'center'
     //   alignItems: 'center'
   },
@@ -1039,10 +963,11 @@ const styles = StyleSheet.create({
 //   },
 
   input: {
-    height: 50, borderRadius: 5,
+    height: 60, borderRadius: 5,
     padding: 3,
-    borderWidth: 1,
-    borderColor: lightGray,
+    backgroundColor: 'black',
+    borderBottomWidth: 4,
+    borderColor: darkGreen,
     // justifyContent: 'center', alignItems: 'flex-start',
     ...new shadow(2,2, color = lightGray, -1, 1)
 },

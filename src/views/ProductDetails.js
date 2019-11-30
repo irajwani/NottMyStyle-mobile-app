@@ -1535,7 +1535,7 @@ class ProductDetails extends Component {
       size: text.size ? text.size : "N/A",
       type: text.type,
       condition: text.condition,
-      post_price: text.post_price,
+      post_price: text.post_price ? text.post_price : 0,
       views, //TODO: iOS
       
       // original_price: text.original_price
@@ -1615,7 +1615,7 @@ class ProductDetails extends Component {
           {/* Product Name (Not Brand) and Price Row */}
         <View style={styles.nameAndPriceRow}>
           <Text style={new avenirNextText('black', 18, "500")}>{text.name.toUpperCase().replace(/ +/g, " ")}</Text>
-          <Text style={[styles.original_price, {fontSize: String(text.price).length > 3 ? Fonts.small.fontSize : Fonts.h4.fontSize, color: mantisGreen}]} >
+          <Text style={[styles.original_price, {fontSize: String(text.price).length > 3 ? Fonts.small.fontSize : Fonts.h3.fontSize, color: mantisGreen}]} >
             {this.state.currency + text.price}
           </Text>
           
@@ -1711,8 +1711,8 @@ class ProductDetails extends Component {
         {Object.keys(details).map((key, index) => (
           <DetailCard 
           key={key} 
-          type={index == 5 ? details[key] > 0 ? "Price of post:" : null : `${key.replace(key.charAt(0), key.charAt(0).toUpperCase())}`} 
-          value={index == 5 ? details[key] > 0 ? `${this.state.currency + details[key]}` : null : `${details[key]}`}
+          type={index == 5 ?  "Price of post" : `${key.replace(key.charAt(0), key.charAt(0).toUpperCase())}`} 
+          value={index == 5 ? `${this.state.currency + details[key]}` : `${details[key]}`}
 
           />
         ))}

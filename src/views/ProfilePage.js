@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { AsyncStorage, Platform, Dimensions, Text, StyleSheet, ImageBackground, ScrollView, View, Image, TouchableHighlight, TouchableOpacity, SafeAreaView } from 'react-native'
 
-import Svg, { Path } from 'react-native-svg';
+import Svg, { G, Path } from 'react-native-svg';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
