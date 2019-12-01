@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { AsyncStorage, SafeAreaView, ImageBackground,Text, View, TouchableOpacity, StyleSheet, Platform } from 'react-native' 
+import { Image, AsyncStorage, SafeAreaView, ImageBackground,Text, View, TouchableOpacity, StyleSheet, Platform } from 'react-native' 
 
 import PushNotification from 'react-native-push-notification';
 import {GoogleSignin} from 'react-native-google-signin'
@@ -18,14 +18,21 @@ import { evenShadow } from '../styles/shadowStyles';
 const {platform,screenWidth} = Metrics;
 
 const WelcomeButton = ({backgroundColor, text, color, icon = false, onPress}) => (
-    <TouchableOpacity style={[styles.welcomeButton, {backgroundColor}, platform == "ios" ? evenShadow : null]} onPress={onPress}>
+    <TouchableOpacity underlayColorr={'transparent'} style={[styles.welcomeButton, {backgroundColor}, platform == "ios" ? evenShadow : null]} onPress={onPress}>
         {icon &&
         <View style={{flex: 0.15, justifyContent: 'center', alignItems: 'center', paddingVertical: 15, paddingHorizontal: 10,}}>
+            {icon == "facebook" ?
             <Icon
-            name="facebook" 
+            name={icon} 
             size={35} 
             color={'white'}
             />
+            :
+            <Image
+            source={Images.google}
+            style={{width: 35, height: 35}}    
+            />
+            }
         </View>
         }
         <View style={{flex: icon ? 0.85 : 1, justifyContent: 'center', alignItems: icon ? 'flex-start' : 'center', paddingVertical: 15, paddingHorizontal: 2,}}>
@@ -224,6 +231,7 @@ class Welcome extends Component {
                 this.setState({loading: false}, () => {this.props.navigation.navigate('AppStack')});
             }
             else {
+                alert('here')
                 this.setState({loading: false}, () => {this.attemptSignUp(socialInformation, true, false)})
             }
             
@@ -233,7 +241,7 @@ class Welcome extends Component {
             // console.log('successfully signed in:', currentUser);
             // console.log(JSON.stringify(currentUser.toJSON()))
         })
-        .catch( (err) => {alert("Error is that: " + err); this.setState({loading: false})})
+        .catch( (err) => {alert("Whoops! Here's what happened: " + err); this.setState({loading: false})})
     }
 
     signInWithFacebook = () => {
@@ -325,9 +333,15 @@ class Welcome extends Component {
                 onPress={()=>{
                     this.signInWithFacebook()
                 }}
-                backgroundColor={fbBlue} text={"Sign up with facebook"} color={'#fff'} icon={true}
+                backgroundColor={fbBlue} text={"Sign up with Facebook"} color={'#fff'} icon={'facebook'}
                     
                 />
+
+                <WelcomeButton 
+                onPress={() => this.signInWithGoogle()}
+                backgroundColor={"#fff"} text={"Sign up with Google"} color={'black'} icon={'google'}
+                />    
+                
 
                 <WelcomeButton 
                 onPress={()=>{

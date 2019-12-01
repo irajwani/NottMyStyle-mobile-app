@@ -71,6 +71,9 @@ const cancelTransactionText = "Transaction Canceled."
 const chatButtonWidth = 210;
 const paymentButtonWidth = 200;
 
+const deliveryFee = 150;
+const businessCut = 0.02;
+
 
 function removeFalsyValuesFrom(object) {
   const newObject = {};
@@ -300,7 +303,7 @@ class ProductDetails extends Component {
       // console.log(addresses, typeof addresses);
       // console.log("KEY IS:", data.key)
       // console.log("Picture Is: " + cloudDatabaseUsers[data.uid].products[data.key].uris.thumbnail[0]);
-      this.setState( {
+      this.setState({
         isGetting: false,
         cloudDatabaseUsers,
         yourProfile, uid, otherUserUid, profile, productComments, addresses,
@@ -311,7 +314,7 @@ class ProductDetails extends Component {
         chat,
         totalPrice: Number(data.text.price) + Number(data.text.post_price),
         canChatWithOtherUser,
-      } )
+      })
     })
     
   }
@@ -1484,6 +1487,59 @@ class ProductDetails extends Component {
     
   }
 
+  renderPakPurchaseModal = () => {
+    const {deliveryOptionModal, deliveryOptionHeader, backIconContainer, logoContainer, logo, deliveryOptionBody, deliveryOptionContainer, radioButton } = styles;
+    const {activeScreen} = this.state;
+    const receipt = [{name: this.state.name, price: this.state.price}, {name: "App reservation fee", price: businessCut*this.state.price}, {name: "Delivery fee", price: deliveryFee}]
+
+    if(activeScreen == "receipt") {
+      <Modal
+      animationType={modalAnimationType}
+      transparent={false}
+      visible={this.state.showPakPurchaseModal}
+      >
+      <SafeAreaView style={deliveryOptionModal}>
+        <View style={deliveryOptionHeader}>
+
+          <FontAwesomeIcon
+            name='arrow-left'
+            size={28}
+            color={'black'}
+            onPress = { () => { 
+              this.setState({showPakPurchaseModal: false })
+            }}
+          />
+          <Image style={styles.logo} source={require("../images/nottmystyleLogo.png")}/>
+
+          <FontAwesomeIcon
+            name='close'
+            size={28}
+            color={'black'}
+            onPress = { () => { 
+              this.setState({showPakPurchaseModal: false })
+            }}
+          />
+        </View>
+
+        <View style={{flex: 0.3}}>
+            {receipt.map((item) => (
+              <View style={{justifyContent: 'space-between', alignItems: 'center'}}>
+                <Text style={{...textStyles.generic}}>{item.name}</Text>
+                <Text style={{...textStyles.generic}}>Rs {item.price}</Text>
+              </View>
+            ))}
+
+
+        </View>
+
+        <View></View>
+
+
+      </SafeAreaView>
+      </Modal>
+    }
+  }
+
    _getHeaderColor = () => {
     const {scrollY} = this.state;
 
@@ -1735,9 +1791,7 @@ class ProductDetails extends Component {
   }
 }
 export default withNavigation(ProductDetails);
-{/* <View style={{flex: 2, alignItems: 'center'}}>
-          <CustomCarousel data={params.data.uris} />
-        </View> */}
+
 const styles = StyleSheet.create( {
   mainContainer: {
     flex: 1,

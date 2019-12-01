@@ -655,7 +655,7 @@ class SignIn extends Component {
         
         return (
             <SafeAreaView style={{flex: 1}}>
-            <ImageBackground source={Images.loginBg} style={{flex: 1}}>
+            <ImageBackground source={Images.createProfileBg} style={{flex: 1}}>
             <View style={styles.signInContainer}>
 
                 
