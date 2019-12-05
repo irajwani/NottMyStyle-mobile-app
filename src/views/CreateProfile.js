@@ -580,7 +580,7 @@ class CreateProfile extends Component {
             <TextInput 
             style={styles.inputText}
             placeholder={"City"} 
-            placeholderTextColor={"#fff"}
+            placeholderTextColor={lightGray}
             value={this.state.city} 
             onChangeText={city => this.setState({ city })}
             maxLength={16}
@@ -593,8 +593,8 @@ class CreateProfile extends Component {
 
         <TouchableOpacity style={{flex: 0.3, justifyContent: 'center', borderBottomWidth: 1, borderColor: '#fff'}} onPress={this.toggleShowCountrySelect}>
             <Text 
-            style={styles.inputText}
-            // style={[styles.inputText, {color: this.state.country ? '#fff' : lightGray }]}
+            // style={styles.inputText}
+            style={[styles.inputText, {color: this.state.country ? '#fff' : lightGray }]}
             >
             {this.state.country ? this.state.country : "Country"}
             </Text>

@@ -100,6 +100,14 @@ const DetailCard = ({type, value, key}) => (
   </View>
 )
 
+///Payment Modals Stuff
+const NextButton = ({text, onPress, disabled}) => (
+  <TouchableOpacity style={styles.nextButton} onPress={onPress} disabled = {disabled ? true : false}>
+    <Text style={styles.nextButtonText}>{text}</Text>
+  </TouchableOpacity>
+)
+////////
+
 class ProductDetails extends Component {
 
   constructor(props){
@@ -121,6 +129,7 @@ class ProductDetails extends Component {
       report: '',
       //Purchase Modal Stuff
       showPurchaseModal: false,
+      showPakPurchaseModal: false,
       activeScreen: "initial",
       deliveryOptions: [
         {text: "Collection in person", selected: false, options: ["Contact via Chat", "OR",  paymentText], },
@@ -132,6 +141,8 @@ class ProductDetails extends Component {
       postCode: "",
       city: "",
       selectedAddress: "",
+
+      cashOnDelivery: false,
       //PayPal Modal stuff
       sku: '',
       price: '',
@@ -851,15 +862,29 @@ class ProductDetails extends Component {
   }
 
   goToNextPage = () => {
-    switch(this.state.activeScreen) {
-      case "postalDelivery":
-        this.setState({activeScreen: "visaCheckoutScreen"});
-        break;
-      default:
-        this.setState({activeScreen: this.state.deliveryOptions[0].selected ? 'collectionInPerson' : 'postalDelivery'});
-        break;
+    if(this.state.currency == "RS") {
+      //pakPurchaseModal
+      switch(this.state.activeScreen) {
+        case "initial":
+          this.setState({activeScreen: "choosePaymentMethod"});
+          break;
+        case "choosePaymentMethod":
+          this.setState({activeScreen: "afterPaymentScreen"});
+          break;
 
+      }
+    } else {
+      switch(this.state.activeScreen) {
+        case "postalDelivery":
+          this.setState({activeScreen: "visaCheckoutScreen"});
+          break;
+        default:
+          this.setState({activeScreen: this.state.deliveryOptions[0].selected ? 'collectionInPerson' : 'postalDelivery'});
+          break;
+  
+      }
     }
+    
     
     // this.props.navigation.navigate()
   }
@@ -870,6 +895,11 @@ class ProductDetails extends Component {
 
   goToPreviousPage = () => {
     //Depending on the active screen, navigate to the previous page accordingly
+    if(this.state.currency == "RS") {
+      //pakPurchaseModal
+      this.setState({activeScreen: "initial"});
+    } 
+    else {
     switch(this.state.activeScreen) {
       case ("collectionInPerson" || "postalDelivery"):
         this.setState({activeScreen: "initial"});
@@ -880,6 +910,8 @@ class ProductDetails extends Component {
       default:
         this.setState({activeScreen: "initial"})
     }
+
+  }
   }
 
   closePurchaseModal = () => {
@@ -917,9 +949,79 @@ class ProductDetails extends Component {
   //   )
   // }
 
+  renderAddAddressButton = (flexMin, flexMax) => (
+    <View style={{flex: this.state.addresses ? flexMin : flexMax}}>
+      <TouchableOpacity onPress={this.goToAddDeliveryAddress} style={styles.addDeliveryAddressButton}>
+          <View style={{
+            flexDirection: 'row',
+            paddingHorizontal: 20,
+            paddingVertical: 15,
+            justifyContent: 'space-evenly',
+            alignItems: 'center'
+          }}>
+            <Icon
+              name="plus"
+              size={30}
+              color={mantisGreen}
+            />
+            <Text style={new avenirNextText("black", 20, "300")}>
+              Add your delivery address
+            </Text>
+            
+          </View>
+      </TouchableOpacity>
+    </View>
+  )
+// The addresses scrollView will always take up 0.35 space and then 0.35 + whatever flex of add addresses button's parent View will be the rest, 
+// and that maximum flex (with or without any addresses) is constant i.e. the sum of the flexes of two independent parent Views, where the
+// existence of one is conditional.
+  renderAddresses = () => (
+    this.state.addresses ?
+      <ScrollView style={{flex: 0.35}} contentContainerStyle={styles.addressesContainer}>
+        {Object.keys(this.state.addresses).map( (key, index) => (
+          <View>
+          <TouchableOpacity 
+          onPress={ () => {
+            // console.log(this.state.addresses)
+            const {...state} = this.state;
+
+            Object.keys(state.addresses).forEach( (k) => {
+              state.addresses[k].selected = false
+            });
+            state.addresses[key].selected = !state.addresses[key].selected;
+            state.selectedAddress = state.addresses[key];
+            this.setState(state); 
+          }}
+          style={[styles.addressContainerButton, {backgroundColor: this.state.addresses[key].selected ? lightGray : '#fff' }]}
+          >
+            <View style={styles.addressContainer}>
+
+              <View style={{flex: 0.2, padding: 3}}>
+                <View style={styles.radioButton}>
+                  {this.state.addresses[key].selected ? <SelectedOptionBullet/> : null}
+                </View>
+              </View>
+
+              <View style={{flex: 0.8, padding: 5}}>
+                <Text style={styles.addressText}>{this.state.addresses[key].addressOne + ", " + this.state.addresses[key].addressTwo + ", " + this.state.addresses[key].city + ", " + this.state.addresses[key].postCode}</Text>
+              </View>
+
+              {/* <Text style={styles.addressText}>{this.state.addresses[key].postCode}</Text> */}
+            </View>
+          </TouchableOpacity>
+          <WhiteSpace height={10}/>
+          </View>
+        ))}
+      </ScrollView>
+    :
+      null
+    
+    )
+  
+
   renderPurchaseModal = () => {
     const {deliveryOptionModal, deliveryOptionHeader, backIconContainer, logoContainer, logo, deliveryOptionBody, deliveryOptionContainer, radioButton } = styles;
-    const {activeScreen} = this.state;
+    var {activeScreen} = this.state;
 
     
 
@@ -1195,63 +1297,11 @@ class ProductDetails extends Component {
 
               
               
-              {this.state.addresses ?
-                <ScrollView style={{flex: 0.35}} contentContainerStyle={styles.addressesContainer}>
-                  {Object.keys(this.state.addresses).map( (key, index) => (
-                    <View>
-                    <TouchableOpacity 
-                    onPress={ () => {
-                      // console.log(this.state.addresses)
-                      const {...state} = this.state;
-
-                      Object.keys(state.addresses).forEach( (k) => {
-                        state.addresses[k].selected = false
-                      });
-                      state.addresses[key].selected = !state.addresses[key].selected;
-                      state.selectedAddress = state.addresses[key];
-                      this.setState(state); 
-                    }}
-                    style={[styles.addressContainerButton, {backgroundColor: this.state.addresses[key].selected ? lightGray : '#fff' }]}
-                    >
-                      <View style={styles.addressContainer}>
-
-                        <View style={{flex: 0.2, padding: 3}}>
-                          <View style={styles.radioButton}>
-                            {this.state.addresses[key].selected ? <SelectedOptionBullet/> : null}
-                          </View>
-                        </View>
-
-                        <View style={{flex: 0.8, padding: 5}}>
-                          <Text style={styles.addressText}>{this.state.addresses[key].addressOne + ", " + this.state.addresses[key].addressTwo + ", " + this.state.addresses[key].city + ", " + this.state.addresses[key].postCode}</Text>
-                        </View>
-
-                        {/* <Text style={styles.addressText}>{this.state.addresses[key].postCode}</Text> */}
-                      </View>
-                    </TouchableOpacity>
-                    <WhiteSpace height={10}/>
-                    </View>
-                  ))}
-                </ScrollView>
-              :
-                null
-              }
+              {this.renderAddresses()}
 
               
               
-              <View style={{flex: this.state.addresses ? 0.35 : 0.7, alignItems: 'center'}}>
-                <TouchableOpacity onPress={this.goToAddDeliveryAddress} style={styles.addDeliveryAddressButton}>
-                    <View style={[styles.collectionInPersonOptionsContainer, {justifyContent: 'space-evenly'}]}>
-                     <Text style={new avenirNextText("black", 20, "300")}>
-                        Add your delivery address
-                      </Text>
-                      <Icon
-                        name="plus"
-                        size={22}
-                        color={mantisGreen}
-                      />
-                    </View>
-                </TouchableOpacity>
-              </View>
+              {this.renderAddAddressButton(0.35, 0.7)}
               
 
           </View>
@@ -1488,11 +1538,21 @@ class ProductDetails extends Component {
   }
 
   renderPakPurchaseModal = () => {
-    const {deliveryOptionModal, deliveryOptionHeader, backIconContainer, logoContainer, logo, deliveryOptionBody, deliveryOptionContainer, radioButton } = styles;
-    const {activeScreen} = this.state;
-    const receipt = [{name: this.state.name, price: this.state.price}, {name: "App reservation fee", price: businessCut*this.state.price}, {name: "Delivery fee", price: deliveryFee}]
+    const {
+      deliveryOptionModal, deliveryOptionHeader, backIconContainer, logoContainer, logo, deliveryOptionBody, deliveryOptionContainer, radioButton,
+      receiptItemContainer,
+      } = styles;
+    var {activeScreen} = this.state;
+    const receipt = [
+      {name: this.state.name, price: this.state.price}, 
+      {name: "App reservation fee", price: businessCut*this.state.price}, 
+      {name: "Delivery fee", price: deliveryFee}
+    ]
 
-    if(activeScreen == "receipt") {
+    if(activeScreen == "initial") {
+      // flex: 0.1 + 0.3 + 0.45 + 0.05 + 0.1
+      const reducer = (accumulator, currentValue) => accumulator + currentValue.price
+      return (
       <Modal
       animationType={modalAnimationType}
       transparent={false}
@@ -1523,7 +1583,7 @@ class ProductDetails extends Component {
 
         <View style={{flex: 0.3}}>
             {receipt.map((item) => (
-              <View style={{justifyContent: 'space-between', alignItems: 'center'}}>
+              <View style={receiptItemContainer}>
                 <Text style={{...textStyles.generic}}>{item.name}</Text>
                 <Text style={{...textStyles.generic}}>Rs {item.price}</Text>
               </View>
@@ -1532,12 +1592,262 @@ class ProductDetails extends Component {
 
         </View>
 
-        <View></View>
+        {this.renderAddresses()}
+        {this.renderAddAddressButton(0.1, 0.45)}
+        
+        <View style={[receiptItemContainer, {flex: 0.05}]}>
+          <Text style={{...textStyles.generic, ...Fonts.h4}}>Total:</Text>
+          <Text style={{...textStyles.generic, ...Fonts.h4}}>Rs {receipt.reduce(reducer, 0)}</Text>
+        </View>
 
+        <NextButton text={"Proceed to Payment"} onPress={this.goToNextPage} disabled={!this.state.selectedAddress}/>
+
+        
 
       </SafeAreaView>
       </Modal>
+      )
     }
+
+    else if(activeScreen == "addDeliveryAddress") {
+      var filledOutAddress = (this.state.fullName && this.state.addressOne && this.state.postCode && this.state.city);
+      return (
+      <Modal 
+      animationType={modalAnimationType}
+      transparent={false}
+      visible={this.state.showPakPurchaseModal}
+      
+      >
+        <SafeAreaView style={deliveryOptionModal}>
+
+          <View style={deliveryOptionHeader}>
+
+            
+            <FontAwesomeIcon
+              name='arrow-left'
+              size={28}
+              color={'black'}
+              onPress = { () => { 
+                  this.goToPreviousPage()
+                  // this.setState({showPurchaseModal: false })
+                  } }
+            />
+          
+            <Image style={styles.logo} source={require("../images/nottmystyleLogo.png")}/>
+            
+            <FontAwesomeIcon
+              name='close'
+              size={28}
+              color={'black'}
+              onPress={this.closePurchaseModal}
+              />
+
+          </View>
+
+          <View style={[deliveryOptionBody, {flex: 0.9}]}>
+
+              <View style={{flex: 0.1}}>
+                <Text style={new avenirNextText('black', 17, "400")}>
+                  Address:
+                </Text>
+              </View>
+
+              <WhiteSpace height={10}/>
+
+              <ScrollView style={{flex: 0.25}} contentContainerStyle={styles.addressForm}>
+                  {addressFields.map( (field, index) => (
+                    <View style={styles.addressField}>
+                      <Text style={new avenirNextText("black", 14, "400")}>{field.header}</Text>
+                      <TextInput
+                      onChangeText={(text) => this.onChange(text, field.key)}
+                      value={this.state[field.key]}
+                      style={{height: 50, width: 280, fontFamily: 'Avenir Next', fontSize: 13, color: treeGreen}}
+                      placeholder={field.placeholder}
+                      placeholderTextColor={graphiteGray}
+                      multiline={false}
+                      maxLength={index == 1 || index == 2 ? 50 : 24}
+                      autoCorrect={false}
+                      clearButtonMode={'while-editing'}
+                      />
+                    </View>
+                  ))}
+              </ScrollView>
+
+              <View style={[styles.collectionInPersonContainer, {flex: 0.65}]}>
+
+                <TouchableOpacity
+                disabled={filledOutAddress ? false : true} 
+                onPress={this.addAddress} 
+                style={styles.collectionInPersonButton}>
+
+                  <View style={[styles.collectionInPersonOptionsContainer, {width: 180}]}>
+
+                    <FontAwesomeIcon
+                      name="address-book"
+                      size={paymentScreensIconSize}
+                      color={'black'}
+
+                    />
+                    <Text style={new avenirNextText('black', 20, "300")}>
+                      Add Address
+                    </Text>
+                    
+                  </View>
+
+                </TouchableOpacity>
+
+              </View>
+                
+              
+
+          </View>
+          
+         
+
+         </SafeAreaView>
+
+      </Modal>
+    )
+
+    }
+
+    else if(activeScreen = "choosePaymentMethod") {
+      return (
+        <Modal
+        animationType={modalAnimationType}
+        transparent={false}
+        visible={this.state.showPakPurchaseModal}
+        >
+        <SafeAreaView style={deliveryOptionModal}>
+
+          <View style={deliveryOptionHeader}>
+
+            
+            <FontAwesomeIcon
+              name='arrow-left'
+              size={28}
+              color={'black'}
+              onPress = { () => { 
+                  this.goToPreviousPage()
+                  // this.setState({showPurchaseModal: false })
+                  } }
+            />
+          
+            <Image style={styles.logo} source={require("../images/nottmystyleLogo.png")}/>
+            
+            <FontAwesomeIcon
+              name='close'
+              size={28}
+              color={'black'}
+              onPress={this.closePurchaseModal}
+              />
+
+          </View>
+
+          <View style={{flex: 0.8, marginHorizontal: 10, padding: 15}}>
+              <Text>Choose your preferred method of payment:</Text>
+              <TouchableOpacity 
+              onPress={ () => {
+                this.setState({cashOnDelivery: !this.state.cashOnDelivery}); 
+              }}
+              style={[styles.addressContainerButton, {backgroundColor: this.state.cashOnDelivery ? lightGray : '#fff' }]}
+              >
+                <View style={styles.addressContainer}>
+
+                  <View style={{flex: 0.2, padding: 3}}>
+                    <View style={styles.radioButton}>
+                      {this.state.cashOnDelivery ? <SelectedOptionBullet/> : null}
+                    </View>
+                  </View>
+
+                  <View style={{flex: 0.8, padding: 5}}>
+                    <Text style={styles.addressText}>Cash On Delivery</Text>
+                  </View>
+
+                  
+                </View>
+              </TouchableOpacity>
+          </View>
+
+          <NextButton 
+          text={"Confirm Order"} 
+          onPress={() => {this.handleResponse(data = {title: "success"})}} 
+          disabled={!this.state.cashOnDelivery}
+          />
+
+
+        </SafeAreaView>
+        </Modal>
+      )
+    }
+
+    else if(activeScreen == "afterPaymentScreen") {
+      //Code from purchase modal copied as is and skimmed down to not care about if whether the payment
+      //went through and whether the person chose postal delivery or collection in person.
+      return (
+        <Modal
+        animationType={modalAnimationType}
+        transparent={false}
+        visible={this.state.showPakPurchaseModal}
+        >
+          <SafeAreaView style={deliveryOptionModal}>
+
+            <View style={deliveryOptionHeader}>
+
+              <FontAwesomeIcon
+                name='arrow-left'
+                size={28}
+                color={logoGreen}
+              />
+              <Image style={styles.logo} source={require("../images/nottmystyleLogo.png")}/>
+              
+              <FontAwesomeIcon
+                name='close'
+                size={28}
+                color={'black'}
+                onPress={this.closePurchaseModal}
+              />
+            </View>
+
+            
+
+            
+              
+              <View style={[deliveryOptionBody, {padding: 10, alignItems: 'center'}]}>
+
+                <View style={{flex: 0.4, justifyContent: 'center', alignItems: 'center'}}>
+                  <ProgressiveImage 
+                  style= {styles.successProductImage} 
+                  thumbnailSource={ require('../images/blur.png') }
+                  source={{uri: this.state.productPictureURLs[0]}}
+                  />
+                </View>
+
+                <View style={{flex: 0.6, alignItems: 'center'}}>
+                  <Text style={styles.successText}>
+                  Congratulations! You have successfully bought {this.state.name} for £{this.state.postOrNah == 'post' ? this.state.totalPrice : this.state.price}.
+                  </Text>
+                  <WhiteSpace height={10}/>
+                  
+                  <Text style={styles.successText}>
+                  Your item will be delivered to:
+                  {this.state.selectedAddress.addressOne + ", " + this.state.selectedAddress.addressTwo + ", " + this.state.selectedAddress.city + ", " + this.state.selectedAddress.postCode}.
+                  Please note that it may take up to 2 weeks for the item to arrive via postal delivery. In case your item doesn't arrive, send us an email at nottmystyle.help@gmail.com.
+                  </Text>
+                    
+                </View>
+
+              </View>    
+              
+              
+            
+          </SafeAreaView>  
+        </Modal>
+      )
+    }
+
+
+
   }
 
    _getHeaderColor = () => {
@@ -1776,15 +2086,16 @@ class ProductDetails extends Component {
         {/* {this.renderPictureModal()} */}
         {this.renderReportUserModal()}
         {this.renderPurchaseModal()}
+        {this.renderPakPurchaseModal()}
         {/* {this.r()} */}
       </Animated.ScrollView> 
 
       <TouchableOpacity  
-      onPress={() => {this.setState({showPurchaseModal: true})}}
+      onPress={() => {this.state.currency == "RS" ? this.setState({showPakPurchaseModal: true}) : this.setState({showPurchaseModal: true})}}
       disabled={isProductSold ? true : false}  
       style={{flex: 0.1, backgroundColor: logoGreen, justifyContent: 'center', alignItems: 'center'}}
       >
-        <Text style={{...textStyles.generic, color: '#fff', ...Fonts.big, fontWeight: "600"}}>{isProductSold ? "Sold":"Buy"}</Text>
+        <Text style={{...textStyles.generic, color: '#fff', ...Fonts.big, fontWeight: "600"}}>{isProductSold ? "SOLD":"BUY NOW"}</Text>
       </TouchableOpacity>
       </SafeAreaView>
     );
@@ -2297,9 +2608,9 @@ addressText: {
   color: 'black',
 },
 addDeliveryAddressButton: {
-  width: 270,
-  height: 40,
-  borderRadius: 15,
+  // width: 270,
+  // height: 40,
+  // borderRadius: 15,
   backgroundColor: '#fff',
 },
 addressForm: {
@@ -2309,6 +2620,34 @@ addressForm: {
 },
 addressField: {
   alignItems: 'flex-start',
+},
+
+/////////////
+/////////////
+/////////////  **pakPurchaseModal
+/////////////
+///////////// Receipt
+
+receiptItemContainer: {
+  flexDirection: 'row', 
+  justifyContent: 'space-between', alignItems: 'center', 
+  paddingTop: 30, paddingHorizontal: 20
+},
+
+nextButton: {
+  flex: 0.1,
+  backgroundColor: mantisGreen,
+  borderRadius: 20,
+  marginHorizontal: 30, 
+  marginVertical: 20,
+  padding: 5,
+  justifyContent: 'center', alignItems: 'center', 
+},
+
+nextButtonText: {
+  ...textStyles.generic,
+  ...Fonts.h4,
+  color: '#fff'
 },
 ////////////
 ////////////
