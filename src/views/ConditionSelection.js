@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
         // margin: 10,
         // borderRadius: 15,
         borderBottomWidth: 0.7,
-        borderColor: 'black',
+        borderColor: silver,
         // justifyContent: 'center', 
         // paddingLeft: 8, 
         padding: 8,

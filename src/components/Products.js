@@ -28,7 +28,7 @@ import { GrayLine, LoadingIndicator } from '../localFunctions/visualFunctions.js
 import { categories } from '../fashion/sizesAndTypes.js';
 import { textStyles } from '../styles/textStyles.js';
 
-import {Metrics, Colors} from '../Theme'
+import {Metrics, Colors, Fonts} from '../Theme'
 import { removeValueFromArray } from '../localFunctions/arrayFunctions.js';
 
 const {smallMargin} = Metrics;
@@ -1926,7 +1926,7 @@ const styles = StyleSheet.create({
   // New marketplace styles
   
   headerBar: {
-    flex: 0.1,
+    flex: 0.13,
     backgroundColor: Colors.limeGreen,
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -1937,6 +1937,7 @@ const styles = StyleSheet.create({
   headerText: {
     ...textStyles.generic,
     color: '#fff',
+    ...Fonts.h2
   },
 
   quickFilterBar: {
@@ -1961,7 +1962,7 @@ const styles = StyleSheet.create({
   },
 
   productScrollContainer: {
-    flex: 0.8,
+    flex: 0.77,
     flexDirection: 'row',
     flexWrap: 'wrap'
   },

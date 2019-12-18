@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {material} from 'react-native-typography';
 
-import { lightGreen, coolBlack, highlightGreen, graphiteGray, treeGreen, profoundPink, rejectRed, logoGreen, mantisGreen, darkGray } from '../colors';
+import { lightGreen, coolBlack, highlightGreen, graphiteGray, treeGreen, profoundPink, rejectRed, logoGreen, mantisGreen, darkGray, silver } from '../colors';
 import {avenirNextText} from '../constructors/avenirNextText'
 
 import ProgressiveImage from '../components/ProgressiveImage';
@@ -1394,7 +1394,7 @@ const styles = StyleSheet.create({
 
   specificChatContainer: {
     flexDirection: 'row', paddingVertical: 6, paddingHorizontal: 0,
-    borderBottomColor: graphiteGray, borderBottomWidth: 0.6,
+    borderBottomColor: silver, borderBottomWidth: 0.6,
     width: width - 8,
 
   },

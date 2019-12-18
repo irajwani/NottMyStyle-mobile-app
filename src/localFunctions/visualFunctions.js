@@ -91,20 +91,6 @@ const SignInTextInput = ({width, placeholder, onChangeText, value, secureTextEnt
     </View>
 )
 
-const minutiaContainer = {marginHorizontal: 2, justifyContent: 'center', alignItems: 'center'};
-
-const ProfileMinutia = ({icon, text}) => (
-  <View style={{flexDirection: 'row', margin: 0}}>
-    <View style={minutiaContainer}>
-      <Icon name={icon} size={20} color={'black'}/>
-    </View>
-    <View style={minutiaContainer}>
-      <Text style={[textStyles.generic, {fontSize: 14, color: 'black'}]}>{text}</Text>
-    </View>
-  </View>
-
-)
-
 const BasicLoadingIndicator = ({isVisible, type, color}) => (
   <Spinner style={{}} isVisible={isVisible} size={50} type={type} color={color}/>    
 )
@@ -329,7 +315,7 @@ class BadgeIcon extends React.Component {
 
 
 
-export {GrayLine, GraySeparation, WhiteSpace, ProfileMinutia, BasicLoadingIndicator, LoadingIndicator, DismissKeyboardView, CustomTouchableO, CustomTextInput, SignInTextInput, MarketplaceIcon, BadgeIcon}
+export {GrayLine, GraySeparation, WhiteSpace, BasicLoadingIndicator, LoadingIndicator, DismissKeyboardView, CustomTouchableO, CustomTextInput, SignInTextInput, MarketplaceIcon, BadgeIcon}
 
 const styles = StyleSheet.create({
   inputContainer: {

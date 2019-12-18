@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { AsyncStorage, Platform, Dimensions, Text, StyleSheet, ImageBackground, ScrollView, View, Image, TouchableHighlight, TouchableOpacity, SafeAreaView } from 'react-native'
 
-import Svg, { G, Path } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -12,28 +12,31 @@ import firebase from '../cloud/firebase.js';
 import PushNotification from 'react-native-push-notification';
 // import {initializePushNotifications} from '../Services/NotificationService';
 
-import ActionSheet from 'react-native-actionsheet'
+// import ActionSheet from 'react-native-actionsheet'
+import Dialog, { DialogTitle, DialogContent, DialogButton, SlideAnimation } from 'react-native-popup-dialog';
 
-import { iOSColors, iOSUIKit, human } from 'react-native-typography';
-import LinearGradient from 'react-native-linear-gradient'
-import ReviewsList from '../components/ReviewsList.js';
-import { PacmanIndicator } from 'react-native-indicators';
-import { avenirNextText } from '../constructors/avenirNextText';
+// import { iOSColors, iOSUIKit, human } from 'react-native-typography';
+// import LinearGradient from 'react-native-linear-gradient'
+// import ReviewsList from '../components/ReviewsList.js';
+// import { PacmanIndicator } from 'react-native-indicators';
+// import { avenirNextText } from '../constructors/avenirNextText';
 
-import { highlightGreen, graphiteGray, avenirNext, mantisGreen,darkGreen,lightGreen,treeGreen, limeGreen, lightGray, yellowGreen } from '../colors.js';
-import { LoadingIndicator, ProfileMinutia } from '../localFunctions/visualFunctions.js';
+import { highlightGreen, graphiteGray, avenirNext,lightGreen, yellowGreen } from '../colors.js';
+import { LoadingIndicator } from '../localFunctions/visualFunctions.js';
 import ProgressiveImage from '../components/ProgressiveImage';
 import { stampShadow, lowerShadow } from '../styles/shadowStyles.js';
 import { textStyles } from '../styles/textStyles.js';
 import { Images, Fonts } from '../Theme/index.js';
 const {width, height} = Dimensions.get('window');
 
+const profilePicSize = 0.5*width;
+
 const resizeMode = 'center';
 
 const noReviewsText = "No Reviews have been\n left for you thus far.";
 
 const ButtonContainer = ({children, text, onPress}) => (
-  <TouchableOpacity onPress={() => onPress()} style={{flexDirection: 'row', flex: 0.5, justifyContent: 'flex-start', alignItems: 'center', margin: 10}}>
+  <TouchableOpacity onPress={() => onPress()} style={{flexDirection: 'row', flex: 0.5, justifyContent: 'flex-start', alignItems: 'center', marginHorizontal: 10}}>
     {children}
     <View style={styles.buttonTextContainer}>
       <Text style={{...textStyles.generic, color: '#fff', ...Fonts.big, fontWeight: "300"}}>{text}</Text>
@@ -469,6 +472,31 @@ class ProfilePage extends Component {
     this.setState({isMenuActive: !this.state.isMenuActive})
   }
 
+  renderExitModal = () => (
+    <Dialog
+      visible={this.state.isMenuActive}
+      dialogAnimation={new SlideAnimation({
+      slideFrom: 'top',
+      })}
+      dialogTitle={<DialogTitle title="Do you want to log out?" titleTextStyle={{...textStyles.generic}} />}
+      actions={[ 
+      <DialogButton
+      text="NO"
+      onPress={this.toggleMenu}
+      />,
+      <DialogButton
+      text="YES"
+      onPress={() => {
+        this.toggleMenu();
+        this.logOut();
+        }}
+      />,
+      ]}
+      onTouchOutside={this.logOut}
+      >
+    </Dialog>
+  )
+
   render() {
     var {isGetting, comments, gradient} = this.state;
     // var backgroundColor = ;
@@ -511,10 +539,14 @@ class ProfilePage extends Component {
                 onPress={() => this.props.navigation.navigate('Settings')}
 
               />
+
+              <TouchableOpacity onPress={this.toggleMenu}>
+                <Image style={{width: 40, height: 40}} source={Images.logout}/>
+              </TouchableOpacity>
               
 
               
-              <View style={{alignItems: 'center'}}>
+              {/* <View style={{alignItems: 'center'}}>
 
                 <View style={{flex: 0.5, alignItems: 'center'}}>
                   {this.state.isMenuActive ?
@@ -550,7 +582,7 @@ class ProfilePage extends Component {
                   }
                 </View>
 
-              </View>
+              </View> */}
               
                 
               
@@ -666,7 +698,7 @@ class ProfilePage extends Component {
       <View style={styles.footerContainer} >
       {/* Reviews Section contained within this flex-box */}
       <ScrollView style={styles.halfPageScrollContainer} contentContainerStyle={styles.halfPageScroll}>
-          <View style={ {backgroundColor: '#fff'} }>
+          
           <Text style={styles.reviewsHeader}>REVIEWS</Text>
           {this.state.noComments ? null : Object.keys(comments).map(
                   (comment) => (
@@ -711,13 +743,15 @@ class ProfilePage extends Component {
               )
                       
               )}
-          </View>
-        </ScrollView> 
-
+          
+        
+      </ScrollView>
       </View>
 
             
+      
 
+      {this.renderExitModal()}
       </SafeAreaView>
       
 
@@ -761,7 +795,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: 'center',
     // alignItems: 'center',
-    padding: 10,
+    paddingTop: 5,
+    paddingHorizontal: 10,
     justifyContent: 'space-evenly'
   },
   mainContainer: {
@@ -774,7 +809,7 @@ const styles = StyleSheet.create({
   
 
   linearGradient: {
-    flex: 0.7,
+    flex: 0.8,
     ...lowerShadow,
     // overflow: 'hidden',
     // position: "relative",
@@ -787,6 +822,16 @@ const styles = StyleSheet.create({
     // width: width,
     // overflow: 'hidden', // for hide the not important parts from circle
     // height: 175,
+  },
+
+  footerContainer: {
+    flex: 0.2,
+    flexDirection: 'column',
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    // alignItems: 'center',
+    padding: 10,
+    justifyContent: 'space-evenly'
   },
 
   // bottomCurve: { // this shape is a circle 
@@ -803,45 +848,33 @@ const styles = StyleSheet.create({
   //   backgroundColor: "#c8f966"
   // },
 
-  topContainer: {
-    flexDirection: 'row',
-    flex: 0.65
-  },
+  // topContainer: {
+  //   flexDirection: 'row',
+  //   flex: 0.65
+  // },
 
-  buttonsContainer: {
-    flex: 0.25,    
-    flexDirection: 'row',
-    // borderBottomColor: 'black',
-    // borderBottomWidth: 1,
-    // backgroundColor: 'red',    
-    // borderRadius: width/5,
-    // width: width,
-    // height: width,
-    // top: 0, // show the bottom part of circle
-    // overflow: 'hidden',
-    // marginLeft: -100,
-  },
+  
 
-  oval: {
-    // marginTop: "10%",
-    // marginTop: width/3,
-    width: width,
-    height: "100%",
-    borderBottomLeftRadius: width,
-    borderBottomRightRadius: width,
-    //backgroundColor: 'red',
-    // borderWidth:2,
-    // borderColor:'black',
-    position: "absolute",
-    transform: [
-      {scaleX: 2}
-    ],
-    // top: 10,
-    // backgroundColor: yellowGreen
-  },
+  // oval: {
+  //   // marginTop: "10%",
+  //   // marginTop: width/3,
+  //   width: width,
+  //   height: "100%",
+  //   borderBottomLeftRadius: width,
+  //   borderBottomRightRadius: width,
+  //   //backgroundColor: 'red',
+  //   // borderWidth:2,
+  //   // borderColor:'black',
+  //   position: "absolute",
+  //   transform: [
+  //     {scaleX: 2}
+  //   ],
+  //   // top: 10,
+  //   // backgroundColor: yellowGreen
+  // },
 
   iconRow: {
-    flex: 0.15,
+    flex: 0.1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -853,169 +886,185 @@ const styles = StyleSheet.create({
   },
 
   profileRow: {
-    flex: 0.6,
-    marginTop: 25,
+    flex: 0.7,
+    // marginTop: 25,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    // backgroundColor: 
     // marginVertical: 20
   },
 
-  triangle: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderLeftWidth: 25,
-    borderRightWidth: 25,
-    borderBottomWidth: 50,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'white'
-  },
+    profilepic: {
+      //flex: 1,
+      // width: profilePicSize,
+      // height: profilePicSize,
+      // borderRadius: profilePicSize/2,
+      width: 170,
+      height: 170,
+      alignSelf: 'center',
+      borderRadius: 85,
+      borderColor: '#fff',
+      borderWidth: 0,
+      ...stampShadow,
+      // opacity: 0.1
+    },
 
-  popDownMenu: {
-    width: 55,
-    height: 35,
-    borderRadius: 8,
-    borderWidth: 0.3,
-    backgroundColor: "white",
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-
-  gearAndPicColumn: {
-    flex: 0.6818,
-    flexDirection: 'column',
-    // flex: 1.0,
-    // flexDirection: 'row',
-    // justifyContent: 'space-evenly',
-    // alignItems: 'center',
-    marginTop: 20,
-    // width: width - 40,
-    // paddingRight: 0,
-    // backgroundColor: 'blue',
-    // width: width
-  },
-
-  gearRow: {
-    flex: 0.2,
+  buttonsContainer: {
+    flex: 0.2,    
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    // alignContent: 'flex-start',
-    // backgroundColor: 'white'
+    
+    // borderBottomColor: 'black',
+    // borderBottomWidth: 1,
+    // backgroundColor: 'red',    
+    // borderRadius: width/5,
+    // width: width,
+    // height: width,
+    // top: 0, // show the bottom part of circle
+    // overflow: 'hidden',
+    // marginLeft: -100,
   },
 
-  picRow: {
-    width: 250,
-    flex: 0.8,
-    // flexDirection: 'row',
-    justifyContent: 'center',
-    // alignContent: 'flex-start',
-    // height: height/5,
-    // backgroundColor: 'yellow'
-    // alignItems: 'flex-start',
-  },
+    blackCircle: {
+      // marginBottom: 10,
+      width: 55,
+      height: 55,
+      borderRadius: 27.5,
+      padding: 4,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'black',
+      // borderColor: '#fff',
+      // borderWidth: 0.3,
+      // ...stampShadow,
+    },
 
-  profileTextColumn: {
-    flex: 0.318,
-    flexDirection: 'column',
-    alignItems: 'center',
-    // paddingTop: 15,
-    // backgroundColor: 'red'
+  // triangle: {
+  //   width: 0,
+  //   height: 0,
+  //   backgroundColor: 'transparent',
+  //   borderStyle: 'solid',
+  //   borderLeftWidth: 25,
+  //   borderRightWidth: 25,
+  //   borderBottomWidth: 50,
+  //   borderLeftColor: 'transparent',
+  //   borderRightColor: 'transparent',
+  //   borderBottomColor: 'white'
+  // },
 
-  },
+  // popDownMenu: {
+  //   width: 55,
+  //   height: 35,
+  //   borderRadius: 8,
+  //   borderWidth: 0.3,
+  //   backgroundColor: "white",
+  //   justifyContent: 'center',
+  //   alignItems: 'center'
+  // },
 
-  blackCircle: {
-    // marginBottom: 10,
-    width: 65,
-    height: 65,
-    borderRadius: 32.5,
-    padding: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-    // borderColor: '#fff',
-    // borderWidth: 0.3,
-    // ...stampShadow,
-  },
+  // gearAndPicColumn: {
+  //   flex: 0.6818,
+  //   flexDirection: 'column',
+  //   // flex: 1.0,
+  //   // flexDirection: 'row',
+  //   // justifyContent: 'space-evenly',
+  //   // alignItems: 'center',
+  //   marginTop: 20,
+  //   // width: width - 40,
+  //   // paddingRight: 0,
+  //   // backgroundColor: 'blue',
+  //   // width: width
+  // },
 
-  whiteCircle: {
-    marginTop: 15,
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    // padding: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 4
-  },
+  // gearRow: {
+  //   flex: 0.2,
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   // alignContent: 'flex-start',
+  //   // backgroundColor: 'white'
+  // },
 
-  subText: {
-    fontFamily: 'Avenir Next',
-    fontSize: 18,
-    fontWeight: '400',
-    color: graphiteGray,
-  },
+  // picRow: {
+  //   width: 250,
+  //   flex: 0.8,
+  //   // flexDirection: 'row',
+  //   justifyContent: 'center',
+  //   // alignContent: 'flex-start',
+  //   // height: height/5,
+  //   // backgroundColor: 'yellow'
+  //   // alignItems: 'flex-start',
+  // },
 
-  footerContainer: {
-    flex: 0.3,
-    flexDirection: 'column',
-    padding: 2,
-    backgroundColor: '#fff'
-  },
+  // profileTextColumn: {
+  //   flex: 0.318,
+  //   flexDirection: 'column',
+  //   alignItems: 'center',
+  //   // paddingTop: 15,
+  //   // backgroundColor: 'red'
 
-  headerBackground: {
-    flex: 1,
-    width: null,
-    alignSelf: 'stretch',
-    justifyContent: 'space-between'
-  },
+  // },
 
-  gear: {
-    flex: 0,
-    paddingRight: 60
-  },
-  users: {
-    flex: 0,
-    paddingLeft: 60,
-    paddingRight: 0,
-    marginLeft: 0
-  },
   
-  profilepicWrap: {
-    backgroundColor: 'black',
-    width: 130,
-    height: 130,
-    borderRadius: 65,
-    borderColor: 'rgba(0,0,0,0.4)',
-    borderWidth: 0,
-  },
-  profilepic: {
-    //flex: 1,
-    width: 170,
-    height: 170,
-    alignSelf: 'center',
-    borderRadius: 85,
-    borderColor: '#fff',
-    borderWidth: 0,
-    ...stampShadow,
-    // opacity: 0.1
-  },
+
+  // whiteCircle: {
+  //   marginTop: 15,
+  //   width: 70,
+  //   height: 70,
+  //   borderRadius: 35,
+  //   // padding: 5,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   backgroundColor: 'white',
+  //   borderColor: 'black',
+  //   borderWidth: 4
+  // },
+
+  // subText: {
+  //   fontFamily: 'Avenir Next',
+  //   fontSize: 18,
+  //   fontWeight: '400',
+  //   color: graphiteGray,
+  // },
+
+  // headerBackground: {
+  //   flex: 1,
+  //   width: null,
+  //   alignSelf: 'stretch',
+  //   justifyContent: 'space-between'
+  // },
+
+  // gear: {
+  //   flex: 0,
+  //   paddingRight: 60
+  // },
+  // users: {
+  //   flex: 0,
+  //   paddingLeft: 60,
+  //   paddingRight: 0,
+  //   marginLeft: 0
+  // },
   
-  numberProducts: {
-    fontFamily: avenirNext,
-    fontSize: 28,
-    color: graphiteGray,
-    fontWeight: 'normal'
-  },
-  soldProducts: {
-    fontFamily: avenirNext,
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold'
-  },
+  // profilepicWrap: {
+  //   backgroundColor: 'black',
+  //   width: 130,
+  //   height: 130,
+  //   borderRadius: 65,
+  //   borderColor: 'rgba(0,0,0,0.4)',
+  //   borderWidth: 0,
+  // },
+  
+  
+  // numberProducts: {
+  //   fontFamily: avenirNext,
+  //   fontSize: 28,
+  //   color: graphiteGray,
+  //   fontWeight: 'normal'
+  // },
+  // soldProducts: {
+  //   fontFamily: avenirNext,
+  //   fontSize: 16,
+  //   color: '#fff',
+  //   fontWeight: 'bold'
+  // },
 
   name: {
     ...textStyles.generic,
@@ -1039,15 +1088,17 @@ const styles = StyleSheet.create({
   // On Sale and Sold buttons
 
   buttonTextContainer: {
-    borderRadius: 20,
+    borderBottomRightRadius: 20,
+    borderTopRightRadius: 20,
     backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
+    padding: 5,
     width: width/3,
     position: 'absolute',
     zIndex: -1,
-    left: 37,
+    // left: 37,
+    left: 30,
   },
 
   /////////////

@@ -2155,6 +2155,7 @@ const styles = StyleSheet.create( {
   descriptionRow: {
     flexDirection: 'row',
     paddingHorizontal: 10,
+    marginBottom: 10,
     // backgroundColor: 'red'
     // flex: 0.1
   },

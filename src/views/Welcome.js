@@ -36,7 +36,7 @@ const WelcomeButton = ({backgroundColor, text, color, icon = false, onPress}) =>
         </View>
         }
         <View style={{flex: icon ? 0.85 : 1, justifyContent: 'center', alignItems: icon ? 'flex-start' : 'center', paddingVertical: 15, paddingHorizontal: 2,}}>
-            <Text style={{...textStyles.generic, ...Fonts.big, color, letterSpacing: 1.2, fontWeight: "200"}}>{text}</Text>
+            <Text style={{...textStyles.generic, fontSize: icon == "facebook" ? 17 : 20, color, letterSpacing: 1.2, fontWeight: "200"}}>{text}</Text>
         </View>
     </TouchableOpacity>
 )

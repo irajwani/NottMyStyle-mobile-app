@@ -76,7 +76,7 @@ const HomeScreen = createBottomTabNavigator(
               
               Chats: ChatsToCustomChatStack,
               
-              WishList: wishListToProductDetailsOrChatOrCommentsStack,
+              // WishList: wishListToProductDetailsOrChatOrCommentsStack,
               
             },
             {
