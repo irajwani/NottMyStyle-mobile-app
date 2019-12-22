@@ -23,6 +23,7 @@ import { LoadingIndicator, ProfileMinutia } from '../localFunctions/visualFuncti
 import ProgressiveImage from '../components/ProgressiveImage';
 
 import { textStyles } from '../styles/textStyles.js';
+import Profile from '../components/Profile.js';
 
 const {width} = Dimensions.get('window');
 
@@ -66,10 +67,7 @@ class OtherUserProfilePage extends Component {
     super(props);
     
     this.state = {
-      name: '',
-      email: '',
-      insta: '',
-      uri: '',
+      profileData: false,
       numberProducts: 0,
       soldProducts: 0,
       sellItem: false,
@@ -79,7 +77,8 @@ class OtherUserProfilePage extends Component {
       showReportUserModal: false,
       isGetting: true,
       uid: firebase.auth().currentUser.uid,
-      comments: false
+      comments: false,
+      noComments: false,
 
     }
 
@@ -123,9 +122,9 @@ class OtherUserProfilePage extends Component {
       var yourUsersBlocked = removeFalsyValuesFrom(rawUsersBlocked);
       // console.log(yourUsersBlocked);
 
-      let profile = d[otherUserUid].profile;
-      let color = d[otherUserUid].color ? d[otherUserUid].color : yellowGreen;
-      let {name, country, insta, uri} = profile;
+      let profileData = d[otherUserUid].profile;
+      // let color = d[otherUserUid].color ? d[otherUserUid].color : yellowGreen;
+      
 
       //get collection keys of current user
       // var collection = d.Users[uid].collection ? d.Users[uid].collection : null;
@@ -150,7 +149,7 @@ class OtherUserProfilePage extends Component {
       // var month = (new Date()).getMonth();
       // var year = (new Date()).getFullYear();
 
-      this.setState({yourProfile, usersBlocked: yourUsersBlocked, yourUid: yourUid, otherUserUid: otherUserUid, profile, name, country, insta, uri, color, isGetting: false})
+      this.setState({yourProfile, usersBlocked: yourUsersBlocked, yourUid: yourUid, otherUserUid: otherUserUid, profileData, isGetting: false})
     })
   }
 
@@ -161,16 +160,20 @@ class OtherUserProfilePage extends Component {
       var comments = false;
       if(d.comments) {
         comments = d.comments;
+        this.setState({comments});
+      }
+      else {
+        this.setState({noComments: true});
       }
       //Removed hard code this.state.comments to unhelpful object with one property
-      this.setState({comments});
+      
     })
 
   }
 
-  showBlockOrReport = () => {
-      this.setState({showBlockOrReportModal: true})
-  }
+  // showBlockOrReport = () => {
+  //     this.setState({showBlockOrReportModal: true})
+  // }
 
   blockUser = (uid) => {
     var blockUserUpdates = {};
@@ -192,6 +195,8 @@ class OtherUserProfilePage extends Component {
     this.setState({showBlockOrReportModal: false, showReportUserModal: true});
   }
 
+  handleReportTextChange = (report) => this.setState({report})
+
   sendReport = (uid, report) => {
     const recipients = ['nottmystyle.help@gmail.com'] // string or array of email addresses
     email(recipients, {
@@ -204,282 +209,62 @@ class OtherUserProfilePage extends Component {
     .catch(console.error)
   }
 
-  navigateTo = (screen) => {
-    this.props.navigation.navigate(screen, {otherUser: this.state.otherUserUid });
-  }
-
   navToOtherUserProfilePage = (uid) => {
     this.props.navigation.navigate('OtherUserProfilePage', {uid: uid})
   }
 
+  navigateTo = (screen) => {
+    this.props.navigation.navigate(screen, {otherUser: this.state.otherUserUid });
+  }
+
+  navToOtherUserProducts = () => this.navigateTo('OtherUserProducts')
+
+  navToOtherUserSoldProducts = () => this.navigateTo('OtherUserSoldProducts')
+
+
+
   navToUserComments = () => {
     // const {params} = this.props.navigation.state;
-    const {otherUserUid, comments, profile, yourProfile} = this.state;
-    this.props.navigation.navigate('UserComments', {yourProfile: yourProfile, theirProfile: profile, comments: comments['a'] ? false : comments, uid: otherUserUid})
+    const {otherUserUid, comments, profileData, yourProfile} = this.state;
+    this.props.navigation.navigate('UserComments', {yourProfile: yourProfile, theirProfile: profileData, comments: comments['a'] ? false : comments, uid: otherUserUid})
   }
 
   render() {
 
-    const {report, name, country, insta, uri, color, usersBlocked, comments, yourUid, otherUserUid} = this.state;
+    var {report, profileData, usersBlocked, noComments, comments, yourUid, otherUserUid, isGetting} = this.state;
     // const {params} = this.props.navigation.state;
     // const {uid} = params; //otherUserUid
     // console.log(usersBlocked, uid, usersBlocked.includes(uid));
 
-    const gradientColors = ["#c8f966", "#307206", "#1c3a09"]; 
+    // const gradientColors = ["#c8f966", "#307206", "#1c3a09"]; 
     // const gradientColors = ['#7de853','#0baa26', '#064711'];
     // const gradientColors2 = ['#0a968f','#6ee5df', ];
+    // alert(profileData.name)
+    return (
+      <Profile
+        currentUser={false}
+        isGetting={isGetting}
+        profileData={profileData}
+        navBack={() => this.props.navigation.goBack()}
 
-    if(this.state.isGetting) {
-      return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 30, marginTop: 22}}>
-          <LoadingIndicator isVisible={this.state.isGetting} color={'#1c3a09'} type={'Wordpress'}/>
-        </View>
-      )
-    }
+        navToOtherUserProducts={this.navToOtherUserProducts}
+        navToOtherUserSoldProducts={this.navToOtherUserSoldProducts}
 
-    else {
-      return (
-      <SafeAreaView style={styles.mainContainer}>
-      <View style={styles.linearGradient}>
+        usersBlocked={usersBlocked}
+        otherUserUid={otherUserUid}
+        blockUser={this.blockUser}
+        unblockUser={this.unblockUser}
 
-        <View style={[styles.oval, {backgroundColor: color}]}/>
+        handleReportTextChange={this.handleReportTextChange}
+        report={report}
+        sendReport={this.sendReport}
 
-
-        <View style={styles.topContainer}>
-
-          <View style={styles.iconColumn}>
-            
-              <Icon 
-                  name="arrow-left"   
-                  size={30} 
-                  color={'black'}
-                  onPress={() => this.props.navigation.goBack()}
-              />
-
-          </View>
-            
-
-          <View style={styles.profileColumn}>
-            {uri ? 
-              <ProgressiveImage 
-              style= {styles.profilepic} 
-              thumbnailSource={ require('../images/blank.jpg') }
-              source={ {uri: this.state.uri} }
-              
-              />
-              : 
-              <Image style= {styles.profilepic} source={require('../images/blank.jpg')}/>
-            } 
-
-            <Text style={[styles.name, {textAlign: 'center'}]}>{name}</Text>
-
-            <ProfileMinutia icon={'city'} text={country} />
-
-            {this.state.insta ? <ProfileMinutia icon={'instagram'} text={`@${insta}`} /> : null}
-
-          </View>
-
-          <View style={styles.iconColumn}>
-            <Icon 
-              name="account-alert"      
-              size={30} 
-              color={'#020002'}
-              onPress={() => {this.showBlockOrReport()}}
-              />
-          </View>
-
-          
-
-        </View>
-
-        <View style={styles.bottomContainer}>
-              <ButtonContainer>
-                <TouchableOpacity style={[styles.blackCircle]} onPress={()=>this.navigateTo('OtherUserProducts')}>
-                  <Svg height={"60%"} width={"60%"} fill={'#fff'} viewBox="0 0 47.023 47.023">
-                      <Path d="M45.405,25.804L21.185,1.61c-1.069-1.067-2.539-1.639-4.048-1.603L4.414,0.334C2.162,0.39,0.349,2.205,0.296,4.455
-        L0.001,17.162c-0.037,1.51,0.558,2.958,1.627,4.026L25.848,45.38c2.156,2.154,5.646,2.197,7.8,0.042l11.761-11.774
-        C47.563,31.494,47.561,27.958,45.405,25.804z M8.646,14.811c-1.695-1.692-1.696-4.435-0.005-6.13
-        c1.692-1.693,4.437-1.693,6.13-0.003c1.693,1.692,1.694,4.437,0.003,6.129C13.082,16.501,10.338,16.501,8.646,14.811z
-        M16.824,22.216c-0.603-0.596-1.043-1.339-1.177-1.797l1.216-0.747c0.157,0.48,0.488,1.132,0.997,1.634
-        c0.548,0.541,1.061,0.6,1.403,0.256c0.324-0.329,0.26-0.764-0.152-1.618c-0.575-1.17-0.667-2.219,0.091-2.987
-        c0.888-0.9,2.32-0.848,3.565,0.38c0.594,0.588,0.908,1.146,1.083,1.596l-1.216,0.701c-0.111-0.309-0.34-0.831-0.857-1.341
-        c-0.518-0.51-0.999-0.522-1.269-0.247c-0.333,0.336-0.182,0.778,0.246,1.708c0.59,1.265,0.549,2.183-0.183,2.928
-        C19.696,23.566,18.272,23.645,16.824,22.216z M22.596,27.758l0.929-1.756l-1.512-1.493l-1.711,0.985l-1.238-1.223l6.82-3.686
-        l1.566,1.547l-3.572,6.891L22.596,27.758z M24.197,29.337l5.207-5.277l1.2,1.183l-4.221,4.273l2.099,2.072l-0.989,1.002
-        L24.197,29.337z M35.307,31.818l-2.059-2.032l-1.083,1.096l1.942,1.917l-0.959,0.972l-1.941-1.917l-1.235,1.251l2.168,2.142
-        l-0.965,0.979l-3.366-3.322l5.209-5.276l3.255,3.215L35.307,31.818z" stroke="#fff" strokeWidth="0.8"/>
-                      <Path d="M23.068,23.788l1.166,1.151l1.499-2.741C25.347,22.434,23.068,23.788,23.068,23.788z" stroke="#fff" strokeWidth="0.8"/>
-                  </Svg>
-
-                  
-                </TouchableOpacity>
-              </ButtonContainer>
-
-              <ButtonContainer>
-                <TouchableOpacity style={styles.blackCircle} onPress={()=>this.navigateTo('OtherUserSoldProducts')}>
-                  <Text style={{fontFamily: 'Avenir Next', fontWeight: "700", fontSize: 16, color:'#fff'}}>SOLD</Text>
-                </TouchableOpacity>
-              </ButtonContainer>
-
-          </View>
-      
-      </View>
-
-      {/* Number of Products on Market and Sold Cards */}
-      
-      {/* Other User's Reviews */}
-      <View style={styles.footerContainer} >
-
-      <ScrollView style={styles.halfPageScrollContainer} contentContainerStyle={styles.halfPageScroll}>
-          <View style={ {backgroundColor: '#fff'} }>
-
-          <View style={styles.reviewsHeaderContainer}>
-            <Text style={styles.reviewsHeader}>REVIEWS</Text>
-            <FontAwesomeIcon 
-              name="edit" 
-              style={styles.users}
-              size={35} 
-              color={iOSColors.black}
-              onPress={() => {this.navToUserComments()}}
-            /> 
-          </View>  
-          {!comments ? null : Object.keys(comments).map(
-                  (comment) => (
-                  <View key={comment} style={[styles.commentContainer, Platform.OS == 'android' ? {borderWidth: 0.5, borderColor: 'black'} : null]}>
-
-                      <View style={styles.commentPicAndTextRow}>
-
-                        {comments[comment].uri ?
-                        <TouchableHighlight style={styles.commentPic} onPress={()=>{yourUid == comments[comment].uid ? this.props.navigation.navigate('Profile') : this.loadRelevantData(yourUid, comments[comment].uid)} }>
-                          <Image style= {styles.commentPic} source={ {uri: comments[comment].uri} }/>
-                        </TouchableHighlight>  
-                        :
-                          <Image style= {styles.commentPic} source={ require('../images/companyLogo2.jpg') }/>
-                        }
-                          
-                        <TouchableOpacity onPress={()=>{yourUid == comments[comment].uid ? this.props.navigation.navigate('Profile') : this.loadRelevantData(yourUid, comments[comment].uid)} } style={styles.textContainer}>
-                            <Text style={ styles.commentName }> {comments[comment].name} </Text>
-                            <Text style={styles.comment}> {comments[comment].text}  </Text>
-                        </TouchableOpacity>
-
-                      </View>
-
-                      <View style={styles.commentTimeRow}>
-
-                        <Text style={ styles.commentTime }> {comments[comment].time} </Text>
-
-                      </View>
-
-                      
-                  </View>
-                  
-              )
-                      
-              )}
-          </View>
-        </ScrollView>  
-
-      </View>
-
-      {/* Modal to select if whether you wish to block or report user */}
-      <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.showBlockOrReportModal}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}
-       >
-          <View style={[styles.modal, {marginTop: Platform.OS == "ios" ? 22 : 0}]}>
-            <Text style={styles.modalHeader}>Block or Report This User</Text>
-            <Text style={styles.modalText}>If you block this user, then they cannot initiate a chat with you regarding one of your products.</Text>
-            <Text style={styles.modalText}>This will delete all chats you have with this individual, so if you decide to unblock this user later, they will have to initiate new chats with you.</Text>
-            <Text style={styles.modalText}>If you believe this user has breached the Terms and Conditions for usage of NottMyStyle (for example, through proliferation of malicious content, or improper language), then please explain this to the NottMyStyle Team through email by selecting Report User.</Text>
-            <View style={styles.documentOpenerContainer}>
-                {usersBlocked.includes(otherUserUid) ?
-                    <Text style={styles.blockUser} 
-                    onPress={() => {
-                      this.unblockUser(otherUserUid); 
-                      //this.setState({showBlockOrReportModal: false});
-                      }}>
-                        Unblock User
-                    </Text>
-                :
-                    <Text style={styles.blockUser} 
-                    onPress={() => {
-                      this.blockUser(otherUserUid);
-                      //this.setState({showBlockOrReportModal: false});
-                      }}>
-                        Block User
-                    </Text>
-                }
-                
-                <Text style={styles.reportUser} onPress={() => {this.reportUser()}}>
-                    Report User
-                </Text>
-            </View>
-            <TouchableHighlight
-                onPress={() => {
-                  this.setState( {showBlockOrReportModal: false} )
-                }}>
-                <Text style={styles.hideModal}>Back</Text>
-            </TouchableHighlight>
-          </View>
-       </Modal>
-
-       {/* Modal to input Report to User */}
-       <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.showReportUserModal}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}
-       >
-        <DismissKeyboardView>
-            <View style={styles.reportModal}>
-                <Text style={styles.reportModalHeader}>Please Explain What You Wish To Report About This User</Text>
-                <TextInput
-                    style={styles.reportInput}
-                    onChangeText={(report) => this.setState({report})}
-                    value={this.state.report}
-                    multiline={true}
-                    numberOfLines={4}
-                    underlineColorAndroid={"transparent"}
-                />
-                <Button
-                    title='Send' 
-                    titleStyle={{ fontWeight: "300" }}
-                    buttonStyle={{
-                    backgroundColor: highlightGreen,
-                    //#2ac40f
-                    width: (width)*0.40,
-                    height: 40,
-                    borderColor: "#226b13",
-                    borderWidth: 0,
-                    borderRadius: 20,
-                    
-                    }}
-                    containerStyle={{ marginTop: 0, marginBottom: 0 }}
-                    onPress={() => {this.sendReport(otherUserUid, report);}} 
-                />
-                
-                <TouchableHighlight
-                    onPress={() => {
-                        this.setState( {showReportUserModal: false} )
-                    }}>
-                    <Text style={styles.hideModal}>Back</Text>
-                </TouchableHighlight>
-            </View>
-          </DismissKeyboardView>
-        </Modal>  
-
-      </SafeAreaView>
-        
-      
-
-
-    )}
+        noComments={noComments}
+        comments={comments}
+        navToUserComments={this.navToUserComments}
+        navToOtherUserProfilePage={this.navToOtherUserProfilePage}
+      />
+    )
 
 
   }

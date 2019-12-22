@@ -671,7 +671,7 @@ class SignIn extends Component {
                     
                     <View style={styles.twoTextInputsContainer}>
                         
-                        {Platform.OS == 'android' &&
+                        
                         <View>
                         <View style={styles.inputContainer}>
 
@@ -719,51 +719,11 @@ class SignIn extends Component {
                         </View>
                         </View>
                         
-                        }
+                        
 
-                        {Platform.OS == 'ios' && 
-                        <View>
-                        <View style={{paddingVertical: 2}}>
-                            <Hoshi
-                                label={'Email Address'}
-                                
-                                labelStyle={ new avenirNextText(lightGray, 15, "500") }
-                                value={this.state.email}
-                                onChangeText={email => this.setState({ email })}
-                                autoCorrect={false}
-                                // this is used as active border color
-                                borderColor={'#122021'}
-                                // this is used to set backgroundColor of label mask.
-                                // please pass the backgroundColor of your TextInput container.
-                                // maskColor={"#120221"}
-                                inputStyle={new avenirNextText(lightGreen, 15, "300")}
-                                keyboardType={'email-address'}
-                                returnKeyType={'next'}
-                                onSubmitEditing={() => this.passInput.focus()}
-                            />
-                        </View>    
-                        <View style={{ paddingVertical: 2}}>
-                            <Hoshi
-                                label={'Password'}
-                                labelStyle={ new avenirNextText(lightGray, 15, "500") }
-                                value={this.state.pass}
-                                onChangeText={pass => this.setState({ pass })}
-                                autoCorrect={false}
-                                secureTextEntry
-                                // this is used as active border color
-                                borderColor={'#122021'}
-                                // this is used to set backgroundColor of label mask.
-                                // maskColor={"#120221"}
-                                // please pass the backgroundColor of your TextInput container.
-                                inputStyle={new avenirNextText('#fff', 15, "300")}
-                                ref={ref => this.passInput = ref}
-                                // onSubmitEditing={this.onSignInPress}
-                            />
-                        </View>
-                        </View>
-                        }
+                        
 
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginVertical: 15, marginHorizontal: 5}}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginVertical: 15, marginHorizontal: 15}}>
                             <View style={{ justifyContent: 'center', alignItems: 'flex-start', marginHorizontal: 5}}>
                                 <TouchableOpacity onPress={this.toggleSaveUsernamePass} style={{height: 25, width: 25, borderWidth: 2, borderColor: '#fff', justifyContent: 'center', alignItems: 'center'}}>
                                     {this.state.saveUsernamePass ?
@@ -839,13 +799,22 @@ class SignIn extends Component {
                             />
                             </View>
 
-                            <View style={{ paddingVertical:10, justifyContent: 'center', alignItems: 'center' }}>
-                                <Icon
-                                    name={"arrow-left"}
-                                    size={40}
-                                    color={"#fff"}
-                                    onPress={()=>this.props.navigation.goBack()}
-                                />
+                            <View style={{ paddingVertical:10 }}>
+                            <Button
+                                title='Back' 
+                                titleStyle={{ fontWeight: "700" }}
+                                buttonStyle={{
+                                backgroundColor: darkGreen,
+                                //#2ac40f
+                                //#45bc53
+                                //#16994f
+                                borderColor: "#37a1e8",
+                                borderWidth: 0,
+                                borderRadius: 5,
+                                
+                                }}
+                                onPress={() => {this.props.navigation.goBack()} } 
+                            />
                             </View>
                         
                     </View>
@@ -909,7 +878,7 @@ const styles = StyleSheet.create({
   //SIGN IN PAGE
     signInContainer: {
       flex: 1,
-      marginHorizontal: 15,
+    //   marginHorizontal: 15,
     //   marginTop: 20,
       //marginBottom: 5,
     //   padding: 15,
@@ -963,7 +932,7 @@ const styles = StyleSheet.create({
 //   },
 
   input: {
-    height: 60, borderRadius: 5,
+    height: 60, borderRadius: 0,
     padding: 3,
     backgroundColor: 'black',
     borderBottomWidth: 4,

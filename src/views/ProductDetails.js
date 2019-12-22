@@ -611,8 +611,8 @@ class ProductDetails extends Component {
                   productSellerId: uid, productImageURL: this.props.navigation.state.params.data.uris.thumbnail[0], 
                   createdByUserId: CHATKIT_USER_NAME, name: room.name, id: room.id, 
                   buyerIdentification: CHATKIT_USER_NAME, sellerIdentification: uid,
-                  seller: this.state.profile.name, sellerAvatar: this.state.profile.uri, 
-                  buyer: this.state.yourProfile.name, buyerAvatar: this.state.yourProfile.uri,
+                  seller: this.state.profile.username ? this.state.profile.username : `Shopaholic-${Math.round(Math.random()*10)}`, sellerAvatar: this.state.profile.uri, 
+                  buyer: this.state.yourProfile.username ? this.state.yourProfile.username : `Shopaholic-${Math.round(Math.random()*10)}`, buyerAvatar: this.state.yourProfile.uri,
                   lastMessage: {lastMessageText, lastMessageDate, lastMessageSenderIdentification},
                   unread: false,
                   presence: "offline", //isUserInChatRoom
@@ -625,7 +625,11 @@ class ProductDetails extends Component {
           // console.log(`Created room called ${room.name}`)
           this.setState({navToChatLoading: false});
           //TODO: next line is untested
-          this.props.navigation.navigate('CustomChat', {productSellerId: this.state.otherUserUid, id: room.id, buyer: this.state.yourProfile.name, buyerAvatar: this.state.yourProfile.uri, seller: this.state.profile.name, sellerAvatar: this.state.profile.uri, buyerIdentification: this.state.uid, sellerIdentification: this.state.otherUserUid })
+          this.props.navigation.navigate('CustomChat', {
+            productSellerId: this.state.otherUserUid, id: room.id, 
+            buyer: this.state.yourProfile.username ? this.state.yourProfile.username : `Shopaholic-${Math.round(Math.random()*10)}`, 
+            seller: this.state.profile.username ? this.state.profile.username : `Shopaholic-${Math.round(Math.random()*10)}`, 
+            buyerAvatar: this.state.yourProfile.uri, sellerAvatar: this.state.profile.uri, buyerIdentification: this.state.uid, sellerIdentification: this.state.otherUserUid })
           // this.props.navigation.navigate( 'CustomChat', {id: this.findRoomId(this.currentUser.rooms, desiredRoomsName)} )
         })
         .catch(err => {
@@ -2020,7 +2024,7 @@ class ProductDetails extends Component {
             <Text onPress={() => 
             {this.state.uid == data.uid ? this.props.navigation.navigate('Profile') : this.navToOtherUserProfilePage(data.uid)}}
             style={styles.profileName}>
-              {profile.name}
+              {profile.username ? profile.username : `Shopaholic-${Math.round(Math.random()*10)}`}
             </Text>
             <Text style={styles.profileMinutia}>
               {profile.country}
